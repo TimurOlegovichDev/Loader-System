@@ -20,7 +20,7 @@ public class BoxValidator {
         for(String line : lines){
             Matcher matcher = NUMBERS_PATTERN.matcher(line);
             if(!matcher.matches()){
-                throw new InvalidCargoInput("The box is damaged");
+                throw new InvalidCargoInput("The box is damaged: " + lines);
             }
         }
     }
@@ -33,13 +33,13 @@ public class BoxValidator {
                 continue;
             for(char c : line.toCharArray()) {
                 if(c != symbol) {
-                    throw new InvalidCargoInput("The box is damaged");
+                    throw new InvalidCargoInput("The box is damaged " + lines);
                 }
                 weight -= Integer.parseInt(c + "");
             }
         }
         if(weight!=0){
-            throw new InvalidCargoInput("The box weight is damaged");
+            throw new InvalidCargoInput("The box weight is damaged " + lines);
         }
     }
 }

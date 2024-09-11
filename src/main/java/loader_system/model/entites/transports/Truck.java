@@ -6,13 +6,13 @@ import loader_system.model.validator.TruckParamValidator;
 
 import java.util.Arrays;
 
-public class Truck implements Transport{
+public class Truck implements Transport {
 
     private final char[][] body;
 
     public Truck(int newHeight, int newWidth) {
         TruckParamValidator validator = new TruckParamValidator();
-        if(validator.bodySizeParamIsValid(newHeight, newWidth)){
+        if (validator.bodySizeParamIsValid(newHeight, newWidth)) {
             body = new char[newHeight][newWidth];
         } else {
             body = new char[DEFAULT_BODY_HEIGHT][DEFAULT_BODY_WIDTH];
@@ -27,20 +27,25 @@ public class Truck implements Transport{
 
     @Override
     public void initBody() {
-        for(char[] row : body){
+        for (char[] row : body) {
             Arrays.fill(row, ' ');
         }
     }
 
     @Override
     public void loadCargo(Cargo cargo, int heightIndex, int widthIndex) {
-        validCargo(cargo);
+        try {
+            validCargo(cargo);
+        } catch (InvalidCargoSize e) {
+            System.out.println(e.getMessage());
+            return;
+        }
         int i = heightIndex;
-        System.out.println(heightIndex + " - " + widthIndex + " " + cargo);
-        for (char[] cargoRow : cargo.getForm()) {
+        for (char[] boxLine : cargo.getForm()) {
             int j = widthIndex;
-            for (char c : cargoRow) {
-                body[i][j] = c;
+            for (Character character : boxLine) {
+                body[i]
+                        [j] = character;
                 j++;
             }
             i--;
@@ -49,11 +54,11 @@ public class Truck implements Transport{
 
     @Override
     public void validCargo(Cargo cargo) {
-        if(cargo.getForm().length == 0)
+        if (cargo.getForm().length == 0)
             return;
-        if(cargo.getHeight()>body.length &&
-                cargo.getWidth()>body[0].length){
-            throw new InvalidCargoSize("This cargo is too big for truck: \n" + cargo);
+        if (cargo.getHeight() > body.length ||
+                cargo.getWidth() > body[0].length) {
+            throw new InvalidCargoSize("This cargo is too big for truck: " + cargo);
         }
     }
 
@@ -65,14 +70,14 @@ public class Truck implements Transport{
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
-        for(char[] arr : body){
+        for (char[] arr : body) {
             sb.append("+");
-            for(char c : arr){
+            for (char c : arr) {
                 sb.append(c);
             }
             sb.append("+\n");
         }
-        sb.append("+".repeat(body[0].length+2)).append("\n");
+        sb.append("+".repeat(body[0].length + 2)).append("\n");
         return sb.toString();
     }
 }

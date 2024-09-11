@@ -20,7 +20,7 @@ public class MinimumEmptySpace implements Algorithm{
                 tryFindEmptySpaceAndLoad(cargo, transportData);
             } catch (NoPlaceException e) {
                 Transport truck = new TruckFactory().createTransport();
-                truck.loadCargo(cargo, 0,0);
+                truck.loadCargo(cargo, truck.getBody().length-1,0);
                 transportData.add(truck);
             }
         }
@@ -46,7 +46,6 @@ public class MinimumEmptySpace implements Algorithm{
         for(char[] boxLine : cargo.getForm()){
             int j = indexBodyWidth;
             for(Character character : boxLine){
-                System.out.println(i + " " + j + " " + character);
                 try {
                     if(cpBody[i][j]==' ') {
                         cpBody[i][j] = character;

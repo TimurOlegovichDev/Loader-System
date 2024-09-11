@@ -4,6 +4,7 @@ import loader_system.db.CargoData;
 import loader_system.db.TransportData;
 import loader_system.model.algorithms.Algorithm;
 import loader_system.model.algorithms.MinimumEmptySpace;
+import loader_system.model.algorithms.OneToOne;
 import loader_system.model.factories.cargo.BoxFactory;
 import loader_system.model.factories.cargo.CargoFactory;
 import loader_system.model.utils.BoxInitializer;
@@ -35,8 +36,9 @@ public class MainController {
                 new InputReader()
                         .readFile("D:\\JavaWorkSpace\\loader-application\\src\\test\\files\\validData"),
                 cargoData);
-        Algorithm algorithm = new MinimumEmptySpace();
+        Algorithm algorithm = new OneToOne();
         algorithm.execute(cargoData, transportData);
+        System.out.println();
         System.out.println(transportData);
     }
 
