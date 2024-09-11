@@ -34,9 +34,9 @@ public class MainController {
         Initializer initializer = new BoxInitializer();
         initializer.initialize(
                 new InputReader()
-                        .readFile("D:\\JavaWorkSpace\\loader-application\\src\\test\\files\\validData"),
+                        .readFile("D:\\JavaWorkSpace\\LoaderSystem\\src\\test\\resources\\big-data"),
                 cargoData);
-        Algorithm algorithm = new OneToOne();
+        Algorithm algorithm = new MinimumEmptySpace();
         algorithm.execute(cargoData, transportData);
         System.out.println();
         System.out.println(transportData);
