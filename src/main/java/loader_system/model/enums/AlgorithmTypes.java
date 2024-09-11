@@ -5,8 +5,8 @@ import lombok.Getter;
 @Getter
 public enum AlgorithmTypes {
 
-    MINIMUM_EMPTY_SPACE("Minimum empty space"),
-    OneToOne("One to one");
+    MES("Minimum empty space"),
+    OTO("One to one");
 
     private final String title;
 

@@ -40,4 +40,8 @@ public class Printer {
         }
         System.out.println(line);
     }
+
+    public void print(String message) {
+        System.out.println(message);
+    }
 }
