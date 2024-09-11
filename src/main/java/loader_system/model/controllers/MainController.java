@@ -3,7 +3,6 @@ package loader_system.model.controllers;
 import loader_system.db.CargoData;
 import loader_system.db.TransportData;
 import loader_system.model.algorithms.Algorithm;
-import loader_system.model.algorithms.MinimumEmptySpace;
 import loader_system.model.factories.algorithm.AlgorithmFactory;
 import loader_system.model.utils.BoxInitializer;
 import loader_system.model.utils.Initializer;

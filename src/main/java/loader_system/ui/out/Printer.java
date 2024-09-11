@@ -19,14 +19,10 @@ public class Printer {
         int messageLength = message.length();
         int padding = (WINDOW_WIDTH - messageLength) / 2;
         StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < padding; i++) {
-            sb.append(" ");
-        }
+        sb.append(" ".repeat(Math.max(0, padding)));
         sb.append(message);
-        for (int i = 0; i < padding; i++) {
-            sb.append(" ");
-        }
-        System.out.println(sb.toString());
+        sb.append(" ".repeat(Math.max(0, padding)));
+        System.out.println(sb);
     }
 
     public void printWrapped(String message) {

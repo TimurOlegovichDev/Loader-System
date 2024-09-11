@@ -2,7 +2,6 @@ package loader_system.model.entites.transports;
 
 import loader_system.model.entites.cargos.Cargo;
 import loader_system.model.exceptions.InvalidCargoSize;
-import loader_system.model.validator.TruckParamValidator;
 
 import java.util.Arrays;
 

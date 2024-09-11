@@ -1,6 +1,5 @@
 package loader_system.model.validator;
 
-import loader_system.model.entites.cargos.Box;
 import loader_system.model.exceptions.InvalidCargoInput;
 
 import java.util.List;

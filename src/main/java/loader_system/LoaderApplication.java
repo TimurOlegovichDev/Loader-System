@@ -5,7 +5,7 @@ import loader_system.model.controllers.MainController;
 import java.io.IOException;
 
 public class LoaderApplication {
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) {
         MainController controller = new MainController();
         try {
             controller.start();
