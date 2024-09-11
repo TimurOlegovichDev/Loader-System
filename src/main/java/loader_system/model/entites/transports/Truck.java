@@ -33,11 +33,12 @@ public class Truck implements Transport{
     }
 
     @Override
-    public void loadCargo(Cargo cargo, int widthIndex, int heightIndex) {
+    public void loadCargo(Cargo cargo, int heightIndex, int widthIndex) {
         validCargo(cargo);
-        int i = widthIndex + cargo.getForm().length - 1;
+        int i = heightIndex;
+        System.out.println(heightIndex + " - " + widthIndex + " " + cargo);
         for (char[] cargoRow : cargo.getForm()) {
-            int j = heightIndex;
+            int j = widthIndex;
             for (char c : cargoRow) {
                 body[i][j] = c;
                 j++;
@@ -48,8 +49,10 @@ public class Truck implements Transport{
 
     @Override
     public void validCargo(Cargo cargo) {
-        if(cargo.getWidth()<=body.length &&
-                cargo.getHeight()<=body[0].length){
+        if(cargo.getForm().length == 0)
+            return;
+        if(cargo.getHeight()>body.length &&
+                cargo.getWidth()>body[0].length){
             throw new InvalidCargoSize("This cargo is too big for truck: \n" + cargo);
         }
     }
@@ -64,7 +67,9 @@ public class Truck implements Transport{
         StringBuilder sb = new StringBuilder();
         for(char[] arr : body){
             sb.append("+");
-            sb.append(Arrays.toString(arr));
+            for(char c : arr){
+                sb.append(c);
+            }
             sb.append("+\n");
         }
         sb.append("+".repeat(body[0].length+2)).append("\n");

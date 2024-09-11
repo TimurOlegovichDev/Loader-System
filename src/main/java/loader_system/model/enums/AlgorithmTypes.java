@@ -1,4 +1,4 @@
-package loader_system.enums;
+package loader_system.model.enums;
 
 import lombok.Getter;
 

@@ -17,7 +17,7 @@ public class MinimumEmptySpace implements Algorithm{
         cargos.sort((x, y) -> Integer.compare(y.getWeight(), x.getWeight()));
         for(Cargo cargo : cargos){
             try {
-                tryFindEmptySpace(cargo, transportData);
+                tryFindEmptySpaceAndLoad(cargo, transportData);
             } catch (NoPlaceException e) {
                 Transport truck = new TruckFactory().createTransport();
                 truck.loadCargo(cargo, 0,0);
@@ -26,11 +26,11 @@ public class MinimumEmptySpace implements Algorithm{
         }
     }
 
-    private static void tryFindEmptySpace(Cargo cargo, TransportData transports) throws NoPlaceException {
+    private static void tryFindEmptySpaceAndLoad(Cargo cargo, TransportData transports) throws NoPlaceException {
         for(Transport transport : transports.getData()){
-            for(int i = 0; i < transport.getBody().length; i++){
+            for(int i = transport.getBody().length - 1; i >= 0; i--){
                 for(int j = 0; j < transport.getBody()[i].length; j++){
-                    if(tryInsertInTruck(i, j, cargo, transport)) {
+                    if(canInsertInTruck(i, j, cargo, transport)) {
                         transport.loadCargo(cargo, i, j);
                         return;
                     }
@@ -40,24 +40,25 @@ public class MinimumEmptySpace implements Algorithm{
         throw new NoPlaceException();
     }
 
-    private static boolean tryInsertInTruck(int indexBodyHeight, int indexBodyWidth, Cargo cargo, Transport transport) {
-        char[][] copyList = transport.getBody();
-        int i = 0;
+    private static boolean canInsertInTruck(int indexBodyHeight, int indexBodyWidth, Cargo cargo, Transport transport) {
+        char[][] cpBody = transport.getBody();
+        int i = indexBodyHeight;
         for(char[] boxLine : cargo.getForm()){
-            int j = 0;
+            int j = indexBodyWidth;
             for(Character character : boxLine){
+                System.out.println(i + " " + j + " " + character);
                 try {
-                    if(copyList[i+indexBodyHeight][j+indexBodyWidth]==' ') {
-                        copyList[i + indexBodyHeight][j + indexBodyWidth] = character;
+                    if(cpBody[i][j]==' ') {
+                        cpBody[i][j] = character;
                     } else {
                         return false;
                     }
-                } catch (IndexOutOfBoundsException e) {
+                } catch (Exception e) {
                     return false;
                 }
                 j++;
             }
-            i++;
+            i--;
         }
         return true;
     }

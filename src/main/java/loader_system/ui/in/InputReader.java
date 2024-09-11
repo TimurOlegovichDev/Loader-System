@@ -8,15 +8,14 @@ import java.util.List;
 
 public class InputReader {
 
-    public static List<String> readFile(String src) {
+    public List<String> readFile(String src) throws IOException {
         List<String> result = new ArrayList<>();
-        try (BufferedReader br = new BufferedReader(new FileReader(src))) {
-            String line;
-            while ((line = br.readLine()) != null)
-                result.add(line.trim());
-        } catch (IOException e) {
-            System.err.println("Error reading file: " + e.getMessage());
+        BufferedReader br = new BufferedReader(new FileReader(src));
+        String line;
+        while ((line = br.readLine()) != null) {
+            result.add(line.trim());
         }
+        br.close();
         return result;
     }
 

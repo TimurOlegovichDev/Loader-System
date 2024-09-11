@@ -4,26 +4,40 @@ import loader_system.model.validator.PrinterParamValidator;
 
 public class Printer {
 
-    private final int WIDTH_MESSAGE;
+    private final int WINDOW_WIDTH;
 
     public Printer(int width) {
         PrinterParamValidator validator = new PrinterParamValidator();
         if(validator.validateMsgWidth(width))
-            WIDTH_MESSAGE = width;
+            WINDOW_WIDTH = width;
         else
-            WIDTH_MESSAGE = 50;
+            WINDOW_WIDTH = 50;
+    }
+
+    public void printCentered(String message) {
+        int messageLength = message.length();
+        int padding = (WINDOW_WIDTH - messageLength) / 2;
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < padding; i++) {
+            sb.append(" ");
+        }
+        sb.append(message);
+        for (int i = 0; i < padding; i++) {
+            sb.append(" ");
+        }
+        System.out.println(sb.toString());
     }
 
     public void printWrapped(String message) {
         String[] words = message.split("\\s+");
         StringBuilder line = new StringBuilder();
         for (String word : words) {
-            if (line.length() + word.length() > WIDTH_MESSAGE){
+            if (line.length() + word.length() > WINDOW_WIDTH){
                 System.out.println(line);
                 line.setLength(0);
             }
             line.append(word).append(" ");
         }
-        System.out.println(line.toString());
+        System.out.println(line);
     }
 }
