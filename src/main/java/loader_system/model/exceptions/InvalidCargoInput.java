@@ -1,4 +1,7 @@
 package loader_system.model.exceptions;
 
-public class InvalidCargoInput {
+public class InvalidCargoInput extends RuntimeException{
+    public InvalidCargoInput(String message){
+        super(message);
+    }
 }

@@ -27,4 +27,18 @@ public class Box implements Cargo{
     public int getHeight() {
         return form.length;
     }
+
+    @Override
+    public int getWeight(){
+        return (int) Math.pow(form[0][0], 2);
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        for(char[] arr : form){
+            sb.append(Arrays.toString(arr));
+        }
+        return sb.toString();
+    }
 }

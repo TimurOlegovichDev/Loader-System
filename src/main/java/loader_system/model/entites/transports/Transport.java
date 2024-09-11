@@ -7,9 +7,9 @@ public interface Transport {
     int DEFAULT_BODY_WIDTH = 6;
     int DEFAULT_BODY_HEIGHT = 6;
 
-    void loadCargo(Cargo cargo);
+    void loadCargo(Cargo cargo, int widthIndex, int heightIndex);
 
-    boolean validCargo(Cargo cargo);
+    void validCargo(Cargo cargo);
 
     void initBody();
 

@@ -8,4 +8,5 @@ public interface Cargo {
 
     int getHeight();
 
+    int getWeight();
 }
