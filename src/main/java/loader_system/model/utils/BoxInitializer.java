@@ -6,6 +6,7 @@ import loader_system.model.factories.cargo.CargoFactory;
 import loader_system.model.validator.BoxValidator;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class BoxInitializer implements Initializer{
@@ -26,6 +27,7 @@ public class BoxInitializer implements Initializer{
                 continue;
             try {
                 validator.validate(sublist);
+                Collections.reverse(sublist); // to solve the problem of overturned loads
                 cargoData.add(cargoFactory.createCargo(getForm(sublist)));
             } catch (Exception e) {
                 exceptions.add(e);

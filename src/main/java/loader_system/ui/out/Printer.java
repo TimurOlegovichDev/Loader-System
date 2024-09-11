@@ -15,6 +15,7 @@ public class Printer {
     }
 
     public void printCentered(String message) {
+        System.out.print("\u001B[34m");
         int messageLength = message.length();
         int padding = (WINDOW_WIDTH - messageLength) / 2;
         StringBuilder sb = new StringBuilder();
@@ -29,6 +30,7 @@ public class Printer {
     }
 
     public void printWrapped(String message) {
+        System.out.print("\u001B[34m");
         String[] words = message.split("\\s+");
         StringBuilder line = new StringBuilder();
         for (String word : words) {
@@ -42,6 +44,7 @@ public class Printer {
     }
 
     public void print(String message) {
+        System.out.print("\u001B[34m");
         System.out.println(message);
     }
 }

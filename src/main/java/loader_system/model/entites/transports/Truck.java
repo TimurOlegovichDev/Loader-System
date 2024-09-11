@@ -10,16 +10,6 @@ public class Truck implements Transport {
 
     private final char[][] body;
 
-    public Truck(int newHeight, int newWidth) {
-        TruckParamValidator validator = new TruckParamValidator();
-        if (validator.bodySizeParamIsValid(newHeight, newWidth)) {
-            body = new char[newHeight][newWidth];
-        } else {
-            body = new char[DEFAULT_BODY_HEIGHT][DEFAULT_BODY_WIDTH];
-        }
-        initBody();
-    }
-
     public Truck() {
         body = new char[DEFAULT_BODY_HEIGHT][DEFAULT_BODY_WIDTH];
         initBody();
@@ -44,8 +34,7 @@ public class Truck implements Transport {
         for (char[] boxLine : cargo.getForm()) {
             int j = widthIndex;
             for (Character character : boxLine) {
-                body[i]
-                        [j] = character;
+                body[i][j] = character;
                 j++;
             }
             i--;
@@ -64,7 +53,11 @@ public class Truck implements Transport {
 
     @Override
     public char[][] getBody() {
-        return body.clone();
+        char[][] copy = new char[body.length][];
+        for(int i = 0; i < body.length; i++){
+            copy[i] = Arrays.copyOf(body[i], body[i].length);
+        }
+        return copy;
     }
 
     @Override
