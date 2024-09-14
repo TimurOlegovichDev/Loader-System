@@ -9,9 +9,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class BoxInitializer implements Initializer{
+public class BoxInitializer {
 
-    @Override
     public void initialize(List<String> forms, CargoData cargoData) {
         BoxValidator validator = new BoxValidator();
         List<Exception> exceptions = new ArrayList<>();

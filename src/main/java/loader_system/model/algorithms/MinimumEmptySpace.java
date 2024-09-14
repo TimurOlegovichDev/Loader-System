@@ -9,56 +9,24 @@ import loader_system.model.factories.transport.TruckFactory;
 
 import java.util.List;
 
-public class MinimumEmptySpace implements Algorithm{
+public class MinimumEmptySpace extends Algorithm {
 
     @Override
     public void execute(CargoData cargoData, TransportData transportData) {
         List<Cargo> cargos = cargoData.getData();
         cargos.sort((x, y) -> Integer.compare(y.getWeight(), x.getWeight()));
-        for(Cargo cargo : cargos){
-            try {
-                tryFindEmptySpaceAndLoad(cargo, transportData);
-            } catch (NoPlaceException e) {
-                Transport truck = new TruckFactory().createTransport();
-                truck.loadCargo(cargo, truck.getBody().length-1,0);
-                transportData.add(truck);
-            }
-        }
-    }
-
-    private static void tryFindEmptySpaceAndLoad(Cargo cargo, TransportData transports) throws NoPlaceException {
-        for(Transport transport : transports.getData()){
-            for(int i = transport.getBody().length - 1; i >= 0; i--){
-                for(int j = 0; j < transport.getBody()[i].length; j++){
-                    if(canInsertInTruck(i, j, cargo, transport)) {
-                        transport.loadCargo(cargo, i, j);
-                        return;
-                    }
-                }
-            }
-        }
-        throw new NoPlaceException();
-    }
-
-    private static boolean canInsertInTruck(int indexBodyHeight, int indexBodyWidth, Cargo cargo, Transport transport) {
-        char[][] cpBody = transport.getBody();
-        int i = indexBodyHeight;
-        for(char[] boxLine : cargo.getForm()){
-            int j = indexBodyWidth;
-            for(Character character : boxLine){
+        for (Cargo cargo : cargos) {
+            for (Transport transport : transportData.getData()) {
                 try {
-                    if(cpBody[i][j]==' ') {
-                        cpBody[i][j] = character;
-                    } else {
-                        return false;
-                    }
-                } catch (Exception e) {
-                    return false;
+                    tryFindEmptySpaceAndLoad(cargo, transport);
+                } catch (NoPlaceException e) {
+                    Transport truck = new TruckFactory().createTransport();
+                    truck.loadCargo(cargo, truck.getBody().length - 1, 0);
+                    transportData.addCargoInTransport(truck, cargo);
+                    transportData.add(truck);
                 }
-                j++;
             }
-            i--;
         }
-        return true;
     }
+
 }

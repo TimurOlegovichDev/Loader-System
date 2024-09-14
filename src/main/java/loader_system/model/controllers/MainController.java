@@ -5,11 +5,10 @@ import loader_system.db.TransportData;
 import loader_system.model.algorithms.Algorithm;
 import loader_system.model.factories.algorithm.AlgorithmFactory;
 import loader_system.model.utils.BoxInitializer;
-import loader_system.model.utils.Initializer;
+import loader_system.model.utils.TruckInitializer;
 import loader_system.ui.in.InputFileReader;
 import loader_system.ui.in.UserInputReceiver;
 import loader_system.ui.out.Printer;
-
 import java.io.IOException;
 
 public class MainController {
@@ -29,7 +28,6 @@ public class MainController {
     }
 
     public void start() throws IOException {
-        System.out.println();
         printer.printCentered("Program started!");
         initComponents();
         startLoading();
@@ -38,12 +36,23 @@ public class MainController {
     }
 
     private void initComponents() throws IOException {
-        Initializer initializer = new BoxInitializer();
+        initCargos();
+        initTransports();
+    }
+
+    private void initCargos() throws IOException {
+        BoxInitializer boxInitializer = new BoxInitializer();
         String filepath = userInputReceiver.getInputLine(printer, "Enter file path: ");
-        initializer.initialize(
+        boxInitializer.initialize(
                 new InputFileReader().readFile(filepath),
                 cargoData
         );
+    }
+
+    private void initTransports() throws IOException {
+        int num = userInputReceiver.getNumber(printer, "Enter number of transports: ");
+        TruckInitializer truckInitializer = new TruckInitializer();
+        truckInitializer.initialize(num, transportData);
     }
 
     private void startLoading() {
