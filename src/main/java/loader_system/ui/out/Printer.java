@@ -1,46 +1,12 @@
 package loader_system.ui.out;
 
-import loader_system.model.validator.PrinterParamValidator;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 public class Printer {
 
-    private final int WINDOW_WIDTH;
-
-    public Printer(int width) {
-        PrinterParamValidator validator = new PrinterParamValidator();
-        if(validator.validateMsgWidth(width))
-            WINDOW_WIDTH = width;
-        else
-            WINDOW_WIDTH = 50;
-    }
-
-    public void printCentered(String message) {
-        System.out.print("\u001B[34m");
-        int messageLength = message.length();
-        int padding = (WINDOW_WIDTH - messageLength) / 2;
-        StringBuilder sb = new StringBuilder();
-        sb.append(" ".repeat(Math.max(0, padding)));
-        sb.append(message);
-        sb.append(" ".repeat(Math.max(0, padding)));
-        System.out.println(sb);
-    }
-
-    public void printWrapped(String message) {
-        System.out.print("\u001B[34m");
-        String[] words = message.split("\\s+");
-        StringBuilder line = new StringBuilder();
-        for (String word : words) {
-            if (line.length() + word.length() > WINDOW_WIDTH){
-                System.out.println(line);
-                line.setLength(0);
-            }
-            line.append(word).append(" ");
-        }
-        System.out.println(line);
-    }
-
     public void print(String message) {
-        System.out.print("\u001B[34m");
-        System.out.println(message);
+        log.debug("Printing message: {}", message);
+        log.info(message);
     }
 }

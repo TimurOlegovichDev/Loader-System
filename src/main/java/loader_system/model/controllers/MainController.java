@@ -9,17 +9,19 @@ import loader_system.model.utils.TruckInitializer;
 import loader_system.ui.in.InputFileReader;
 import loader_system.ui.in.UserInputReceiver;
 import loader_system.ui.out.Printer;
+import lombok.extern.slf4j.Slf4j;
+
 import java.io.IOException;
 
-public class MainController {
 
-    private final int WINDOW_WIDTH = 50;
+@Slf4j
+public class MainController {
 
     private final TransportData transportData;
 
     private final CargoData cargoData;
 
-    private final Printer printer = new Printer(WINDOW_WIDTH);
+    private final Printer printer = new Printer();
     private final UserInputReceiver userInputReceiver = new UserInputReceiver();
 
     public MainController() {
@@ -28,44 +30,56 @@ public class MainController {
     }
 
     public void start() throws IOException {
-        printer.printCentered("Program started!");
+        log.info("Starting application...");
         initComponents();
         startLoading();
-        printer.printCentered("Loading is over!\n");
-        printer.printCentered(transportData.toString());
+        log.info("Loading is complete.");
+        log.info("\n{}", transportData);
+        log.info("System shut down");
     }
 
     private void initComponents() throws IOException {
+        log.info("Initializing components...");
         initCargos();
         initTransports();
+        log.info("Components initialized successfully.");
     }
 
     private void initCargos() throws IOException {
+        log.debug("Initializing cargos...");
         BoxInitializer boxInitializer = new BoxInitializer();
         String filepath = userInputReceiver.getInputLine(printer, "Enter file path: ");
         boxInitializer.initialize(
                 new InputFileReader().readFile(filepath),
                 cargoData
         );
+        log.info("Cargos initialized successfully.");
     }
 
-    private void initTransports() throws IOException {
+    private void initTransports() {
+        log.debug("Initializing transports...");
         int num = userInputReceiver.getNumber(printer, "Enter number of transports: ");
+        log.debug("Creating {} transports", num);
         TruckInitializer truckInitializer = new TruckInitializer();
         truckInitializer.initialize(num, transportData);
+        log.info("Transports initialized successfully.");
     }
 
     private void startLoading() {
+        log.info("Starting loading process...");
         Algorithm algorithm = chooseAndCreateAlgo();
         algorithm.execute(cargoData, transportData);
+        log.info("Loading process complete.");
     }
 
     private Algorithm chooseAndCreateAlgo() {
+        log.debug("Choosing algorithm...");
         String algorithmName = userInputReceiver
                 .getInputLine(
                         printer,
                         "Enter algorithm name (OTO - one to one, MES - minimum empty space): "
                 );
+        log.debug("Creating algorithm: {}", algorithmName);
         return new AlgorithmFactory().getAlgorithm(algorithmName);
     }
 

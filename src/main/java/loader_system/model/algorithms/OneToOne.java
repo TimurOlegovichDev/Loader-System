@@ -5,20 +5,25 @@ import loader_system.db.TransportData;
 import loader_system.model.entites.cargos.Cargo;
 import loader_system.model.entites.transports.Transport;
 import loader_system.model.exceptions.NoPlaceException;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.List;
 
+@Slf4j
 public class OneToOne extends Algorithm {
 
     @Override
     public void execute(CargoData cargoData, TransportData transportData) {
         List<Cargo> cargos = cargoData.getData();
         cargos.sort((x, y) -> Integer.compare(y.getWeight(), x.getWeight()));
-        List<Transport> transports = transportData.getData();
         for (Cargo cargo : cargos) {
-            Transport transport = chooseTruckToLoad(transportData);
-            tryFindEmptySpaceAndLoad(cargo, transport);
-            transportData.addCargoInTransport(transport, cargo);
+            try {
+                Transport transport = chooseTruckToLoad(transportData);
+                tryFindEmptySpaceAndLoad(cargo, transport);
+                transportData.addCargoInTransport(transport, cargo);
+            } catch (NoPlaceException e) {
+                log.error(e.getMessage());
+            }
         }
     }
 

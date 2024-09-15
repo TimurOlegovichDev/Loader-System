@@ -2,11 +2,14 @@ package loader_system.model.entites.transports;
 
 import loader_system.model.entites.cargos.Cargo;
 import loader_system.model.exceptions.InvalidCargoSize;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Arrays;
 
 public class Truck implements Transport {
 
+    private static final Logger log = LoggerFactory.getLogger(Truck.class);
     private final char[][] body;
 
     public Truck() {
@@ -26,7 +29,7 @@ public class Truck implements Transport {
         try {
             validCargo(cargo);
         } catch (InvalidCargoSize e) {
-            System.out.println(e.getMessage());
+            log.warn("This cargo is too big for truck: {}", cargo);
             return;
         }
         int i = heightIndex;
