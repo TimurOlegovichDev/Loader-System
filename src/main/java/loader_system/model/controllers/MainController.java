@@ -33,7 +33,6 @@ public class MainController {
         log.info("Starting application...");
         initComponents();
         startLoading();
-        log.info("Loading is complete.");
         log.info("\n{}", transportData);
         log.info("System shut down");
     }
@@ -68,8 +67,13 @@ public class MainController {
     private void startLoading() {
         log.info("Starting loading process...");
         Algorithm algorithm = chooseAndCreateAlgo();
-        algorithm.execute(cargoData, transportData);
-        log.info("Loading process complete.");
+        try {
+            algorithm.execute(cargoData, transportData);
+            log.info("Loading process complete.");
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            log.info("Loading process interrupted.");
+        }
     }
 
     private Algorithm chooseAndCreateAlgo() {
@@ -77,7 +81,7 @@ public class MainController {
         String algorithmName = userInputReceiver
                 .getInputLine(
                         printer,
-                        "Enter algorithm name (OTO - one to one, MES - minimum empty space): "
+                        "Enter algorithm name (EL - even loading, MES - minimum empty space): "
                 );
         log.debug("Creating algorithm: {}", algorithmName);
         return new AlgorithmFactory().getAlgorithm(algorithmName);

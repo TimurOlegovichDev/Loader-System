@@ -10,7 +10,7 @@ public class CargoData implements Datable {
 
     @Override
     public List<Cargo> getData() {
-        return new ArrayList<>(cargoData);
+        return cargoData;
     }
 
     @Override

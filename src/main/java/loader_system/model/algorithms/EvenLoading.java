@@ -10,10 +10,11 @@ import lombok.extern.slf4j.Slf4j;
 import java.util.List;
 
 @Slf4j
-public class OneToOne extends Algorithm {
+public class EvenLoading extends Algorithm {
 
     @Override
     public void execute(CargoData cargoData, TransportData transportData) {
+        log.debug("Executing EvenLoading algorithm");
         List<Cargo> cargos = cargoData.getData();
         cargos.sort((x, y) -> Integer.compare(y.getWeight(), x.getWeight()));
         for (Cargo cargo : cargos) {
@@ -21,15 +22,16 @@ public class OneToOne extends Algorithm {
                 Transport transport = chooseTruckToLoad(transportData);
                 tryFindEmptySpaceAndLoad(cargo, transport);
                 transportData.addCargoInTransport(transport, cargo);
-            } catch (NoPlaceException e) {
-                log.error(e.getMessage());
+            } catch (Exception e) {
+                log.warn(e.getMessage());
             }
         }
+        log.debug("EvenLoading algorithm finished successfully");
     }
 
     private Transport chooseTruckToLoad(TransportData transportData) {
         if (transportData.getData().isEmpty()) {
-            throw new NoPlaceException();
+            throw new NoPlaceException("There is no truck to load");
         }
         List<Transport> transports = transportData.getData();
         Transport truck = transports.get(0);

@@ -6,7 +6,7 @@ import lombok.Getter;
 public enum AlgorithmTypes {
 
     MES("Minimum empty space"),
-    OTO("One to one");
+    EL("Even loading");
 
     private final String title;
 

@@ -1,15 +1,15 @@
 package loader_system.model.entites.transports;
 
 import loader_system.model.entites.cargos.Cargo;
-import loader_system.model.exceptions.InvalidCargoSize;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.Arrays;
 
+@Slf4j
 public class Truck implements Transport {
 
-    private static final Logger log = LoggerFactory.getLogger(Truck.class);
     private final char[][] body;
 
     public Truck() {
@@ -26,12 +26,6 @@ public class Truck implements Transport {
 
     @Override
     public void loadCargo(Cargo cargo, int heightIndex, int widthIndex) {
-        try {
-            validCargo(cargo);
-        } catch (InvalidCargoSize e) {
-            log.warn("This cargo is too big for truck: {}", cargo);
-            return;
-        }
         int i = heightIndex;
         for (char[] boxLine : cargo.getForm()) {
             int j = widthIndex;
@@ -40,16 +34,6 @@ public class Truck implements Transport {
                 j++;
             }
             i--;
-        }
-    }
-
-    @Override
-    public void validCargo(Cargo cargo) {
-        if (cargo.getForm().length == 0)
-            return;
-        if (cargo.getHeight() > body.length ||
-                cargo.getWidth() > body[0].length) {
-            throw new InvalidCargoSize("This cargo is too big for truck: " + cargo);
         }
     }
 

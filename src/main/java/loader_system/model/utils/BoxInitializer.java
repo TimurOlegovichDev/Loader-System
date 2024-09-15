@@ -37,7 +37,7 @@ public class BoxInitializer {
         }
     }
 
-    private char[][] getForm(List<String> lines) {
+    char[][] getForm(List<String> lines) {
         log.trace("Converting lines to char array");
         char[][] form = new char[lines.size()][];
         int indexCharArray = 0;

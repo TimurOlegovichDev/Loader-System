@@ -9,8 +9,6 @@ public interface Transport {
 
     void loadCargo(Cargo cargo, int heightIndex, int widthIndex);
 
-    void validCargo(Cargo cargo);
-
     void initBody();
 
     char[][] getBody();

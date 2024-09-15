@@ -4,6 +4,7 @@ import loader_system.db.CargoData;
 import loader_system.db.TransportData;
 import loader_system.model.entites.cargos.Cargo;
 import loader_system.model.entites.transports.Transport;
+import loader_system.model.exceptions.InvalidCargoSize;
 import loader_system.model.exceptions.NoPlaceException;
 import lombok.extern.slf4j.Slf4j;
 
@@ -14,6 +15,9 @@ public abstract class Algorithm {
 
     protected void tryFindEmptySpaceAndLoad(Cargo cargo, Transport transport) throws NoPlaceException {
         log.trace("Trying to find empty space to load cargo: {}", cargo);
+        if(!canLoadCargo(cargo, transport)) {
+            throw new InvalidCargoSize("This cargo is too big for this transport: " + cargo);
+        }
         for (int i = transport.getBody().length - 1; i >= 0; i--) {
             for (int j = 0; j < transport.getBody()[i].length; j++) {
                 if (canInsertInTransport(i, j, cargo, transport)) {
@@ -23,8 +27,7 @@ public abstract class Algorithm {
                 }
             }
         }
-        log.error("No empty space found to load cargo: \n {}", cargo);
-        throw new NoPlaceException();
+        throw new NoPlaceException("No empty space found to load cargo: " + cargo);
     }
 
     private boolean canInsertInTransport(int indexBodyHeight, int indexBodyWidth, Cargo cargo, Transport transport) {
@@ -42,14 +45,19 @@ public abstract class Algorithm {
                         return false;
                     }
                 } catch (Exception e) {
-                    log.debug("Cannot insert cargo at ({}, {}), no empty space", i, j);
+                    log.trace("Cannot insert cargo at ({}, {}), no empty space", i, j);
                     return false;
                 }
                 j++;
             }
             i--;
         }
-        log.debug("Cargo can be inserted at ({}, {})", indexBodyHeight, indexBodyWidth);
+        log.trace("Cargo can be inserted at ({}, {})", indexBodyHeight, indexBodyWidth);
         return true;
     }
+
+    protected boolean canLoadCargo(Cargo cargo, Transport transport) {
+        return cargo.getWidth() <= transport.getBody()[0].length && cargo.getHeight() <= transport.getBody().length;
+    }
+
 }
