@@ -13,7 +13,7 @@ public abstract class Algorithm {
 
     public abstract void execute(CargoData cargoData, TransportData transportData);
 
-    protected void tryFindEmptySpaceAndLoad(Cargo cargo, Transport transport) throws NoPlaceException {
+    protected void findEmptySpaceAndLoad(Cargo cargo, Transport transport) throws NoPlaceException {
         log.trace("Trying to find empty space to load cargo: {}", cargo);
         if(!canLoadCargo(cargo, transport)) {
             throw new InvalidCargoSize("This cargo is too big for this transport: " + cargo);
@@ -57,7 +57,15 @@ public abstract class Algorithm {
     }
 
     protected boolean canLoadCargo(Cargo cargo, Transport transport) {
-        return cargo.getWidth() <= transport.getBody()[0].length && cargo.getHeight() <= transport.getBody().length;
+        return cargo.getWidth() <= transport.getBody()[0].length
+                &&
+                cargo.getHeight() <= transport.getBody().length;
+    }
+
+    protected void validateTransportData(TransportData transportData) {
+        if (transportData.getData().isEmpty()) {
+            throw new NoPlaceException("There is no truck to load");
+        }
     }
 
 }

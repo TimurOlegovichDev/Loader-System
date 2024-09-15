@@ -20,32 +20,23 @@ public class MinimumEmptySpace extends Algorithm {
         log.debug("Executing MinimumEmptySpace algorithm");
         List<Cargo> cargos = sortCargosByWeight(cargoData.getData());
         for (Cargo cargo : cargos) {
-            log.debug("Processing cargo: {}", cargo);
-            boolean loaded = false;
-            try {
-                for (Transport transport : transportData.getData()) {
-                   try {
-                       tryFindEmptySpaceAndLoad(cargo, transport);
-                       loaded = true;
-                       break;
-                   } catch (NoPlaceException e) {
-                       log.debug(e.getMessage());
-                   }
-                }
-            } catch (InvalidCargoSize e) {
-                log.warn(e.getMessage());
-                continue;
-            }
-            if (!loaded) {
-                throw new NoPlaceException("There is no more space for this cargo: " + cargo);
-            }
+            log.info("Processing cargo: {}", cargo);
+            findTransportAndLoadCargo(cargo, transportData);
         }
         log.debug("MinimumEmptySpace algorithm execution completed");
     }
 
-    private void validateTransportData(TransportData transportData) {
-        if (transportData.getData().isEmpty()) {
-            throw new NoPlaceException("There is no truck to load");
+    private void findTransportAndLoadCargo(Cargo cargo, TransportData transportData) {
+        for (Transport transport : transportData.getData()) {
+            try {
+                findEmptySpaceAndLoad(cargo, transport);
+                break;
+            } catch (NoPlaceException e) {
+                log.debug(e.getMessage());
+            } catch (InvalidCargoSize i){
+                log.debug(i.getMessage());
+                break;
+            }
         }
     }
 

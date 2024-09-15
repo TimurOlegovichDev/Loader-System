@@ -30,11 +30,11 @@ public class MainController {
     }
 
     public void start() throws IOException {
-        log.info("Starting application...");
         initComponents();
         startLoading();
-        log.info("\n{}", transportData);
-        log.info("System shut down");
+        if(!transportData.getData().isEmpty()){
+            log.info("\n{}", transportData);
+        }
     }
 
     private void initComponents() throws IOException {
@@ -46,9 +46,8 @@ public class MainController {
 
     private void initCargos() throws IOException {
         log.debug("Initializing cargos...");
-        BoxInitializer boxInitializer = new BoxInitializer();
         String filepath = userInputReceiver.getInputLine(printer, "Enter file path: ");
-        boxInitializer.initialize(
+        new BoxInitializer().initialize(
                 new InputFileReader().readFile(filepath),
                 cargoData
         );
@@ -71,8 +70,7 @@ public class MainController {
             algorithm.execute(cargoData, transportData);
             log.info("Loading process complete.");
         } catch (Exception e) {
-            log.error(e.getMessage());
-            log.info("Loading process interrupted.");
+            log.error("Loading process interrupted: {}", e.getMessage());
         }
     }
 

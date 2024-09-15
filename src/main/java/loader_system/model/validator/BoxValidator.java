@@ -14,35 +14,36 @@ public class BoxValidator {
 
     public void validate(List<String> lines) {
         log.debug("Validating box with lines: {}", lines);
-        checkLinesForNotNumbers(lines);
         boxFormValidate(lines);
         log.debug("Box is valid: {}", lines);
     }
 
-    private void checkLinesForNotNumbers(List<String> lines) throws InvalidCargoInput {
-        for (String line : lines) {
-            Matcher matcher = NUMBERS_PATTERN.matcher(line);
-            if (!matcher.matches()) {
-                throw new InvalidCargoInput("The box data invalid");
-            }
-        }
-    }
-
     private void boxFormValidate(List<String> lines) throws InvalidCargoInput {
+        if(linesContainsLetter(lines)){
+            throw new InvalidCargoInput("The box format is damaged");
+        }
         char symbol = lines.get(0).charAt(0);
-        int weight = (int) Math.pow(Integer.parseInt(symbol + ""), 2);
+        int correctWeight = (int) Math.pow(Integer.parseInt(symbol + ""), 2);
         for (String line : lines) {
             if (line.isEmpty())
                 continue;
             for (char c : line.toCharArray()) {
-                if (c != symbol) {
-                    throw new InvalidCargoInput("The box format is damaged");
-                }
-                weight -= Integer.parseInt(c + "");
+                correctWeight -= Integer.parseInt(c + "");
             }
         }
-        if (weight != 0) {
-            throw new InvalidCargoInput("The box weight is damaged");
+        if(correctWeight != 0){
+            throw new InvalidCargoInput("The weight of the box is different from the correct");
         }
     }
+
+    private boolean linesContainsLetter(List<String> lines) throws InvalidCargoInput {
+        for (String line : lines) {
+            Matcher matcher = NUMBERS_PATTERN.matcher(line);
+            if (!matcher.matches()) {
+                return true;
+            }
+        }
+        return false;
+    }
+
 }

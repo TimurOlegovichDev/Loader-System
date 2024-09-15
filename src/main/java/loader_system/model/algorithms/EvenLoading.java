@@ -4,7 +4,6 @@ import loader_system.db.CargoData;
 import loader_system.db.TransportData;
 import loader_system.model.entites.cargos.Cargo;
 import loader_system.model.entites.transports.Transport;
-import loader_system.model.exceptions.NoPlaceException;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.List;
@@ -15,31 +14,30 @@ public class EvenLoading extends Algorithm {
     @Override
     public void execute(CargoData cargoData, TransportData transportData) {
         log.debug("Executing EvenLoading algorithm");
+        validateTransportData(transportData);
         List<Cargo> cargos = cargoData.getData();
         cargos.sort((x, y) -> Integer.compare(y.getWeight(), x.getWeight()));
         for (Cargo cargo : cargos) {
+            log.info("Processing cargo: {}", cargo);
             try {
                 Transport transport = chooseTruckToLoad(transportData);
-                tryFindEmptySpaceAndLoad(cargo, transport);
+                findEmptySpaceAndLoad(cargo, transport);
                 transportData.addCargoInTransport(transport, cargo);
+                log.info("Load cargo completed: {}", cargo);
             } catch (Exception e) {
                 log.warn(e.getMessage());
             }
         }
-        log.debug("EvenLoading algorithm finished successfully");
+        log.debug("EvenLoading algorithm finished");
     }
 
     private Transport chooseTruckToLoad(TransportData transportData) {
-        if (transportData.getData().isEmpty()) {
-            throw new NoPlaceException("There is no truck to load");
-        }
         List<Transport> transports = transportData.getData();
         Transport truck = transports.get(0);
         for (int i = 1; i < transports.size(); i++) {
-            if (transportData.getCargoWeightInTransport(transports.get(i))
-                    <
-                    transportData.getCargoWeightInTransport(truck)
-            ) {
+            int anotherWeight= transportData.getCargoWeightInTransport(transports.get(i));
+            int currentWeight = transportData.getCargoWeightInTransport(truck);
+            if (anotherWeight < currentWeight) {
                 truck = transportData.getData().get(i);
             }
         }

@@ -19,13 +19,15 @@ public class BoxInitializer {
         CargoFactory cargoFactory = new BoxFactory();
         int start = 0;
         while (start < forms.size()) {
+            log.debug("Initializing box: {}", forms);
             int end = start;
             while (end < forms.size() && !forms.get(end).isEmpty())
                 end++;
             List<String> sublist = forms.subList(start, end);
             start = end + 1;
-            if (sublist.isEmpty())
+            if (sublist.isEmpty()){
                 continue;
+            }
             try {
                 validator.validate(sublist);
                 Collections.reverse(sublist); // to solve the problem of overturned loads

@@ -4,7 +4,9 @@ import loader_system.model.algorithms.Algorithm;
 import loader_system.model.algorithms.MinimumEmptySpace;
 import loader_system.model.algorithms.EvenLoading;
 import loader_system.model.enums.AlgorithmTypes;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 public class AlgorithmFactory{
 
     public Algorithm getAlgorithm(String algorithmName){
@@ -14,7 +16,7 @@ public class AlgorithmFactory{
                 case EL -> new EvenLoading();
             };
         } catch (IllegalArgumentException e) {
-            System.out.println("Invalid algorithm name, defaulting to MES");
+            log.error("Invalid algorithm name, defaulting to MES");
         }
         return new MinimumEmptySpace();
     }

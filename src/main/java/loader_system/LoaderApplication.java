@@ -19,5 +19,6 @@ public class LoaderApplication {
         } catch (IOException e) {
             logger.error(e.getMessage());
         }
+        logger.info("System shut down");
     }
 }
