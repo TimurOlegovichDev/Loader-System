@@ -1,6 +1,9 @@
 package loader_system.model.entites.transports;
 
+import loader_system.db.TransportData;
 import loader_system.model.entites.cargos.Cargo;
+
+import java.util.List;
 
 public interface Transport {
 

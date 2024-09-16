@@ -30,6 +30,8 @@ public class MinimumEmptySpace extends Algorithm {
         for (Transport transport : transportData.getData()) {
             try {
                 findEmptySpaceAndLoad(cargo, transport);
+                transportData.addCargoInTransport(transport, cargo);
+                log.info("Load cargo completed: {}", cargo);
                 break;
             } catch (NoPlaceException e) {
                 log.debug(e.getMessage());

@@ -3,7 +3,7 @@ package loader_system.model.utils;
 import loader_system.db.CargoData;
 import loader_system.model.entites.cargos.Cargo;
 import loader_system.model.factories.cargo.BoxFactory;
-import loader_system.model.validator.BoxValidator;
+import loader_system.model.utils.initializers.BoxInitializer;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;

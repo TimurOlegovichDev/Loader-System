@@ -1,12 +1,17 @@
 package loader_system.model.entites.cargos;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.util.Arrays;
 
 public class Box implements Cargo{
 
     private final char[][] form;
 
-    public Box(char[][] form) {
+    @JsonCreator
+    public Box(@JsonProperty("form") char[][] form) {
         this.form = form;
     }
 
@@ -16,6 +21,7 @@ public class Box implements Cargo{
     }
 
     @Override
+    @JsonIgnore
     public int getWidth() {
         return Arrays.stream(form)
                 .mapToInt(arr -> arr.length)
@@ -24,11 +30,13 @@ public class Box implements Cargo{
     }
 
     @Override
+    @JsonIgnore
     public int getHeight() {
         return form.length;
     }
 
     @Override
+    @JsonIgnore
     public int getWeight(){
         return (int) Math.pow(form[0][0], 2);
     }

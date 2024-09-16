@@ -1,4 +1,4 @@
-package loader_system.model.utils;
+package loader_system.model.utils.initializers;
 
 import loader_system.db.TransportData;
 import loader_system.model.entites.transports.Truck;

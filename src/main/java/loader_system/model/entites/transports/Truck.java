@@ -1,11 +1,13 @@
 package loader_system.model.entites.transports;
 
+import com.fasterxml.jackson.annotation.JsonGetter;
+import com.fasterxml.jackson.annotation.JsonSetter;
+import loader_system.db.TransportData;
 import loader_system.model.entites.cargos.Cargo;
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.Arrays;
+import java.util.List;
 
 @Slf4j
 public class Truck implements Transport {
@@ -15,6 +17,10 @@ public class Truck implements Transport {
     public Truck() {
         body = new char[DEFAULT_BODY_HEIGHT][DEFAULT_BODY_WIDTH];
         initBody();
+    }
+
+    public Truck(char[][] body) {
+        this.body = body;
     }
 
     @Override

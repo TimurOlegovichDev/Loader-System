@@ -1,4 +1,4 @@
-package loader_system.model.utils;
+package loader_system.model.utils.initializers;
 
 import loader_system.db.CargoData;
 import loader_system.model.factories.cargo.BoxFactory;
@@ -6,7 +6,6 @@ import loader_system.model.factories.cargo.CargoFactory;
 import loader_system.model.validator.BoxValidator;
 import lombok.extern.slf4j.Slf4j;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -39,7 +38,7 @@ public class BoxInitializer {
         }
     }
 
-    char[][] getForm(List<String> lines) {
+    public char[][] getForm(List<String> lines) {
         log.trace("Converting lines to char array");
         char[][] form = new char[lines.size()][];
         int indexCharArray = 0;

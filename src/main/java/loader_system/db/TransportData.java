@@ -1,5 +1,6 @@
 package loader_system.db;
 
+import loader_system.model.entites.cargos.Box;
 import loader_system.model.entites.cargos.Cargo;
 import loader_system.model.entites.transports.Transport;
 
@@ -15,6 +16,20 @@ public class TransportData implements Datable {
     @Override
     public List<Transport> getData() {
         return new ArrayList<>(transportMap.keySet());
+    }
+
+    public List<Cargo> getCargos(Transport transport) {
+        return transportMap.get(transport);
+    }
+
+    public List<Box> getBoxes(Transport transport) {
+        List<Box> boxes = new ArrayList<>();
+        for (Cargo cargo : getCargos(transport)) {
+            if(cargo instanceof Box) {
+                boxes.add((Box) cargo);
+            }
+        }
+        return boxes;
     }
 
     @Override
