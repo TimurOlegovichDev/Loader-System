@@ -1,14 +1,53 @@
 package loader.entites.cargos;
 
-public interface Cargo {
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.Getter;
 
-    char[][] getForm();
+import java.util.Arrays;
 
-    int getWidth();
+public class Cargo {
 
-    int getHeight();
+    private final char[][] form;
 
-    int getWeight();
+    @Getter
+    private final char symbol;
 
-    char getSymbol();
+    @JsonCreator
+    public Cargo(@JsonProperty("form") char[][] form) {
+        this.form = form;
+        this.symbol = form[0][0];
+    }
+
+    public char[][] getForm() {
+        return Arrays.copyOf(form, form.length);
+    }
+
+    @JsonIgnore
+    public int getWidth() {
+        return Arrays.stream(form)
+                .mapToInt(arr -> arr.length)
+                .max()
+                .orElse(0);
+    }
+
+    @JsonIgnore
+    public int getHeight() {
+        return form.length;
+    }
+
+    @JsonIgnore
+    public int getWeight(){
+        return (int) Math.pow(form[0][0], 2);
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        for(char[] arr : form){
+            sb.append(Arrays.toString(arr));
+        }
+        return sb.toString();
+    }
 }

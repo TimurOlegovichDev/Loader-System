@@ -8,7 +8,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 @Slf4j
-public class BoxValidator {
+public class CargoValidator {
 
     public static final Pattern NUMBERS_PATTERN = Pattern.compile("[0-9]+");
 

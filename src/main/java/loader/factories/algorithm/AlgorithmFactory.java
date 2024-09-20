@@ -1,6 +1,6 @@
 package loader.factories.algorithm;
 
-import loader.algorithms.Algorithm;
+import loader.algorithms.LoadingCargoAlgorithm;
 import loader.algorithms.MinimumEmptySpace;
 import loader.enums.AlgorithmTypes;
 import lombok.extern.slf4j.Slf4j;
@@ -8,7 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class AlgorithmFactory{
 
-    public Algorithm getAlgorithm(String algorithmName){
+    public LoadingCargoAlgorithm getAlgorithm(String algorithmName){
         try {
             return AlgorithmTypes.valueOf(AlgorithmTypes.class, algorithmName.toUpperCase()).getAlgorithm();
         } catch (IllegalArgumentException e) {

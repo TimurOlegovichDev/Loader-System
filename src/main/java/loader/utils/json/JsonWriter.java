@@ -10,7 +10,11 @@ import java.io.IOException;
 @Slf4j
 public class JsonWriter {
 
-    private final ObjectMapper mapper = new ObjectMapper();
+    private final ObjectMapper mapper;
+
+    public JsonWriter(ObjectMapper mapper){
+        this.mapper = mapper;
+    }
 
     protected void writeObject(Object object, String fileName) throws IOException {
         log.debug("Writing object to filepath: {}", fileName);

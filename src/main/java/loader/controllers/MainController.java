@@ -1,14 +1,12 @@
 package loader.controllers;
-
-import loader.algorithms.Algorithm;
+import loader.algorithms.LoadingCargoAlgorithm;
 import loader.db.CargoData;
 import loader.db.TransportData;
-import loader.entites.cargos.Cargo;
 import loader.dto.TruckDto;
+import loader.entites.cargos.Cargo;
 import loader.entites.transports.Transport;
 import loader.factories.algorithm.AlgorithmFactory;
 import loader.utils.CargoCounter;
-import loader.utils.initializers.cargo.BoxInitializer;
 import loader.utils.initializers.cargo.CargoInitializer;
 import loader.utils.initializers.transport.TransportInitializer;
 import loader.utils.initializers.transport.TruckInitializer;
@@ -17,7 +15,6 @@ import loader.input.InputFileReader;
 import loader.input.UserInputReceiver;
 import loader.output.Printer;
 import lombok.extern.log4j.Log4j2;
-import lombok.extern.slf4j.Slf4j;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -36,7 +33,7 @@ public class MainController {
 
     private final InputFileReader inputFileReader = new InputFileReader();
 
-    private final CargoInitializer boxInitializer = new BoxInitializer();
+    private final CargoInitializer boxInitializer = new CargoInitializer();
     private final TransportInitializer truckInitializer = new TruckInitializer();
 
     private final CargoCounter cargoCounter = new CargoCounter();
@@ -67,7 +64,7 @@ public class MainController {
     private void initCargos() throws IOException {
         log.debug("Initializing cargos...");
         String filepath = userInputReceiver.getInputLine(printer, "Enter file path: ");
-        List<Cargo> cargos = boxInitializer.initializeToList(
+        List<Cargo> cargos = boxInitializer.initializeCargoToList(
                 inputFileReader.readFile(filepath)
         );
         cargos.forEach(cargoData::add);
@@ -102,7 +99,7 @@ public class MainController {
 
     private void startLoading() {
         log.info("Starting loading process...");
-        Algorithm algorithm = chooseAndCreateAlgo();
+        LoadingCargoAlgorithm algorithm = chooseAndCreateAlgo();
         try {
             algorithm.execute(cargoData, transportData);
             log.info("Loading process complete.");
@@ -111,7 +108,7 @@ public class MainController {
         }
     }
 
-    private Algorithm chooseAndCreateAlgo() {
+    private LoadingCargoAlgorithm chooseAndCreateAlgo() {
         log.debug("Choosing algorithm...");
         String algorithmName = userInputReceiver
                 .getInputLine(
@@ -126,7 +123,7 @@ public class MainController {
         String path = userInputReceiver.getInputLine(printer, "Enter file path to save data: ");
         List<TruckDto> truckDtos = new ArrayList<>();
         for(Transport transport : transportData.getData()){
-            truckDtos.add(new TruckDto(transport.getBody(), transportData.getBoxes(transport)));
+            truckDtos.add(new TruckDto(transport.getBody(), transportData.getCargos(transport)));
         }
         jsonService.writeObject(truckDtos, path);
     }

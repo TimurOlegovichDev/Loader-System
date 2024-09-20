@@ -9,7 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 import java.util.List;
 
 @Slf4j
-public class EvenLoading extends Algorithm {
+public class EvenLoading extends LoadingCargoAlgorithm {
 
     @Override
     public void execute(CargoData cargoData, TransportData transportData) {
@@ -20,11 +20,12 @@ public class EvenLoading extends Algorithm {
             log.info("Processing cargo: {}", cargo);
             try {
                 Transport transport = chooseTruckToLoad(transportData);
-                findEmptySpaceAndLoad(cargo, transport);
+                tryLoadToTransport(cargo, transport);
                 transportData.addCargoInTransport(transport, cargo);
                 log.info("Load cargo completed: {}", cargo);
             } catch (Exception e) {
                 log.warn(e.getMessage());
+                return;
             }
         }
         log.debug("EvenLoading algorithm finished");

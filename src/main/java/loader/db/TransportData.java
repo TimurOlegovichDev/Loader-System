@@ -1,6 +1,5 @@
 package loader.db;
 
-import loader.entites.cargos.Box;
 import loader.entites.cargos.Cargo;
 import loader.entites.transports.Transport;
 
@@ -21,18 +20,8 @@ public class TransportData {
         return transportMap.get(transport);
     }
 
-    public List<Box> getBoxes(Transport transport) {
-        List<Box> boxes = new ArrayList<>();
-        for (Cargo cargo : getCargos(transport)) {
-            if(cargo instanceof Box) {
-                boxes.add((Box) cargo);
-            }
-        }
-        return boxes;
-    }
-
-    public void add(Object o) {
-        transportMap.put((Transport) o, new ArrayList<>());
+    public void add(Transport transport) {
+        transportMap.put(transport, new ArrayList<>());
     }
 
     public void add(Map<Transport, List<Cargo>> map) {
@@ -51,8 +40,8 @@ public class TransportData {
         return weight;
     }
 
-    public void remove(Object o) {
-        transportMap.remove((Transport) o);
+    public void remove(Transport transport) {
+        transportMap.remove(transport);
     }
 
     @Override

@@ -1,6 +1,8 @@
 package loader.db;
 
+
 import loader.entites.cargos.Cargo;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -8,25 +10,22 @@ public class CargoData {
 
     private final List<Cargo> cargoData = new ArrayList<>();
 
-
     public List<Cargo> getData() {
         return new ArrayList<>(cargoData);
     }
 
-
-    public void add(Object o) {
-        cargoData.add((Cargo) o);
+    public void add(Cargo cargo) {
+        cargoData.add(cargo);
     }
 
-
-    public void remove(Object o) {
-        cargoData.remove((Cargo) o);
+    public void remove(Cargo cargo) {
+        cargoData.remove(cargo);
     }
 
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
-        for(Cargo cargo : cargoData)
+        for (Cargo cargo : cargoData)
             sb.append(cargo.toString()).append("\n");
         return sb.toString();
     }

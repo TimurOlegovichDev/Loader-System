@@ -25,7 +25,7 @@ public class TruckInitializer implements TransportInitializer {
 
     @Override
     public Map<Transport, List<Cargo>> initializeToMapWithCargoFromFile(String filepath) {
-        List<TruckDto> truckDtos = new JsonService().readToList(TruckDto.class, filepath);
+        List<TruckDto> truckDtos = new JsonService().read(TruckDto.class, filepath);
         Map<Transport, List<Cargo>> map = new HashMap<>();
         for (TruckDto truckDto : truckDtos) {
             map.put(

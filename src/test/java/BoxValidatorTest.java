@@ -1,6 +1,6 @@
 
 import loader.exceptions.InvalidCargoInput;
-import loader.validator.BoxValidator;
+import loader.validator.CargoValidator;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -15,11 +15,11 @@ import static org.junit.Assert.assertThrows;
 @RunWith(MockitoJUnitRunner.class)
 public class BoxValidatorTest {
 
-    private BoxValidator boxValidator;
+    private CargoValidator boxValidator;
 
     @Before
     public void setup() {
-        boxValidator = new BoxValidator();
+        boxValidator = new CargoValidator();
     }
 
     @Test

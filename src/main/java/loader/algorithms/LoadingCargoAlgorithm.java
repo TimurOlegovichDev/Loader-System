@@ -12,11 +12,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
-public abstract class Algorithm {
+public abstract class LoadingCargoAlgorithm {
 
     public abstract void execute(CargoData cargoData, TransportData transportData);
 
-    protected void findEmptySpaceAndLoad(Cargo cargo, Transport transport) throws NoPlaceException {
+    protected void tryLoadToTransport(Cargo cargo, Transport transport) throws NoPlaceException {
         log.trace("Trying to find empty space to load cargo: {}", cargo);
         if(!canLoadCargo(cargo, transport)) {
             throw new InvalidCargoSize("This cargo is too big for this transport: " + cargo);

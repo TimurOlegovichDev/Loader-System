@@ -10,9 +10,13 @@ import java.util.List;
 @Slf4j
 public class JsonReader {
 
-    private final ObjectMapper mapper = new ObjectMapper();
+    private final ObjectMapper mapper;
 
-    protected <T> List<T> readObjectAndGetList(Class<T> clazz, String fileName) throws IOException {
+    public JsonReader(ObjectMapper mapper){
+        this.mapper = mapper;
+    }
+
+    protected <T> List<T> readObject(Class<T> clazz, String fileName) throws IOException {
         log.debug("Reading json file {}", fileName);
         File file = new File(fileName);
         List<T> list = mapper.readValue(file, mapper.getTypeFactory().constructCollectionType(List.class, clazz));

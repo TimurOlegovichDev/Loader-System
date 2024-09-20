@@ -1,6 +1,6 @@
 package loader.dto;
 
-import loader.entites.cargos.Box;
+import loader.entites.cargos.Cargo;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -14,5 +14,5 @@ import java.util.List;
 @NoArgsConstructor
 public class TruckDto {
     private char[][] body;
-    private List<Box> cargos;
+    private List<Cargo> cargos;
 }

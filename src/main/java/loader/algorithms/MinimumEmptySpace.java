@@ -11,7 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 import java.util.List;
 
 @Slf4j
-public class MinimumEmptySpace extends Algorithm {
+public class MinimumEmptySpace extends LoadingCargoAlgorithm {
 
     @Override
     public void execute(CargoData cargoData, TransportData transportData) {
@@ -20,24 +20,25 @@ public class MinimumEmptySpace extends Algorithm {
         List<Cargo> cargos = sortCargosByWeight(cargoData.getData());
         for (Cargo cargo : cargos) {
             log.info("Processing cargo: {}", cargo);
-            findTransportAndLoadCargo(cargo, transportData);
+            tryLoadCargo(cargo, transportData);
         }
         log.debug("MinimumEmptySpace algorithm execution completed");
     }
 
-    private void findTransportAndLoadCargo(Cargo cargo, TransportData transportData) {
+    private void tryLoadCargo(Cargo cargo, TransportData transportData) {
         for (Transport transport : transportData.getData()) {
             try {
-                findEmptySpaceAndLoad(cargo, transport);
+                tryLoadToTransport(cargo, transport);
                 transportData.addCargoInTransport(transport, cargo);
                 log.info("Load cargo completed: {}", cargo);
-                break;
+                return;
             } catch (NoPlaceException e) {
                 log.debug(e.getMessage());
             } catch (InvalidCargoSize i){
                 log.debug(i.getMessage());
-                break;
+                return;
             }
         }
+        throw new NoPlaceException("Cant find transport to load this cargo: " + cargo);
     }
 }
