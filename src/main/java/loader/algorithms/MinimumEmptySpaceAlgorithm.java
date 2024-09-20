@@ -2,8 +2,8 @@ package loader.algorithms;
 
 import loader.db.CargoData;
 import loader.db.TransportData;
-import loader.entites.cargos.Cargo;
-import loader.entites.transports.Transport;
+import loader.model.entites.cargos.Cargo;
+import loader.model.entites.transports.Transport;
 import loader.exceptions.InvalidCargoSize;
 import loader.exceptions.NoPlaceException;
 import lombok.extern.slf4j.Slf4j;
@@ -11,7 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 import java.util.List;
 
 @Slf4j
-public class MinimumEmptySpace extends LoadingCargoAlgorithm {
+public class MinimumEmptySpaceAlgorithm extends LoadingCargoAlgorithm {
 
     @Override
     public void execute(CargoData cargoData, TransportData transportData) {

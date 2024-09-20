@@ -1,15 +1,15 @@
-package loader.enums;
+package loader.model.enums;
 
-import loader.algorithms.EvenLoading;
+import loader.algorithms.EvenLoadingAlgorithm;
 import loader.algorithms.LoadingCargoAlgorithm;
-import loader.algorithms.MinimumEmptySpace;
+import loader.algorithms.MinimumEmptySpaceAlgorithm;
 import lombok.Getter;
 
 @Getter
 public enum AlgorithmTypes {
 
-    MES(new MinimumEmptySpace()),
-    EL(new EvenLoading());
+    MES(new MinimumEmptySpaceAlgorithm()),
+    EL(new EvenLoadingAlgorithm());
 
     private final LoadingCargoAlgorithm algorithm;
 

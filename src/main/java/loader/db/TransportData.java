@@ -1,7 +1,7 @@
 package loader.db;
 
-import loader.entites.cargos.Cargo;
-import loader.entites.transports.Transport;
+import loader.model.entites.cargos.Cargo;
+import loader.model.entites.transports.Transport;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -22,6 +22,10 @@ public class TransportData {
 
     public void add(Transport transport) {
         transportMap.put(transport, new ArrayList<>());
+    }
+
+    public void add(List<Transport> transports) {
+        transports.forEach(this::add);
     }
 
     public void add(Map<Transport, List<Cargo>> map) {

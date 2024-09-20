@@ -1,6 +1,6 @@
-package loader.dto;
+package loader.model.dto;
 
-import loader.entites.cargos.Cargo;
+import loader.model.entites.cargos.Cargo;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

@@ -2,14 +2,16 @@ package loader.algorithms;
 
 import loader.db.CargoData;
 import loader.db.TransportData;
-import loader.entites.cargos.Cargo;
-import loader.entites.transports.Transport;
+import loader.exceptions.InvalidCargoSize;
+import loader.exceptions.NoPlaceException;
+import loader.model.entites.cargos.Cargo;
+import loader.model.entites.transports.Transport;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.List;
 
 @Slf4j
-public class EvenLoading extends LoadingCargoAlgorithm {
+public class EvenLoadingAlgorithm extends LoadingCargoAlgorithm {
 
     @Override
     public void execute(CargoData cargoData, TransportData transportData) {
@@ -19,19 +21,18 @@ public class EvenLoading extends LoadingCargoAlgorithm {
         for (Cargo cargo : cargos) {
             log.info("Processing cargo: {}", cargo);
             try {
-                Transport transport = chooseTruckToLoad(transportData);
+                Transport transport = findMostFreeTransport(transportData);
                 tryLoadToTransport(cargo, transport);
                 transportData.addCargoInTransport(transport, cargo);
                 log.info("Load cargo completed: {}", cargo);
-            } catch (Exception e) {
+            } catch (InvalidCargoSize e) {
                 log.warn(e.getMessage());
-                return;
             }
         }
         log.debug("EvenLoading algorithm finished");
     }
 
-    private Transport chooseTruckToLoad(TransportData transportData) {
+    private Transport findMostFreeTransport(TransportData transportData) {
         List<Transport> transports = transportData.getData();
         Transport truck = transports.get(0);
         for (int i = 1; i < transports.size(); i++) {

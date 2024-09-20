@@ -1,6 +1,6 @@
 package loader.utils;
 
-import loader.entites.cargos.Cargo;
+import loader.model.entites.cargos.Cargo;
 
 import java.util.HashMap;
 import java.util.List;

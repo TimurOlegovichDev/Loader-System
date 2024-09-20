@@ -1,13 +1,13 @@
+import loader.algorithms.EvenLoadingAlgorithm;
 import loader.algorithms.LoadingCargoAlgorithm;
 import loader.db.CargoData;
 import loader.db.TransportData;
-import loader.algorithms.EvenLoading;
-import loader.dto.TruckDto;
-import loader.entites.cargos.Cargo;
-import loader.entites.transports.Transport;
+import loader.model.dto.TruckDto;
+import loader.model.entites.cargos.Cargo;
+import loader.model.entites.transports.Transport;
 import loader.factories.cargo.CargoFactory;
 import loader.factories.transport.TruckFactory;
-import loader.utils.json.JsonService;
+import loader.input.json.JsonService;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -19,7 +19,7 @@ public class JsonServiceTest {
 
     private final CargoData cargoData = new CargoData();
     private final TransportData transportData = new TransportData();
-    private final LoadingCargoAlgorithm algorithm = new EvenLoading();
+    private final LoadingCargoAlgorithm algorithm = new EvenLoadingAlgorithm();
     private final JsonService jsonService = new JsonService();
 
     private final String TEST_FILE_PATH = "D:\\WorkSpaces\\Java\\LoaderSystem\\src\\test\\resources\\jsons\\truck.json";

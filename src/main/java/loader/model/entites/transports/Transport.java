@@ -1,6 +1,6 @@
-package loader.entites.transports;
+package loader.model.entites.transports;
 
-import loader.entites.cargos.Cargo;
+import loader.model.entites.cargos.Cargo;
 
 public interface Transport {
 

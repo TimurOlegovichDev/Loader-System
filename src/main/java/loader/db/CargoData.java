@@ -1,7 +1,7 @@
 package loader.db;
 
 
-import loader.entites.cargos.Cargo;
+import loader.model.entites.cargos.Cargo;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,6 +16,10 @@ public class CargoData {
 
     public void add(Cargo cargo) {
         cargoData.add(cargo);
+    }
+
+    public void add(List<Cargo> cargos) {
+        cargoData.addAll(cargos);
     }
 
     public void remove(Cargo cargo) {

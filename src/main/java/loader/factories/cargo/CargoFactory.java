@@ -1,6 +1,6 @@
 package loader.factories.cargo;
 
-import loader.entites.cargos.Cargo;
+import loader.model.entites.cargos.Cargo;
 
 public class CargoFactory {
 

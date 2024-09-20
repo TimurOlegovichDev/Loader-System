@@ -1,6 +1,6 @@
 package loader.utils.initializers.cargo;
 
-import loader.entites.cargos.Cargo;
+import loader.model.entites.cargos.Cargo;
 import loader.factories.cargo.CargoFactory;
 import loader.validator.CargoValidator;
 import lombok.extern.slf4j.Slf4j;
@@ -20,9 +20,8 @@ public class CargoInitializer {
         this.cargoFactory = new CargoFactory();
     }
 
-    public List<Cargo> initializeCargoToList(List<String> forms) {
+    public List<Cargo> initialize(List<String> forms) {
         log.debug("Initializing boxes from lines");
-
         List<Cargo> initialBoxes = new ArrayList<>();
         int start = 0;
         while (start < forms.size()) {

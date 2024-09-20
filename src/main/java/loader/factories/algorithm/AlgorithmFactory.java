@@ -1,8 +1,8 @@
 package loader.factories.algorithm;
 
 import loader.algorithms.LoadingCargoAlgorithm;
-import loader.algorithms.MinimumEmptySpace;
-import loader.enums.AlgorithmTypes;
+import loader.algorithms.MinimumEmptySpaceAlgorithm;
+import loader.model.enums.AlgorithmTypes;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -14,7 +14,7 @@ public class AlgorithmFactory{
         } catch (IllegalArgumentException e) {
             log.error("Invalid algorithm name, defaulting to MES");
         }
-        return new MinimumEmptySpace();
+        return new MinimumEmptySpaceAlgorithm();
     }
 
 }

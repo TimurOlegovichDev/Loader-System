@@ -1,7 +1,7 @@
 package loader.factories.transport;
 
-import loader.entites.transports.Transport;
-import loader.entites.transports.Truck;
+import loader.model.entites.transports.Transport;
+import loader.model.entites.transports.Truck;
 
 public class TruckFactory implements TransportFactory {
 
