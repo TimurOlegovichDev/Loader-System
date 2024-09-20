@@ -9,6 +9,7 @@ import loader.exceptions.NoPlaceException;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 @Slf4j
@@ -25,7 +26,7 @@ public abstract class LoadingCargoAlgorithm {
             for (int j = 0; j < transport.getBody()[i].length; j++) {
                 if (canInsertInTransport(i, j, cargo, transport)) {
                     log.trace("Found empty space to load cargo: {}", cargo);
-                    transport.loadCargo(cargo, i, j);
+                    loadCargo(cargo, transport, i, j);
                     return;
                 }
             }
@@ -33,40 +34,42 @@ public abstract class LoadingCargoAlgorithm {
         throw new NoPlaceException("No empty space found to load cargo: " + cargo);
     }
 
-    private boolean canInsertInTransport(int indexBodyHeight, int indexBodyWidth, Cargo cargo, Transport transport) {
-        log.trace("Checking if cargo can be inserted at ({}, {})", indexBodyHeight, indexBodyWidth);
+    private boolean canInsertInTransport(int heightIndex, int widthIndex, Cargo cargo, Transport transport) {
+        log.trace("Checking if cargo can be inserted at ({}, {})", heightIndex, widthIndex);
         char[][] cpBody = transport.getBody();
-        int i = indexBodyHeight;
+        int height = heightIndex;
+        int width = widthIndex;
+        log.debug(cargo.toString());
         for (char[] boxLine : cargo.getForm()) {
-            int j = indexBodyWidth;
+            width = 0;
             for (Character character : boxLine) {
                 try {
-                    if (cpBody[i][j] == ' ') {
-                        cpBody[i][j] = character;
+                    if (cpBody[height][width] == ' ') {
+                        cpBody[height][width] = character;
+                        log.trace("Inserted part of cargo at: {} {}", height, width);
                     } else {
-                        log.trace("Cannot insert cargo at ({}, {}), space is occupied", i, j);
+                        log.trace("Cannot insert cargo at ({}, {}), space is occupied", height, width);
                         return false;
                     }
                 } catch (Exception e) {
-                    log.trace("Cannot insert cargo at ({}, {}), no empty space", i, j);
+                    log.trace("Cannot insert cargo at ({}, {}), no empty space", height, width);
                     return false;
                 }
-                j++;
+                width++;
             }
-            i--;
+            height--;
         }
-        log.trace("Cargo can be inserted at ({}, {})", indexBodyHeight, indexBodyWidth);
+        log.trace("Cargo can be inserted at ({}, {})", heightIndex, widthIndex);
         return true;
     }
 
     protected boolean canLoadCargo(Cargo cargo, Transport transport) {
-        return cargo.getWidth() <= transport.getBody()[0].length
-                &&
-                cargo.getHeight() <= transport.getBody().length;
+        return cargo.getWidth() <= transport.getBody().length
+                && cargo.getHeight() <= transport.getBody()[0].length;
     }
 
     protected void validateTransportData(TransportData transportData) {
-        if (transportData.getData().isEmpty()) {
+        if (transportData == null || transportData.getData().isEmpty()) {
             throw new NoPlaceException("There is no truck to load");
         }
     }
@@ -75,6 +78,18 @@ public abstract class LoadingCargoAlgorithm {
         List<Cargo> sortedCargos = new ArrayList<>(cargos);
         sortedCargos.sort((x, y) -> Integer.compare(y.getWeight(), x.getWeight()));
         return sortedCargos;
+    }
+
+    private void loadCargo(Cargo cargo, Transport transport, int heightIndex, int widthIndex) {
+        int i = heightIndex;
+        for (char[] boxLine : cargo.getForm()) {
+            int j = widthIndex;
+            for (Character character : boxLine) {
+                transport.getBody()[i][j] = character;
+                j++;
+            }
+            i--;
+        }
     }
 
 }

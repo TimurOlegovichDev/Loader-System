@@ -7,7 +7,7 @@ import loader.model.entites.cargos.Cargo;
 import loader.model.entites.transports.Transport;
 import loader.factories.cargo.CargoFactory;
 import loader.factories.transport.TruckFactory;
-import loader.input.json.JsonService;
+import loader.utils.json.JsonService;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;

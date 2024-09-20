@@ -9,6 +9,7 @@ import loader.model.entites.transports.Transport;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.List;
+import java.util.Optional;
 
 @Slf4j
 public class EvenLoadingAlgorithm extends LoadingCargoAlgorithm {
@@ -21,9 +22,16 @@ public class EvenLoadingAlgorithm extends LoadingCargoAlgorithm {
         for (Cargo cargo : cargos) {
             log.info("Processing cargo: {}", cargo);
             try {
-                Transport transport = findMostFreeTransport(transportData);
-                tryLoadToTransport(cargo, transport);
-                transportData.addCargoInTransport(transport, cargo);
+                Optional<Transport> optional = findMostFreeTransport(transportData);
+                optional.ifPresentOrElse(
+                        transport -> {
+                            tryLoadToTransport(cargo, transport);
+                            transportData.addCargoInTransport(transport, cargo);
+                        },
+                        () -> {
+                            throw new NoPlaceException("No place found for cargo: " + cargo);
+                        }
+                );
                 log.info("Load cargo completed: {}", cargo);
             } catch (InvalidCargoSize e) {
                 log.warn(e.getMessage());
@@ -32,17 +40,18 @@ public class EvenLoadingAlgorithm extends LoadingCargoAlgorithm {
         log.debug("EvenLoading algorithm finished");
     }
 
-    private Transport findMostFreeTransport(TransportData transportData) {
+    private Optional<Transport> findMostFreeTransport(TransportData transportData) {
         List<Transport> transports = transportData.getData();
-        Transport truck = transports.get(0);
-        for (int i = 1; i < transports.size(); i++) {
+        Transport truck = null;
+        for (int i = 0; i < transports.size(); i++) {
             int anotherWeight = transportData.getCargoWeightInTransport(transports.get(i));
             int currentWeight = transportData.getCargoWeightInTransport(truck);
-            if (anotherWeight < currentWeight) {
+            log.debug(anotherWeight + " - " + currentWeight);
+            if (truck == null || anotherWeight <= currentWeight) {
                 truck = transportData.getData().get(i);
             }
         }
-        return truck;
+        return Optional.ofNullable(truck);
     }
 
 }

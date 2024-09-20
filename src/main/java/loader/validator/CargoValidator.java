@@ -11,6 +11,8 @@ import java.util.regex.Pattern;
 public class CargoValidator {
 
     public static final Pattern NUMBERS_PATTERN = Pattern.compile("[0-9]+");
+    private final int FIRST_ROW_INDEX = 0;
+    private final int FIRST_COLUMN_INDEX = 0;
 
     public void validate(List<String> lines) {
         log.debug("Validating box with lines: {}", lines);
@@ -22,13 +24,13 @@ public class CargoValidator {
         if(linesContainsLetter(lines)){
             throw new InvalidCargoInput("The box format is damaged");
         }
-        char symbol = lines.get(0).charAt(0);
+        char symbol = lines.get(FIRST_ROW_INDEX).charAt(FIRST_COLUMN_INDEX);
         int correctWeight = (int) Math.pow(Integer.parseInt(symbol + ""), 2);
         for (String line : lines) {
             if (line.isEmpty())
                 continue;
             for (char c : line.toCharArray()) {
-                correctWeight -= Integer.parseInt(c + "");
+                correctWeight -= Character.getNumericValue(c);
             }
         }
         if(correctWeight != 0){

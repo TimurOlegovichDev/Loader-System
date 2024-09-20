@@ -3,8 +3,8 @@ package loader.controllers;
 import loader.model.entites.cargos.Cargo;
 import loader.model.entites.transports.Transport;
 import loader.utils.CargoCounter;
-import loader.utils.initializers.cargo.CargoInitializer;
-import loader.utils.initializers.transport.TruckInitializer;
+import loader.utils.initializers.CargoInitializer;
+import loader.utils.initializers.TruckInitializer;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.List;

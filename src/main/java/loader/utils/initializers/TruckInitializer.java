@@ -1,13 +1,11 @@
-package loader.utils.initializers.transport;
+package loader.utils.initializers;
 
 import loader.model.entites.cargos.Cargo;
 import loader.model.entites.transports.Transport;
 import loader.model.entites.transports.Truck;
 import loader.factories.transport.TruckFactory;
 import loader.model.dto.TruckDto;
-import loader.input.json.JsonService;
-import loader.utils.CargoCounter;
-import lombok.extern.slf4j.Slf4j;
+import loader.utils.json.JsonService;
 
 import java.util.ArrayList;
 import java.util.HashMap;

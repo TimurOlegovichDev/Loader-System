@@ -3,7 +3,7 @@
     <!-- Секция аппендеров -->
     <Appenders>
         <!-- Файловый аппендер -->
-        <File name="file" fileName="logs/info.log-%d{yyyy-MM-dd}.%i.log">
+        <File name="file" fileName="logs/info.log">
             <PatternLayout>
                 <Pattern>%date{HH:mm:ss.SSS} [%-8thread] %-5level %-40logger - %message%n</Pattern>
             </PatternLayout>

@@ -9,6 +9,9 @@ import java.util.Arrays;
 
 public class Cargo {
 
+    private final int FIRST_ROW_INDEX = 0;
+    private final int FIRST_COLUMN_INDEX = 0;
+
     private final char[][] form;
 
     @Getter
@@ -17,7 +20,7 @@ public class Cargo {
     @JsonCreator
     public Cargo(@JsonProperty("form") char[][] form) {
         this.form = form;
-        this.symbol = form[0][0];
+        this.symbol = form[FIRST_ROW_INDEX][FIRST_COLUMN_INDEX];
     }
 
     public char[][] getForm() {
@@ -39,7 +42,7 @@ public class Cargo {
 
     @JsonIgnore
     public int getWeight(){
-        return (int) Math.pow(form[0][0], 2);
+        return (int) Math.pow(Character.getNumericValue(symbol), 2);
     }
 
     @Override

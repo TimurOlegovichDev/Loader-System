@@ -38,7 +38,11 @@ public class TransportData {
 
     public int getCargoWeightInTransport(Transport transport) {
         int weight = 0;
-        for(Cargo cargoInTransport : transportMap.get(transport)) {
+        List<Cargo> cargos = getCargos(transport);
+        if(cargos == null) {
+            return weight;
+        }
+        for(Cargo cargoInTransport : cargos) {
             weight += cargoInTransport.getWeight();
         }
         return weight;

@@ -10,7 +10,10 @@ public class AlgorithmFactory{
 
     public LoadingCargoAlgorithm getAlgorithm(String algorithmName){
         try {
-            return AlgorithmTypes.valueOf(AlgorithmTypes.class, algorithmName.toUpperCase()).getAlgorithm();
+            return AlgorithmTypes.valueOf(
+                    AlgorithmTypes.class,
+                    algorithmName.toUpperCase()
+            ).getAlgorithm();
         } catch (IllegalArgumentException e) {
             log.error("Invalid algorithm name, defaulting to MES");
         }

@@ -1,4 +1,4 @@
-package loader.input.json;
+package loader.utils.json;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;

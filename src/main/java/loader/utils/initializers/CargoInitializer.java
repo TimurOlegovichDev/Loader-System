@@ -1,4 +1,4 @@
-package loader.utils.initializers.cargo;
+package loader.utils.initializers;
 
 import loader.model.entites.cargos.Cargo;
 import loader.factories.cargo.CargoFactory;
@@ -27,8 +27,9 @@ public class CargoInitializer {
         while (start < forms.size()) {
             log.debug("Initializing box: {}", forms);
             int end = start;
-            while (end < forms.size() && !forms.get(end).isEmpty())
+            while (end < forms.size() && !forms.get(end).isEmpty()) {
                 end++;
+            }
             List<String> sublist = forms.subList(start, end);
             start = end + 1;
             if (sublist.isEmpty()){

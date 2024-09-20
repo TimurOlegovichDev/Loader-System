@@ -1,6 +1,5 @@
 package loader.model.entites.transports;
 
-import loader.model.entites.cargos.Cargo;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.Arrays;
@@ -12,7 +11,7 @@ public class Truck implements Transport {
 
     public Truck() {
         body = new char[DEFAULT_BODY_HEIGHT][DEFAULT_BODY_WIDTH];
-        initBody();
+        Arrays.stream(body).forEach(row -> Arrays.fill(row, ' '));
     }
 
     public Truck(char[][] body) {
@@ -20,29 +19,9 @@ public class Truck implements Transport {
     }
 
     @Override
-    public void initBody() {
-        for (char[] row : body) {
-            Arrays.fill(row, ' ');
-        }
-    }
-
-    @Override
-    public void loadCargo(Cargo cargo, int heightIndex, int widthIndex) {
-        int i = heightIndex;
-        for (char[] boxLine : cargo.getForm()) {
-            int j = widthIndex;
-            for (Character character : boxLine) {
-                body[i][j] = character;
-                j++;
-            }
-            i--;
-        }
-    }
-
-    @Override
     public char[][] getBody() {
         char[][] copy = new char[body.length][];
-        for(int i = 0; i < body.length; i++){
+        for (int i = 0; i < body.length; i++) {
             copy[i] = Arrays.copyOf(body[i], body[i].length);
         }
         return copy;

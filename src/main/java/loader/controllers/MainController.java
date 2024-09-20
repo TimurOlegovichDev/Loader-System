@@ -4,12 +4,11 @@ import loader.input.UserInputReceiver;
 import loader.model.enums.Scenarios;
 import loader.utils.CargoCounter;
 import loader.utils.FileHandler;
-import loader.utils.initializers.cargo.CargoInitializer;
-import loader.utils.initializers.transport.TruckInitializer;
+import loader.utils.initializers.CargoInitializer;
+import loader.utils.initializers.TruckInitializer;
 import lombok.extern.log4j.Log4j2;
 
 import java.io.IOException;
-
 
 @Log4j2
 public class MainController {
@@ -56,7 +55,7 @@ public class MainController {
 
     private void initCargos() throws IOException {
         String filepath = userInputReceiver.getInputLine("Enter file path: ");
-        initController.initializeCargos(fileHandler.readFile(filepath));
+        initController.initializeCargos(fileHandler.read(filepath));
     }
 
     private void initTransports() {
@@ -79,11 +78,11 @@ public class MainController {
 
     private void save() {
         String path = userInputReceiver.getInputLine("Enter file path to save data: ");
-        fileHandler.saveTransportAtJson(path, dataController.getTransportData());
+        fileHandler.saveAtJson(path, dataController.getTransportData());
     }
 
-    private void printTransports(){
-        if(!dataController.getTransportData().getData().isEmpty()){
+    private void printTransports() {
+        if (!dataController.getTransportData().getData().isEmpty()) {
             log.info("{}{}", System.lineSeparator(),
                     dataController.getTransportData());
         }

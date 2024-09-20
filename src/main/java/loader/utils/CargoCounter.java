@@ -11,10 +11,17 @@ public class CargoCounter {
     public Map<Character, Integer> countCargos(List<Cargo> cargos){
         Map<Character, Integer> cargosCount = new HashMap<>();
         for (Cargo cargo : cargos){
-            if(cargosCount.containsKey(cargo.getSymbol())){
-                cargosCount.put(cargo.getSymbol(), cargosCount.get(cargo.getSymbol()) + 1);
+            char symbol = cargo.getSymbol();
+            if(cargosCount.containsKey(symbol)){
+                cargosCount.put(
+                        symbol,
+                        cargosCount.get(symbol) + 1 // Увеличиваем количество имеющихся коробок на одну
+                );
             } else {
-                cargosCount.put(cargo.getSymbol(), 1);
+                cargosCount.put(
+                        symbol,
+                        1 // Указываем изначальное количество имеющихся коробок данного типа
+                );
             }
         }
         return cargosCount;
