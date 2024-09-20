@@ -4,13 +4,11 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
+import lombok.NonNull;
 
 import java.util.Arrays;
 
 public class Cargo {
-
-    private final int FIRST_ROW_INDEX = 0;
-    private final int FIRST_COLUMN_INDEX = 0;
 
     private final char[][] form;
 
@@ -18,9 +16,12 @@ public class Cargo {
     private final char symbol;
 
     @JsonCreator
-    public Cargo(@JsonProperty("form") char[][] form) {
+    public Cargo(
+            @JsonProperty("form")
+            @NonNull
+            char[][] form) {
         this.form = form;
-        this.symbol = form[FIRST_ROW_INDEX][FIRST_COLUMN_INDEX];
+        this.symbol = form[0][0]; // Используем первый символ формы, так как он гарантированно будет в массиве
     }
 
     public char[][] getForm() {
@@ -41,14 +42,14 @@ public class Cargo {
     }
 
     @JsonIgnore
-    public int getWeight(){
+    public int getWeight() {
         return (int) Math.pow(Character.getNumericValue(symbol), 2);
     }
 
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
-        for(char[] arr : form){
+        for (char[] arr : form) {
             sb.append(Arrays.toString(arr));
         }
         return sb.toString();

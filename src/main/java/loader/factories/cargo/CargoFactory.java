@@ -2,10 +2,8 @@ package loader.factories.cargo;
 
 import loader.model.entites.cargos.Cargo;
 
-public class CargoFactory {
+public interface CargoFactory {
 
-    public Cargo createCargo(char[][] form) {
-        return new Cargo(form);
-    }
+    Cargo createCargo(char[][] form);
 
 }

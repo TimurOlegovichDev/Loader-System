@@ -12,7 +12,7 @@ import java.util.List;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class TruckDto {
+public class TransportDto {
     private char[][] body;
     private List<Cargo> cargos;
 }

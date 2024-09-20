@@ -22,10 +22,6 @@ public class CargoData {
         cargoData.addAll(cargos);
     }
 
-    public void remove(Cargo cargo) {
-        cargoData.remove(cargo);
-    }
-
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();

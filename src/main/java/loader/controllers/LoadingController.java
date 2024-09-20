@@ -10,17 +10,11 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class LoadingController {
 
-    private final UserInputReceiver userInputReceiver;
-
-    public LoadingController(UserInputReceiver userInputReceiver) {
-        this.userInputReceiver = userInputReceiver;
-    }
-
-    public void startLoading(CargoData cargoData, TransportData transportData) {
+    public void startLoading(CargoData cargoDataSrc, TransportData transportDataDest) {
         log.info("Start loading process...");
         LoadingCargoAlgorithm algorithm = getAlgorithm();
         try {
-            algorithm.execute(cargoData, transportData);
+            algorithm.execute(cargoDataSrc, transportDataDest);
         } catch (Exception e) {
             log.error("Loading process interrupted: {}", e.getMessage());
             return;
@@ -29,7 +23,7 @@ public class LoadingController {
     }
 
     private LoadingCargoAlgorithm getAlgorithm() {
-        String algorithmName = userInputReceiver
+        String algorithmName = new UserInputReceiver()
                 .getInputLine(
                         "Enter algorithm name " +
                                 "(EL - even loading," +

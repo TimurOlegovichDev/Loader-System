@@ -1,7 +1,7 @@
 package loader.utils;
 
 import loader.db.TransportData;
-import loader.model.dto.TruckDto;
+import loader.model.dto.TransportDto;
 import loader.model.entites.transports.Transport;
 import loader.utils.json.JsonService;
 import lombok.extern.slf4j.Slf4j;
@@ -22,11 +22,11 @@ public class FileHandler {
     }
 
     public void saveAtJson(String filePath, TransportData transportData) {
-        List<TruckDto> truckDtos = new ArrayList<>();
+        List<TransportDto> transportDtos = new ArrayList<>();
         for (Transport transport : transportData.getData()) {
-            truckDtos.add(new TruckDto(transport.getBody(), transportData.getCargos(transport)));
+            transportDtos.add(new TransportDto(transport.getBody(), transportData.getCargos(transport)));
         }
-        jsonService.writeObject(truckDtos, filePath);
+        jsonService.writeObject(transportDtos, filePath);
     }
 
     public List<String> read(String src) {

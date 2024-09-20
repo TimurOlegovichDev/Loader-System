@@ -13,26 +13,24 @@ import java.io.IOException;
 @Log4j2
 public class MainController {
 
-    private final DataController dataController;
+    private final Repository repository;
     private final InitController initController;
     private final LoadingController loadingController;
     private final UserInputReceiver userInputReceiver;
     private final FileHandler fileHandler;
 
-    public MainController(
-            DataController dataController,
-            UserInputReceiver userInputReceiver,
-            FileHandler fileHandler) {
-        this.dataController = dataController;
+    public MainController(Repository repository,
+                          LoadingController loadingController,
+                          UserInputReceiver userInputReceiver,
+                          FileHandler fileHandler) {
+        this.repository = repository;
         this.initController = new InitController(
                 new TruckInitializer(),
                 new CargoInitializer(),
-                dataController,
+                repository,
                 new CargoCounter()
         );
-        this.loadingController = new LoadingController(
-                userInputReceiver
-        );
+        this.loadingController = loadingController;
         this.userInputReceiver = userInputReceiver;
         this.fileHandler = fileHandler;
     }
@@ -53,7 +51,7 @@ public class MainController {
         initTransports();
     }
 
-    private void initCargos() throws IOException {
+    private void initCargos() {
         String filepath = userInputReceiver.getInputLine("Enter file path: ");
         initController.initializeCargos(fileHandler.read(filepath));
     }
@@ -71,20 +69,22 @@ public class MainController {
 
     private void loadCargos() {
         loadingController.startLoading(
-                dataController.getCargoData(),
-                dataController.getTransportData()
+                repository.getCargoData(),
+                repository.getTransportData()
         );
     }
 
     private void save() {
-        String path = userInputReceiver.getInputLine("Enter file path to save data: ");
-        fileHandler.saveAtJson(path, dataController.getTransportData());
+        String filepath = userInputReceiver.getInputLine("Enter file path to save data: ");
+        fileHandler.saveAtJson(filepath, repository.getTransportData());
     }
 
     private void printTransports() {
-        if (!dataController.getTransportData().getData().isEmpty()) {
-            log.info("{}{}", System.lineSeparator(),
-                    dataController.getTransportData());
+        if (!repository.getTransportData().getData().isEmpty()) {
+            log.info("{}{}",
+                    System.lineSeparator(),
+                    repository.getTransportData()
+            );
         }
     }
 

@@ -2,14 +2,13 @@ package algorithms;
 
 import loader.algorithms.EvenLoadingAlgorithm;
 import loader.algorithms.MinimumEmptySpaceAlgorithm;
-import loader.controllers.DataController;
 import loader.controllers.InitController;
+import loader.controllers.Repository;
 import loader.db.CargoData;
 import loader.db.TransportData;
 import loader.exceptions.NoPlaceException;
 import loader.model.entites.cargos.Cargo;
 import loader.model.entites.transports.Transport;
-import loader.model.entites.transports.Truck;
 import loader.utils.CargoCounter;
 import loader.utils.FileHandler;
 import loader.utils.initializers.CargoInitializer;
@@ -26,15 +25,15 @@ import java.util.List;
 public class AlgoTests {
 
     private InitController initController;
-    private DataController dataController;
+    private Repository repository;
 
     @Before
     public void setUp() throws IOException {
-        dataController = new DataController(new TransportData(), new CargoData());
+        repository = new Repository(new TransportData(), new CargoData());
         this.initController = new InitController(
                 new TruckInitializer(),
                 new CargoInitializer(),
-                dataController,
+                repository,
                 new CargoCounter()
         );
         initController.initializeCargos(new FileHandler(
@@ -47,14 +46,14 @@ public class AlgoTests {
         Assert.assertThrows(
                 NoPlaceException.class,
                 () -> new EvenLoadingAlgorithm().execute(
-                        dataController.getCargoData(),
+                        repository.getCargoData(),
                         null
                 )
         );
         Assert.assertThrows(
                 NoPlaceException.class,
                 () -> new MinimumEmptySpaceAlgorithm().execute(
-                        dataController.getCargoData(),
+                        repository.getCargoData(),
                         null
                 )
         );
@@ -65,7 +64,7 @@ public class AlgoTests {
         CargoData cargoData = new CargoData();
         cargoData.add(new Cargo(new char[][]{{'1'}})); // 1x1 cargo
         TransportData transportData = new TransportData();
-        transportData.add(new Truck());
+        transportData.add(new Transport());
         EvenLoadingAlgorithm algorithm = new EvenLoadingAlgorithm();
         algorithm.execute(cargoData, transportData);
         Transport transport = transportData.getData().get(0);
@@ -81,7 +80,7 @@ public class AlgoTests {
         CargoData cargoData = new CargoData();
         cargoData.add(new Cargo(new char[][]{{'2'}, {'2'}})); // 2x1 cargo
         TransportData transportData = new TransportData();
-        transportData.add(new Truck(new char[][]{{' '}, {'1'}})); // truck with no space
+        transportData.add(new Transport(new char[][]{{' ', '1'}})); // truck with no space
 
         // When
         EvenLoadingAlgorithm algorithm = new EvenLoadingAlgorithm();

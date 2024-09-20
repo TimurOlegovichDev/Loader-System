@@ -2,10 +2,10 @@ package loader.algorithms;
 
 import loader.db.CargoData;
 import loader.db.TransportData;
-import loader.model.entites.cargos.Cargo;
-import loader.model.entites.transports.Transport;
 import loader.exceptions.InvalidCargoSize;
 import loader.exceptions.NoPlaceException;
+import loader.model.entites.cargos.Cargo;
+import loader.model.entites.transports.Transport;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.ArrayList;
@@ -19,7 +19,7 @@ public abstract class LoadingCargoAlgorithm {
 
     protected void tryLoadToTransport(Cargo cargo, Transport transport) throws NoPlaceException {
         log.trace("Trying to find empty space to load cargo: {}", cargo);
-        if(!canLoadCargo(cargo, transport)) {
+        if (!canLoadCargo(cargo, transport)) {
             throw new InvalidCargoSize("This cargo is too big for this transport: " + cargo);
         }
         for (int i = transport.getBody().length - 1; i >= 0; i--) {
@@ -36,12 +36,11 @@ public abstract class LoadingCargoAlgorithm {
 
     private boolean canInsertInTransport(int heightIndex, int widthIndex, Cargo cargo, Transport transport) {
         log.trace("Checking if cargo can be inserted at ({}, {})", heightIndex, widthIndex);
-        char[][] cpBody = transport.getBody();
+        char[][] cpBody = copyBody(transport.getBody());
         int height = heightIndex;
-        int width = widthIndex;
         log.debug(cargo.toString());
         for (char[] boxLine : cargo.getForm()) {
-            width = 0;
+            int width = widthIndex;
             for (Character character : boxLine) {
                 try {
                     if (cpBody[height][width] == ' ') {
@@ -82,14 +81,23 @@ public abstract class LoadingCargoAlgorithm {
 
     private void loadCargo(Cargo cargo, Transport transport, int heightIndex, int widthIndex) {
         int i = heightIndex;
+        char[][] body = transport.getBody();
         for (char[] boxLine : cargo.getForm()) {
             int j = widthIndex;
             for (Character character : boxLine) {
-                transport.getBody()[i][j] = character;
+                body[i][j] = character;
                 j++;
             }
             i--;
         }
+    }
+
+    private char[][] copyBody(char[][] body) {
+        char[][] copy = new char[body.length][];
+        for (int i = 0; i < body.length; i++) {
+            copy[i] = Arrays.copyOf(body[i], body[i].length);
+        }
+        return copy;
     }
 
 }

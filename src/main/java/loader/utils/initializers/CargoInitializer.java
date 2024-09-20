@@ -1,7 +1,7 @@
 package loader.utils.initializers;
 
+import loader.factories.cargo.DefaultCargoFactory;
 import loader.model.entites.cargos.Cargo;
-import loader.factories.cargo.CargoFactory;
 import loader.validator.CargoValidator;
 import lombok.extern.slf4j.Slf4j;
 
@@ -13,11 +13,11 @@ import java.util.List;
 public class CargoInitializer {
 
     private final CargoValidator validator;
-    private final CargoFactory cargoFactory;
+    private final DefaultCargoFactory defaultCargoFactory;
 
     public CargoInitializer() {
         this.validator = new CargoValidator();
-        this.cargoFactory = new CargoFactory();
+        this.defaultCargoFactory = new DefaultCargoFactory();
     }
 
     public List<Cargo> initialize(List<String> forms) {
@@ -32,13 +32,13 @@ public class CargoInitializer {
             }
             List<String> sublist = forms.subList(start, end);
             start = end + 1;
-            if (sublist.isEmpty()){
+            if (sublist.isEmpty()) {
                 continue;
             }
             try {
                 validator.validate(sublist);
                 Collections.reverse(sublist); // to solve the problem of overturned loads
-                initialBoxes.add(cargoFactory.createCargo(getForm(sublist)));
+                initialBoxes.add(defaultCargoFactory.createCargo(getForm(sublist)));
             } catch (Exception e) {
                 log.warn("An exception was received: {}", e.getMessage());
                 log.warn("Box is not valid: {}", sublist);

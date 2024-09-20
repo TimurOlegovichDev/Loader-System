@@ -2,10 +2,10 @@ package loader.algorithms;
 
 import loader.db.CargoData;
 import loader.db.TransportData;
-import loader.model.entites.cargos.Cargo;
-import loader.model.entites.transports.Transport;
 import loader.exceptions.InvalidCargoSize;
 import loader.exceptions.NoPlaceException;
+import loader.model.entites.cargos.Cargo;
+import loader.model.entites.transports.Transport;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.List;
@@ -34,7 +34,7 @@ public class MinimumEmptySpaceAlgorithm extends LoadingCargoAlgorithm {
                 return;
             } catch (NoPlaceException e) {
                 log.debug(e.getMessage());
-            } catch (InvalidCargoSize i){
+            } catch (InvalidCargoSize i) {
                 log.debug(i.getMessage());
                 return;
             }
