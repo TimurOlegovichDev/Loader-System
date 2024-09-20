@@ -1,6 +1,6 @@
 
-import loader.model.exceptions.InvalidCargoInput;
-import loader.model.validator.BoxValidator;
+import loader.exceptions.InvalidCargoInput;
+import loader.validator.BoxValidator;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration>
+    <!-- Секция аппендеров -->
+    <Appenders>
+        <!-- Файловый аппендер -->
+        <File name="file" fileName="logs/info.log-%d{yyyy-MM-dd}.%i.log">
+            <PatternLayout>
+                <Pattern>%date{HH:mm:ss.SSS} [%-8thread] %-5level %-40logger - %message%n</Pattern>
+            </PatternLayout>
+        </File>
+        <Console name="console" target="SYSTEM_OUT">
+            <PatternLayout>
+                <Pattern>%date{HH:mm:ss.SSS} [%-8thread] %-5level %-40logger - %message%n</Pattern>
+            </PatternLayout>
+        </Console>
+    </Appenders>
+    <!-- Секция логгеров -->
+    <Loggers>
+        <!-- Корневой логгер -->
+        <Root level="trace">
+            <AppenderRef ref="file" level="TRACE"/>
+            <AppenderRef ref="console" level="INFO"/>
+        </Root>
+    </Loggers>
+</Configuration>

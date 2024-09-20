@@ -1,18 +1,16 @@
 import loader.db.CargoData;
 import loader.db.TransportData;
-import loader.model.algorithms.Algorithm;
-import loader.model.algorithms.EvenLoading;
-import loader.model.dto.transport.TruckDto;
-import loader.model.entites.cargos.Box;
-import loader.model.entites.cargos.Cargo;
-import loader.model.entites.transports.Transport;
-import loader.model.factories.cargo.BoxFactory;
-import loader.model.factories.transport.TruckFactory;
-import loader.model.utils.json.JsonService;
+import loader.algorithms.Algorithm;
+import loader.algorithms.EvenLoading;
+import loader.dto.TruckDto;
+import loader.entites.cargos.Cargo;
+import loader.entites.transports.Transport;
+import loader.factories.cargo.BoxFactory;
+import loader.factories.transport.TruckFactory;
+import loader.utils.json.JsonService;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.jupiter.api.Disabled;
 
 import java.util.ArrayList;
 import java.util.List;

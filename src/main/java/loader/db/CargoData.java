@@ -1,6 +1,6 @@
 package loader.db;
 
-import loader.model.entites.cargos.Cargo;
+import loader.entites.cargos.Cargo;
 import java.util.ArrayList;
 import java.util.List;
 

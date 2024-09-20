@@ -1,17 +1,15 @@
 package loader;
 
-import loader.model.controllers.MainController;
+import loader.controllers.MainController;
+import lombok.extern.log4j.Log4j2;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
+@Log4j2
 public class LoaderApplication {
 
-    private static final Logger logger = LoggerFactory.getLogger(LoaderApplication.class);
-
     public static void main(String[] args) {
-        logger.info("Starting application");
+        log.info("Starting application");
         new MainController().start();
-        logger.info("System shut down");
+        log.info("System shut down");
     }
+
 }

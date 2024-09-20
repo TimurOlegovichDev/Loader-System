@@ -1,8 +1,8 @@
 package loader.db;
 
-import loader.model.entites.cargos.Box;
-import loader.model.entites.cargos.Cargo;
-import loader.model.entites.transports.Transport;
+import loader.entites.cargos.Box;
+import loader.entites.cargos.Cargo;
+import loader.entites.transports.Transport;
 
 import java.util.ArrayList;
 import java.util.HashMap;
