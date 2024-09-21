@@ -12,7 +12,7 @@ public class JsonReader {
 
     private final ObjectMapper mapper;
 
-    public JsonReader(ObjectMapper mapper){
+    public JsonReader(ObjectMapper mapper) {
         this.mapper = mapper;
     }
 

@@ -3,14 +3,31 @@ package loader.model.enums;
 import loader.algorithms.EvenLoadingAlgorithm;
 import loader.algorithms.LoadingCargoAlgorithm;
 import loader.algorithms.MinimumEmptySpaceAlgorithm;
+import loader.algorithms.utils.DefaultCargoLoader;
+import loader.algorithms.utils.DefaultCargoSorter;
+import loader.algorithms.utils.DefaultTransportValidator;
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public enum AlgorithmTypes {
 
-    MES(new MinimumEmptySpaceAlgorithm()),
-    EL(new EvenLoadingAlgorithm());
+    MES(new MinimumEmptySpaceAlgorithm(
+            new DefaultCargoLoader(
+                    new DefaultTransportValidator()
+            ),
+            new DefaultCargoSorter(),
+            new DefaultTransportValidator()
+    )),
+    EL(new EvenLoadingAlgorithm(
+            new DefaultCargoLoader(
+                    new DefaultTransportValidator()
+            ),
+            new DefaultCargoSorter(),
+            new DefaultTransportValidator()
+    ));
 
+    @Getter
     private final LoadingCargoAlgorithm algorithm;
 
 
@@ -26,7 +43,7 @@ public enum AlgorithmTypes {
             ).algorithm;
         } catch (IllegalArgumentException e) {
             log.error("Invalid algorithm name, defaulting to MES");
-            return new MinimumEmptySpaceAlgorithm();
+            return MES.algorithm;
         }
     }
 

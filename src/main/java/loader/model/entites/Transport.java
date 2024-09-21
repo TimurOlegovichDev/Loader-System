@@ -1,4 +1,4 @@
-package loader.model.entites.transports;
+package loader.model.entites;
 
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
@@ -8,8 +8,8 @@ import java.util.Arrays;
 @Slf4j
 public class Transport {
 
-    int DEFAULT_BODY_WIDTH = 6;
-    int DEFAULT_BODY_HEIGHT = 6;
+    private final int DEFAULT_BODY_WIDTH = 6;
+    private final int DEFAULT_BODY_HEIGHT = 6;
 
     @Getter
     private final char[][] body;

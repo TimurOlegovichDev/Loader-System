@@ -1,7 +1,7 @@
 package loader.utils.initializers;
 
 import loader.factories.cargo.DefaultCargoFactory;
-import loader.model.entites.cargos.Cargo;
+import loader.model.entites.Cargo;
 import loader.validator.CargoValidator;
 import lombok.extern.slf4j.Slf4j;
 

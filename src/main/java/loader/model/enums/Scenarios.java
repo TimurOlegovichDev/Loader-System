@@ -1,7 +1,5 @@
 package loader.model.enums;
 
-import lombok.Getter;
-
 public enum Scenarios {
 
     INITIALIZE_ENTITIES,

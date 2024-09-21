@@ -21,7 +21,7 @@ public class CargoValidator {
     }
 
     private void boxFormValidate(List<String> lines) throws InvalidCargoInput {
-        if(linesContainsLetter(lines)){
+        if (linesContainsLetter(lines)) {
             throw new InvalidCargoInput("The box format is damaged");
         }
         char symbol = lines.get(FIRST_ROW_INDEX).charAt(FIRST_COLUMN_INDEX);
@@ -33,7 +33,7 @@ public class CargoValidator {
                 correctWeight -= Character.getNumericValue(c);
             }
         }
-        if(correctWeight != 0){
+        if (correctWeight != 0) {
             throw new InvalidCargoInput("The weight of the box is different from the correct");
         }
     }

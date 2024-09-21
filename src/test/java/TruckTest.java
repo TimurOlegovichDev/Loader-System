@@ -1,5 +1,5 @@
 import loader.factories.transport.TruckFactory;
-import loader.model.entites.transports.Transport;
+import loader.model.entites.Transport;
 import org.junit.Assert;
 import org.junit.Test;
 

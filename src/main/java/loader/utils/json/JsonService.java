@@ -18,7 +18,7 @@ public class JsonService {
         this.jsonReader = new JsonReader(new ObjectMapper());
     }
 
-    public void writeObject(Object object, String fileName){
+    public void writeObject(Object object, String fileName) {
         try {
             log.info("Saving data...");
             jsonWriter.writeObject(object, fileName);

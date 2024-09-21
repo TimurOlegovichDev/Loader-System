@@ -2,8 +2,8 @@ package loader.utils.initializers;
 
 import loader.factories.transport.TruckFactory;
 import loader.model.dto.TransportDto;
-import loader.model.entites.cargos.Cargo;
-import loader.model.entites.transports.Transport;
+import loader.model.entites.Cargo;
+import loader.model.entites.Transport;
 import loader.utils.json.JsonService;
 
 import java.util.ArrayList;

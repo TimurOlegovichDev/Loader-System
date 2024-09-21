@@ -1,7 +1,7 @@
 package loader.controllers;
 
-import loader.model.entites.cargos.Cargo;
-import loader.model.entites.transports.Transport;
+import loader.model.entites.Cargo;
+import loader.model.entites.Transport;
 import loader.utils.CargoCounter;
 import loader.utils.initializers.CargoInitializer;
 import loader.utils.initializers.TruckInitializer;

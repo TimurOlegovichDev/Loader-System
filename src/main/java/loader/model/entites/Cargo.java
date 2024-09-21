@@ -1,4 +1,4 @@
-package loader.model.entites.cargos;
+package loader.model.entites;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnore;

@@ -1,6 +1,6 @@
 package loader.utils;
 
-import loader.model.entites.cargos.Cargo;
+import loader.model.entites.Cargo;
 
 import java.util.HashMap;
 import java.util.List;
@@ -8,11 +8,11 @@ import java.util.Map;
 
 public class CargoCounter {
 
-    public Map<Character, Integer> countCargos(List<Cargo> cargos){
+    public Map<Character, Integer> countCargos(List<Cargo> cargos) {
         Map<Character, Integer> cargosCount = new HashMap<>();
-        for (Cargo cargo : cargos){
+        for (Cargo cargo : cargos) {
             char symbol = cargo.getSymbol();
-            if(cargosCount.containsKey(symbol)){
+            if (cargosCount.containsKey(symbol)) {
                 cargosCount.put(
                         symbol,
                         cargosCount.get(symbol) + 1 // Увеличиваем количество имеющихся коробок на одну

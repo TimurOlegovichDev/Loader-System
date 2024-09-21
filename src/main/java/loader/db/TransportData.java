@@ -1,7 +1,7 @@
 package loader.db;
 
-import loader.model.entites.cargos.Cargo;
-import loader.model.entites.transports.Transport;
+import loader.model.entites.Cargo;
+import loader.model.entites.Transport;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -39,10 +39,10 @@ public class TransportData {
     public int getCargoWeightInTransport(Transport transport) {
         int weight = 0;
         List<Cargo> cargos = getCargos(transport);
-        if(cargos == null) {
+        if (cargos == null) {
             return weight;
         }
-        for(Cargo cargoInTransport : cargos) {
+        for (Cargo cargoInTransport : cargos) {
             weight += cargoInTransport.getWeight();
         }
         return weight;
@@ -55,7 +55,7 @@ public class TransportData {
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
-        for(Transport transport : transportMap.keySet())
+        for (Transport transport : transportMap.keySet())
             sb.append(transport.toString()).append("\n\n");
         return sb.toString();
     }

@@ -1,6 +1,6 @@
 package loader.factories.transport;
 
-import loader.model.entites.transports.Transport;
+import loader.model.entites.Transport;
 
 public interface TransportFactory {
 

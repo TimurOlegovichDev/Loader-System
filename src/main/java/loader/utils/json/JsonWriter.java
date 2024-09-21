@@ -12,13 +12,13 @@ public class JsonWriter {
 
     private final ObjectMapper mapper;
 
-    public JsonWriter(ObjectMapper mapper){
+    public JsonWriter(ObjectMapper mapper) {
         this.mapper = mapper;
     }
 
     protected void writeObject(Object object, String fileName) throws IOException {
         log.debug("Writing object to filepath: {}", fileName);
-        if(!fileName.endsWith(".json")) {
+        if (!fileName.endsWith(".json")) {
             fileName += ".json";
         }
         mapper.enable(SerializationFeature.INDENT_OUTPUT);
