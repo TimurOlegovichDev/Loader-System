@@ -1,17 +1,13 @@
 package loader.controllers;
 
 import loader.db.TransportDataManager;
-import loader.factories.cargo.DefaultCargoFactory;
+import loader.db.TransportationDataContainer;
+import loader.enums.Scenarios;
 import loader.input.UserInputReceiver;
 import loader.model.entites.Transport;
-import loader.model.enums.Scenarios;
 import loader.model.structures.TransportJsonStructure;
-import loader.utils.CargoCounter;
 import loader.utils.FileHandler;
-import loader.utils.initializers.CargoInitializer;
-import loader.utils.initializers.TruckInitializer;
 import loader.utils.json.JsonService;
-import loader.validator.CargoValidator;
 import lombok.extern.log4j.Log4j2;
 
 import java.util.ArrayList;
@@ -27,27 +23,19 @@ public class MainController {
 
     private final TransportationDataContainer transportationDataContainer;
     private final InitController initController;
-    private final LoadingController loadingController;
+    private final LoadingController defaultLoadingController;
     private final UserInputReceiver userInputReceiver;
     private final FileHandler fileHandler;
     private final JsonService jsonService;
 
-    public MainController(TransportationDataContainer transportationDataContainer,
-                          LoadingController loadingController,
+    public MainController(TransportationDataContainer transportationDataContainer, InitController initController,
+                          LoadingController defaultLoadingController,
                           UserInputReceiver userInputReceiver,
                           FileHandler fileHandler,
                           JsonService jsonService) {
         this.transportationDataContainer = transportationDataContainer;
-        this.initController = new InitController(
-                new TruckInitializer(jsonService),
-                new CargoInitializer(
-                        new CargoValidator(),
-                        new DefaultCargoFactory()
-                ),
-                transportationDataContainer,
-                new CargoCounter()
-        );
-        this.loadingController = loadingController;
+        this.initController = initController;
+        this.defaultLoadingController = defaultLoadingController;
         this.userInputReceiver = userInputReceiver;
         this.fileHandler = fileHandler;
         this.jsonService = jsonService;
@@ -90,9 +78,12 @@ public class MainController {
     }
 
     private void loadCargos() {
-        loadingController.startLoading(
+        defaultLoadingController.startLoading(
                 transportationDataContainer.getCargoDataManager(),
-                transportationDataContainer.getTransportDataManager()
+                transportationDataContainer.getTransportDataManager(),
+                userInputReceiver.getInputLine("Выберите алгоритм погрузки " +
+                        "( EL - равномерная погрузка, " +
+                        "MES - плотная загрузка )")
         );
     }
 

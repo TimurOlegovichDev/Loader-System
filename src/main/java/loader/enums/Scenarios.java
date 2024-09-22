@@ -1,4 +1,4 @@
-package loader.model.enums;
+package loader.enums;
 
 public enum Scenarios {
 

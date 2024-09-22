@@ -1,7 +1,5 @@
-package loader.controllers;
+package loader.db;
 
-import loader.db.CargoDataManager;
-import loader.db.TransportDataManager;
 import lombok.Getter;
 
 @Getter

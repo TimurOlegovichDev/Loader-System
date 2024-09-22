@@ -1,13 +1,13 @@
 package loadertests.algorithms;
 
 import loader.algorithms.LoadingCargoAlgorithm;
-import loader.controllers.TransportationDataContainer;
 import loader.db.CargoDataManager;
 import loader.db.TransportDataManager;
+import loader.db.TransportationDataContainer;
+import loader.enums.AlgorithmTypes;
 import loader.exceptions.NoPlaceException;
 import loader.model.entites.Cargo;
 import loader.model.entites.Transport;
-import loader.model.enums.AlgorithmTypes;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;

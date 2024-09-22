@@ -1,4 +1,4 @@
-package loader.model.enums;
+package loader.enums;
 
 import loader.algorithms.EvenLoadingAlgorithm;
 import loader.algorithms.LoadingCargoAlgorithm;
