@@ -17,13 +17,13 @@ public class JsonWriter {
     }
 
     protected void writeObject(Object object, String fileName) throws IOException {
-        log.debug("Writing object to filepath: {}", fileName);
+        log.debug("Сохранение данных в: {}", fileName);
         if (!fileName.endsWith(".json")) {
             fileName += ".json";
         }
         mapper.enable(SerializationFeature.INDENT_OUTPUT);
         File file = new File(fileName);
         mapper.writeValue(file, object);
-        log.debug("JSON file written successfully into: {}", fileName);
+        log.debug("Данные успешно сохранены!");
     }
 }

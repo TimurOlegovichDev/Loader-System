@@ -16,26 +16,26 @@ import java.io.IOException;
 @Log4j2
 public class MainController {
 
-    private final TransportationCargoContainer transportationCargoContainer;
+    private final TransportationDataContainer transportationDataContainer;
     private final InitController initController;
     private final LoadingController loadingController;
     private final UserInputReceiver userInputReceiver;
     private final FileHandler fileHandler;
     private final JsonService jsonService;
 
-    public MainController(TransportationCargoContainer transportationCargoContainer,
+    public MainController(TransportationDataContainer transportationDataContainer,
                           LoadingController loadingController,
                           UserInputReceiver userInputReceiver,
                           FileHandler fileHandler,
                           JsonService jsonService) {
-        this.transportationCargoContainer = transportationCargoContainer;
+        this.transportationDataContainer = transportationDataContainer;
         this.initController = new InitController(
                 new TruckInitializer(jsonService),
                 new CargoInitializer(
                         new CargoValidator(),
                         new DefaultCargoFactory()
                 ),
-                transportationCargoContainer,
+                transportationDataContainer,
                 new CargoCounter()
         );
         this.loadingController = loadingController;
@@ -61,38 +61,47 @@ public class MainController {
     }
 
     private void initCargos() {
-        String filepath = userInputReceiver.getInputLine("Enter file path: ");
+        String filepath = userInputReceiver.getInputLine(
+                "Введите путь к файлу для считывания груза: "
+        );
         initController.initializeCargos(fileHandler.read(filepath));
     }
 
     private void initTransports() {
         initTransportFromFile();
-        int num = userInputReceiver.getNumber("Enter number of transports to add: ");
+        int num = userInputReceiver.getNumber(
+                "Введите количество транспорта, которое хотите создать: "
+        );
         initController.initializeTransport(num);
     }
 
     private void initTransportFromFile() {
-        String filepath = userInputReceiver.getInputLine("Enter filepath to import transport:");
+        String filepath = userInputReceiver.getInputLine(
+                "Введите путь к json файлу для добавления транспорта:"
+        );
         initController.initializeTransport(filepath);
     }
 
     private void loadCargos() {
         loadingController.startLoading(
-                transportationCargoContainer.getCargoData(),
-                transportationCargoContainer.getTransportData()
+                transportationDataContainer.getCargoDataManager(),
+                transportationDataContainer.getTransportDataManager()
         );
     }
 
     private void save() {
-        String filepath = userInputReceiver.getInputLine("Enter file path to save data: ");
-        jsonService.writeObject(transportationCargoContainer.getTransportData(), filepath);
+        String filepath = userInputReceiver.getInputLine(
+                "Введите путь к json файлу для сохранения данных: "
+        );
+        jsonService.writeObject(transportationDataContainer.getTransportDataManager(), filepath);
     }
 
     private void printTransports() {
-        if (!transportationCargoContainer.getTransportData().getData().isEmpty()) {
+        log.info("Отображение транспорта");
+        if (!transportationDataContainer.getTransportDataManager().getData().isEmpty()) {
             log.info("{}{}",
                     System.lineSeparator(),
-                    transportationCargoContainer.getTransportData()
+                    transportationDataContainer.getTransportDataManager()
             );
         }
     }

@@ -6,7 +6,7 @@ import loader.model.entites.Cargo;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CargoData {
+public class CargoDataManager {
 
     private final List<Cargo> cargoData = new ArrayList<>();
 

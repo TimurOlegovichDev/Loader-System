@@ -5,10 +5,12 @@ import loader.algorithms.LoadingCargoAlgorithm;
 import loader.algorithms.MinimumEmptySpaceAlgorithm;
 import loader.algorithms.utils.impl.DefaultCargoLoader;
 import loader.algorithms.utils.impl.DefaultCargoSorter;
+import loader.algorithms.utils.impl.DefaultTransportSorter;
 import loader.algorithms.utils.impl.DefaultTransportValidator;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 
+@Getter
 @Slf4j
 public enum AlgorithmTypes {
 
@@ -17,6 +19,7 @@ public enum AlgorithmTypes {
                     new DefaultTransportValidator()
             ),
             new DefaultCargoSorter(),
+            new DefaultTransportSorter(),
             new DefaultTransportValidator()
     )),
     EL(new EvenLoadingAlgorithm(
@@ -27,7 +30,6 @@ public enum AlgorithmTypes {
             new DefaultTransportValidator()
     ));
 
-    @Getter
     private final LoadingCargoAlgorithm algorithm;
 
 
@@ -42,7 +44,7 @@ public enum AlgorithmTypes {
                     algorithmName.toUpperCase()
             ).algorithm;
         } catch (IllegalArgumentException e) {
-            log.error("Invalid algorithm name, defaulting to MES");
+            log.error("Неправильное имя алгоритма, выбран по умолчанию: MES");
             return MES.algorithm;
         }
     }

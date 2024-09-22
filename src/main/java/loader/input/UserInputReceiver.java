@@ -14,19 +14,19 @@ public class UserInputReceiver {
         while (true) {
             try {
                 int number = Integer.parseInt(scanner.nextLine());
-                log.debug("User entered number: {}", number);
+                log.debug("Введено число: {}", number);
                 return number;
             } catch (NumberFormatException e) {
-                log.error("Invalid number, try again");
+                log.error("Число введено неверно, попробуйте еще раз");
             }
         }
     }
 
     public String getInputLine(String msg) {
-        log.debug("Requesting input line from user with message: {}", msg);
+        log.debug("Запрос на ввод со следующим сообщением: {}", msg);
         log.info(msg);
         String input = scanner.nextLine();
-        log.debug("User entered input line: {}", input);
+        log.debug("Пользовательский ввод: {}", input);
         return input;
     }
 

@@ -15,43 +15,45 @@ public class InitController {
 
     private final TruckInitializer truckInitializer;
     private final CargoInitializer cargoInitializer;
-    private final TransportationCargoContainer transportationCargoContainer;
+    private final TransportationDataContainer transportationDataContainer;
     private final CargoCounter cargoCounter;
 
     public InitController(TruckInitializer truckInitializer,
                           CargoInitializer cargoInitializer,
-                          TransportationCargoContainer transportationCargoContainer,
+                          TransportationDataContainer transportationDataContainer,
                           CargoCounter cargoCounter) {
         this.truckInitializer = truckInitializer;
         this.cargoInitializer = cargoInitializer;
-        this.transportationCargoContainer = transportationCargoContainer;
+        this.transportationDataContainer = transportationDataContainer;
         this.cargoCounter = cargoCounter;
     }
 
     public void initializeCargos(List<String> forms) {
         List<Cargo> cargos = cargoInitializer.initialize(forms);
-        transportationCargoContainer.getCargoData().add(cargos);
+        transportationDataContainer.getCargoDataManager().add(cargos);
     }
 
     public void initializeTransport(String filePath) {
         Map<Transport, List<Cargo>> transportListMap =
                 truckInitializer.initializeFromJson(filePath);
         countCargos(transportListMap);
-        transportationCargoContainer.getTransportData().add(transportListMap);
+        transportationDataContainer.getTransportDataManager().add(transportListMap);
+        log.info("Транспорт добавлен в базу данных");
     }
 
     public void initializeTransport(int numberOfTransport) {
         List<Transport> transports =
                 truckInitializer.initialize(numberOfTransport);
-        transportationCargoContainer.getTransportData().add(transports);
+        transportationDataContainer.getTransportDataManager().add(transports);
     }
 
     private void countCargos(Map<Transport, List<Cargo>> map) {
+        log.info("Информация о транспорте");
         for (Transport transport : map.keySet()) {
             List<Cargo> cargos = map.get(transport);
             cargoCounter.countCargos(cargos)
                     .forEach((symbol, count) ->
-                            log.info("Truck contains {} cargos {} type", count, symbol)
+                            log.info("Тип груза: {}, количество: {}", symbol, count)
                     );
             log.info("{}{}", System.lineSeparator(), transport.toString());
         }

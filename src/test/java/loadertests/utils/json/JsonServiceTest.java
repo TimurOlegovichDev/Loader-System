@@ -1,9 +1,9 @@
-package utils.json;
+package loadertests.utils.json;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import loader.algorithms.LoadingCargoAlgorithm;
-import loader.db.CargoData;
-import loader.db.TransportData;
+import loader.db.CargoDataManager;
+import loader.db.TransportDataManager;
 import loader.factories.cargo.DefaultCargoFactory;
 import loader.factories.transport.TruckFactory;
 import loader.model.dto.TransportDto;
@@ -23,15 +23,15 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class JsonServiceTest {
 
-    private final CargoData cargoData = new CargoData();
-    private final TransportData transportData = new TransportData();
+    private final CargoDataManager cargoDataManager = new CargoDataManager();
+    private final TransportDataManager transportDataManager = new TransportDataManager();
     private final LoadingCargoAlgorithm algorithm = AlgorithmTypes.EL.getAlgorithm();
     private final JsonService jsonService = new JsonService(
             new JsonWriter(new ObjectMapper()),
             new JsonReader(new ObjectMapper())
     );
 
-    private final String TEST_FILE_PATH = "D:\\WorkSpaces\\Java\\LoaderSystem\\src\\test\\resources\\jsons\\truck.json";
+    private final String TEST_FILE_PATH = "D:\\WorkSpaces\\Java\\LoaderSystem\\src\\test\\resources\\jsons\\valid.json";
     private final int TRUCKS_NUMBER_IN_FILE = 1;
 
     @BeforeEach
@@ -45,31 +45,31 @@ class JsonServiceTest {
                 {'7', '7', '7', '7'},
                 {'7', '7', '7'}
         });
-        cargoData.add(box);
-        cargoData.add(box2);
-        transportData.add(transport);
-        algorithm.execute(cargoData, transportData);
+        cargoDataManager.add(box);
+        cargoDataManager.add(box2);
+        transportDataManager.add(transport);
+        algorithm.execute(cargoDataManager, transportDataManager);
     }
 
     @Test
     public void test_write_and_read_truck_to_data() {
         List<TransportDto> transportDtos = new ArrayList<>();
-        for (Transport transport : transportData.getData()) {
-            transportDtos.add(new TransportDto(transport.getBody(), transportData.getCargos(transport)));
-            transportData.remove(transport);
+        for (Transport transport : transportDataManager.getData()) {
+            transportDtos.add(new TransportDto(transport.getBody(), transportDataManager.getCargos(transport)));
+            transportDataManager.remove(transport);
         }
-        assertTrue(transportData.getData().isEmpty());
+        assertTrue(transportDataManager.getData().isEmpty());
         jsonService.writeObject(transportDtos, TEST_FILE_PATH);
         transportDtos.clear();
         transportDtos = jsonService.read(TransportDto.class, TEST_FILE_PATH);
         for (TransportDto transportDto : transportDtos) {
             Transport transport = new TruckFactory().createTransport(transportDto.getBody());
-            transportData.add(transport);
+            transportDataManager.add(transport);
             for (Cargo cargo : transportDto.getCargos()) {
-                transportData.addCargoInTransport(transport, cargo);
+                transportDataManager.addCargoInTransport(transport, cargo);
             }
         }
-        assertEquals(transportData.getData().size(), TRUCKS_NUMBER_IN_FILE);
+        assertEquals(transportDataManager.getData().size(), TRUCKS_NUMBER_IN_FILE);
     }
 
     @Test
@@ -77,18 +77,18 @@ class JsonServiceTest {
         List<TransportDto> transportDtos = jsonService.read(TransportDto.class, TEST_FILE_PATH);
         assertEquals(transportDtos.size(), TRUCKS_NUMBER_IN_FILE);
         Transport transportMain = new TruckFactory().createTransport();
-        TransportData transportData2 = new TransportData();
-        transportData2.add(transportMain);
-        algorithm.execute(cargoData, transportData2);
+        TransportDataManager transportDataManager2 = new TransportDataManager();
+        transportDataManager2.add(transportMain);
+        algorithm.execute(cargoDataManager, transportDataManager2);
         for (TransportDto transportDto : transportDtos) {
             Transport transport = new TruckFactory().createTransport(transportDto.getBody());
-            transportData.add(transport);
+            transportDataManager.add(transport);
             for (Cargo cargo : transportDto.getCargos()) {
-                transportData.addCargoInTransport(transport, cargo);
+                transportDataManager.addCargoInTransport(transport, cargo);
             }
-            System.out.println(transportData.getCargos(transport));
+            System.out.println(transportDataManager.getCargos(transport));
         }
-        assertArrayEquals(transportData.getData().get(0).getBody(), transportMain.getBody());
+        assertArrayEquals(transportDataManager.getData().get(0).getBody(), transportMain.getBody());
     }
 
 }

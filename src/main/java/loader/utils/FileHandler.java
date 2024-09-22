@@ -12,7 +12,7 @@ import java.util.List;
 public class FileHandler {
 
     public List<String> read(String src) {
-        log.debug("Reading file from path: {}", src);
+        log.debug("Чтение файла: {}", src);
         List<String> result = new ArrayList<>();
         try (BufferedReader br = new BufferedReader(new FileReader(src))) {
             String line;
@@ -20,7 +20,7 @@ public class FileHandler {
                 result.add(line.trim());
             }
             br.close();
-            log.debug("File read successfully, {} lines read", result.size());
+            log.debug("Файл прочитан успешно, количество прочитанных строк: {}", result.size());
         } catch (IOException e) {
             log.error(e.getMessage());
         }

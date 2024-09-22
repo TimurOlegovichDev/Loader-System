@@ -15,9 +15,9 @@ public class CargoValidator {
     private final int FIRST_COLUMN_INDEX = 0;
 
     public void validate(List<String> lines) throws InvalidCargoInput {
-        log.debug("Validating box with lines: {}", lines);
+        log.debug("Валидация коробки: {}", lines);
         boxFormValidate(lines);
-        log.debug("Box is valid: {}", lines);
+        log.debug("Коробка валидна: {}", lines);
     }
 
     private void boxFormValidate(List<String> lines) throws InvalidCargoInput {
@@ -25,16 +25,19 @@ public class CargoValidator {
             throw new InvalidCargoInput("Входные данные содержат нечисловые символы " + lines);
         }
         char symbol = lines.get(FIRST_ROW_INDEX).charAt(FIRST_COLUMN_INDEX);
-        int correctWeight = (int) Math.pow(Integer.parseInt(symbol + ""), 2);
+        int expectedWeight = (int) Math.pow(Integer.parseInt(symbol + ""), 2);
+        int actualWeight = 0;
         for (String line : lines) {
             if (line.isEmpty())
                 continue;
             for (char c : line.toCharArray()) {
-                correctWeight -= Character.getNumericValue(c);
+                actualWeight += Character.getNumericValue(c);
             }
         }
-        if (correctWeight != 0) {
-            throw new InvalidCargoInput("The weight of the box is different from the correct");
+        if (actualWeight != expectedWeight) {
+            throw new InvalidCargoInput("Вес коробки отличается от ожидаемого: текущий: "
+                    + actualWeight + " ожидаемый: "
+                    + expectedWeight);
         }
     }
 

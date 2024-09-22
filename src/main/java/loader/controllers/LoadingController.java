@@ -1,8 +1,8 @@
 package loader.controllers;
 
 import loader.algorithms.LoadingCargoAlgorithm;
-import loader.db.CargoData;
-import loader.db.TransportData;
+import loader.db.CargoDataManager;
+import loader.db.TransportDataManager;
 import loader.input.UserInputReceiver;
 import loader.model.enums.AlgorithmTypes;
 import lombok.extern.slf4j.Slf4j;
@@ -10,24 +10,24 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class LoadingController {
 
-    public void startLoading(CargoData cargoDataSrc, TransportData transportDataDest) {
-        log.info("Start loading process...");
+    public void startLoading(CargoDataManager cargoDataManagerSrc, TransportDataManager transportDataManagerDest) {
+        log.info("Старт процесса погрузки...");
         LoadingCargoAlgorithm algorithm = getAlgorithm();
         try {
-            algorithm.execute(cargoDataSrc, transportDataDest);
+            algorithm.execute(cargoDataManagerSrc, transportDataManagerDest);
         } catch (Exception e) {
-            log.error("Loading process interrupted: {}", e.getMessage());
+            log.error("Процесс погрузки прерван: {}", e.getMessage());
             return;
         }
-        log.info("Loading process finished.");
+        log.info("Процесс погрузки успешно завершен.");
     }
 
     private LoadingCargoAlgorithm getAlgorithm() {
         String algorithmName = new UserInputReceiver()
                 .getInputLine(
-                        "Enter algorithm name " +
-                                "(EL - even loading," +
-                                " MES - minimum empty space): "
+                        "Введите название алгоритма погрузки " +
+                                "(EL - равномерная погрузка," +
+                                " MES - плотная погрузка): "
                 );
         return AlgorithmTypes.of(algorithmName);
     }

@@ -1,7 +1,7 @@
 package loader.algorithms.utils.impl;
 
 import loader.algorithms.utils.TransportValidator;
-import loader.db.TransportData;
+import loader.db.TransportDataManager;
 import loader.exceptions.NoPlaceException;
 import loader.model.entites.Cargo;
 import loader.model.entites.Transport;
@@ -11,15 +11,15 @@ import lombok.extern.slf4j.Slf4j;
 public class DefaultTransportValidator implements TransportValidator {
 
     @Override
-    public void validateTransportData(TransportData transportData) throws NoPlaceException {
-        if (transportData == null || transportData.getData().isEmpty()) {
-            throw new NoPlaceException("There is no truck to load");
+    public void validateTransportData(TransportDataManager transportDataManager) throws NoPlaceException {
+        if (transportDataManager == null || transportDataManager.getData().isEmpty()) {
+            throw new NoPlaceException("Транспорт для погрузки отсутствует");
         }
     }
 
     @Override
     public boolean canInsertInTransport(int heightIndex, int widthIndex, Cargo cargo, Transport transport) {
-        log.trace("Checking if cargo can be inserted at ({}, {})", heightIndex, widthIndex);
+        log.trace("Проверка на возможность погрузки груза по координатам ({}, {})", heightIndex, widthIndex);
         char[][] cpBody = copyBody(transport.getBody());
         int height = heightIndex;
         log.debug(cargo.toString());
@@ -29,20 +29,18 @@ public class DefaultTransportValidator implements TransportValidator {
                 try {
                     if (cpBody[height][width] == ' ') {
                         cpBody[height][width] = character;
-                        log.trace("Inserted part of cargo at: {} {}", height, width);
                     } else {
-                        log.trace("Cannot insert cargo at ({}, {}), space is occupied", height, width);
                         return false;
                     }
                 } catch (Exception e) {
-                    log.trace("Cannot insert cargo at ({}, {}), no empty space", height, width);
+                    log.trace("Груз невозможно загрузить по координатам ({}, {}), нет свободного места", height, width);
                     return false;
                 }
                 width++;
             }
             height--;
         }
-        log.trace("Cargo can be inserted at ({}, {})", heightIndex, widthIndex);
+        log.trace("Груз может быть загружен");
         return true;
     }
 

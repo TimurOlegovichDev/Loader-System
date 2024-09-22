@@ -3,9 +3,9 @@ package loader;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import loader.controllers.LoadingController;
 import loader.controllers.MainController;
-import loader.controllers.TransportationCargoContainer;
-import loader.db.CargoData;
-import loader.db.TransportData;
+import loader.controllers.TransportationDataContainer;
+import loader.db.CargoDataManager;
+import loader.db.TransportDataManager;
 import loader.input.UserInputReceiver;
 import loader.utils.FileHandler;
 import loader.utils.json.JsonReader;
@@ -19,11 +19,11 @@ import java.io.IOException;
 public class LoaderApplication {
 
     public static void main(String[] args) throws IOException {
-        log.info("Starting application");
+        log.info("Программа запущена");
         new MainController(
-                new TransportationCargoContainer(
-                        new TransportData(),
-                        new CargoData()
+                new TransportationDataContainer(
+                        new TransportDataManager(),
+                        new CargoDataManager()
                 ),
                 new LoadingController(),
                 new UserInputReceiver(),
@@ -37,7 +37,7 @@ public class LoaderApplication {
                         )
                 )
         ).start();
-        log.info("System shut down");
+        log.info("Завершение работы");
     }
 
 }

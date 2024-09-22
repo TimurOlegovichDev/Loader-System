@@ -17,10 +17,10 @@ public class JsonReader {
     }
 
     protected <T> List<T> readObject(Class<T> clazz, String fileName) throws IOException {
-        log.debug("Reading json file {}", fileName);
+        log.debug("Чтение json файла {}", fileName);
         File file = new File(fileName);
         List<T> list = mapper.readValue(file, mapper.getTypeFactory().constructCollectionType(List.class, clazz));
-        log.info("JSON file read successfully: {}", fileName);
+        log.debug("Чтение успешно завершено!");
         return list;
     }
 

@@ -31,9 +31,11 @@ public class Transport {
             for (char c : arr) {
                 sb.append(c);
             }
-            sb.append("+\n");
+            sb.append("+")
+                    .append(System.lineSeparator());
         }
-        sb.append("+".repeat(body[0].length + 2)).append("\n");
+        sb.append("+".repeat(body[0].length + 2))
+                .append(System.lineSeparator());
         return sb.toString();
     }
 }

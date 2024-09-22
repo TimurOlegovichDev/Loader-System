@@ -1,4 +1,4 @@
-package utils.initializers;
+package loadertests.utils.initializers;
 
 import loader.factories.cargo.DefaultCargoFactory;
 import loader.model.entites.Cargo;

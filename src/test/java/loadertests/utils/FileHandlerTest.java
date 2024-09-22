@@ -1,4 +1,4 @@
-package utils;
+package loadertests.utils;
 
 import loader.utils.FileHandler;
 import org.junit.jupiter.api.Test;
@@ -16,7 +16,7 @@ public class FileHandlerTest {
     private final String DATA_FILEPATH = "D:\\WorkSpaces\\Java\\LoaderSystem\\src\\test\\resources\\txts\\validData";
 
     @Test
-    void testReadingTxtFile() {
+    void test_reading_file() {
         List<String> result = new ArrayList<>(List.of(
                 "8888",
                 "8888",

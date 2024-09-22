@@ -2,9 +2,10 @@ package loader.algorithms;
 
 import loader.algorithms.utils.CargoLoader;
 import loader.algorithms.utils.CargoSorter;
+import loader.algorithms.utils.TransportSorter;
 import loader.algorithms.utils.TransportValidator;
-import loader.db.CargoData;
-import loader.db.TransportData;
+import loader.db.CargoDataManager;
+import loader.db.TransportDataManager;
 import loader.exceptions.InvalidCargoSize;
 import loader.exceptions.NoPlaceException;
 import loader.model.entites.Cargo;
@@ -16,28 +17,37 @@ import java.util.List;
 @Slf4j
 public class MinimumEmptySpaceAlgorithm extends LoadingCargoAlgorithm {
 
-    public MinimumEmptySpaceAlgorithm(CargoLoader cargoLoader, CargoSorter cargoSorter, TransportValidator transportValidator) {
-        super(cargoLoader, cargoSorter, transportValidator);
+    private final TransportSorter transportSorter;
+    private final CargoSorter cargoSorter;
+
+    public MinimumEmptySpaceAlgorithm(CargoLoader cargoLoader,
+                                      CargoSorter cargoSorter,
+                                      TransportSorter transportSorter,
+                                      TransportValidator transportValidator) {
+        super(cargoLoader, transportValidator);
+        this.cargoSorter = cargoSorter;
+        this.transportSorter = transportSorter;
     }
 
     @Override
-    public void execute(CargoData cargoData, TransportData transportData) {
-        log.debug("Executing MinimumEmptySpace algorithm");
-        transportValidator.validateTransportData(transportData);
-        List<Cargo> cargos = cargoSorter.sortCargosByWeight(cargoData.getData());
+    public void execute(CargoDataManager cargoDataManager, TransportDataManager transportDataManager) {
+        log.info("Старт алгоритма плотной погрузки");
+        transportValidator.validateTransportData(transportDataManager);
+        List<Cargo> cargos = cargoSorter.sortCargosByWeight(cargoDataManager.getData());
+        List<Transport> transports = transportSorter.sort(transportDataManager);
         for (Cargo cargo : cargos) {
-            log.info("Processing cargo: {}", cargo);
-            tryLoadCargo(cargo, transportData);
+            log.info("Погрузка груза: {}", cargo);
+            tryLoadCargo(cargo, transports, transportDataManager);
         }
-        log.debug("MinimumEmptySpace algorithm execution completed");
+        log.info("Плотная погрузка окончена");
     }
 
-    private void tryLoadCargo(Cargo cargo, TransportData transportData) {
-        for (Transport transport : transportData.getData()) {
+    private void tryLoadCargo(Cargo cargo, List<Transport> transports, TransportDataManager transportDataManager) {
+        for (Transport transport : transports) {
             try {
                 cargoLoader.tryLoadToTransport(cargo, transport);
-                transportData.addCargoInTransport(transport, cargo);
-                log.info("Load cargo completed: {}", cargo);
+                transportDataManager.addCargoInTransport(transport, cargo);
+                log.debug("Груз успешно загружен: {}", cargo);
                 return;
             } catch (NoPlaceException e) {
                 log.debug(e.getMessage());
@@ -46,6 +56,6 @@ public class MinimumEmptySpaceAlgorithm extends LoadingCargoAlgorithm {
                 return;
             }
         }
-        throw new NoPlaceException("Cant find transport to load this cargo: " + cargo);
+        throw new NoPlaceException("Нет транспорта для загрузки данного груза: " + cargo);
     }
 }

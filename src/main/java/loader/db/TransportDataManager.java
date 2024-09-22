@@ -9,7 +9,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class TransportData {
+public class TransportDataManager {
 
     private final Map<Transport, List<Cargo>> transportMap = new HashMap<>();
 
@@ -57,7 +57,7 @@ public class TransportData {
     public String toString() {
         StringBuilder sb = new StringBuilder();
         for (Transport transport : transportMap.keySet())
-            sb.append(transport.toString()).append("\n\n");
+            sb.append(transport.toString()).append(System.lineSeparator());
         return sb.toString();
     }
 }

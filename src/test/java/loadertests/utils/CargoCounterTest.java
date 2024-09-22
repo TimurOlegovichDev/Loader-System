@@ -1,4 +1,4 @@
-package utils;
+package loadertests.utils;
 
 import loader.model.entites.Cargo;
 import loader.utils.CargoCounter;
@@ -35,7 +35,7 @@ public class CargoCounterTest {
     }
 
     @Test
-    void testCount() {
+    void test_count_cargos() {
         assertArrayEquals(
                 result.entrySet().toArray(),
                 counter.countCargos(cargos).entrySet().toArray()

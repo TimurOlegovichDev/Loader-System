@@ -11,7 +11,7 @@ public class CargoCounter {
     public Map<Character, Integer> countCargos(List<Cargo> cargos) {
         Map<Character, Integer> cargosCount = new HashMap<>();
         for (Cargo cargo : cargos) {
-            char symbol = cargo.getSymbol();
+            char symbol = cargo.getType();
             if (cargosCount.containsKey(symbol)) {
                 cargosCount.put(
                         symbol,

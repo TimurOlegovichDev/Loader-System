@@ -1,49 +1,47 @@
 package loader.model.entites;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.NonNull;
 
 import java.util.Arrays;
 
+@Getter
 public class Cargo {
 
     private final char[][] form;
-
-    @Getter
-    private final char symbol;
+    private final int height;
+    private final int width;
+    private final int weight;
+    private final char type;
 
     @JsonCreator
-    public Cargo(
-            @JsonProperty("form")
-            @NonNull
-            char[][] form) {
+    public Cargo(@JsonProperty("form") @NonNull char[][] form) {
         this.form = form;
-        this.symbol = form[0][0]; // Используем первый символ формы, так как он гарантированно будет в массиве
-    }
-
-    public char[][] getForm() {
-        return Arrays.copyOf(form, form.length);
-    }
-
-    @JsonIgnore
-    public int getWidth() {
-        return Arrays.stream(form)
+        this.type = form[0][0]; // Используем первый символ формы, так как он гарантированно будет в массиве
+        weight = (int) Math.pow(Character.getNumericValue(type), 2);
+        height = form.length;
+        width = Arrays.stream(form)
                 .mapToInt(arr -> arr.length)
                 .max()
                 .orElse(0);
     }
 
-    @JsonIgnore
-    public int getHeight() {
-        return form.length;
+    public Cargo(@JsonProperty("form") @NonNull char[][] form,
+                 int height,
+                 int width,
+                 int weight,
+                 char type) {
+        this.form = form;
+        this.height = height;
+        this.width = width;
+        this.weight = weight;
+        this.type = type;
     }
 
-    @JsonIgnore
-    public int getWeight() {
-        return (int) Math.pow(Character.getNumericValue(symbol), 2);
+    public char[][] getForm() {
+        return Arrays.copyOf(form, form.length);
     }
 
     @Override

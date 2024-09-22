@@ -21,11 +21,11 @@ public class CargoInitializer {
     }
 
     public List<Cargo> initialize(List<String> forms) {
-        log.debug("Initializing boxes from lines");
+        log.debug("Инициализация коробок");
         List<Cargo> initialBoxes = new ArrayList<>();
         int start = 0;
         while (start < forms.size()) {
-            log.debug("Initializing box: {}", forms);
+            log.debug("Инициализация коробки: {}", forms);
             int end = start;
             while (end < forms.size() && !forms.get(end).isEmpty()) {
                 end++;
@@ -40,15 +40,14 @@ public class CargoInitializer {
                 Collections.reverse(sublist); // to solve the problem of overturned loads
                 initialBoxes.add(defaultCargoFactory.createCargo(getForm(sublist)));
             } catch (Exception e) {
-                log.warn("An exception was received: {}", e.getMessage());
-                log.warn("Box is not valid: {}", sublist);
+                log.warn("Обнаружено исключение для коробки {}: {}", sublist, e.getMessage());
             }
         }
         return initialBoxes;
     }
 
     private char[][] getForm(List<String> lines) {
-        log.trace("Converting lines to char array");
+        log.trace("Конвертирование листа в массив символов");
         char[][] form = new char[lines.size()][];
         int indexCharArray = 0;
         for (String line : lines) {
@@ -59,6 +58,7 @@ public class CargoInitializer {
             }
             form[indexCharArray++] = charRow;
         }
+        log.trace("Конвертирование листа завершено");
         return form;
     }
 

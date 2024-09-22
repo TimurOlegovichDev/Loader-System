@@ -1,4 +1,4 @@
-package validator;
+package loadertests.validator;
 
 import loader.exceptions.InvalidCargoInput;
 import loader.validator.CargoValidator;
@@ -16,7 +16,7 @@ public class CargoValidatorTest {
     private final CargoValidator cargoValidator = new CargoValidator();
 
     @Test
-    void testValidDataInput() {
+    void test_with_valid_data() {
         List<List<String>> validList = new ArrayList<>(List.of(
                 new ArrayList<>(List.of(
                         "9999",
@@ -45,7 +45,7 @@ public class CargoValidatorTest {
     }
 
     @Test
-    void testThrowInvalidCargoException() {
+    void test_throw_InvalidCargoException() {
         List<List<String>> invalidList = new ArrayList<>(List.of(
                 new ArrayList<>(List.of( // Не хватает символов
                         "9999",

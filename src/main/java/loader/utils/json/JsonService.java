@@ -19,9 +19,7 @@ public class JsonService {
 
     public void writeObject(Object object, String fileName) {
         try {
-            log.info("Saving data...");
             jsonWriter.writeObject(object, fileName);
-            log.info("Saving completed to file: {}", fileName);
         } catch (IOException e) {
             log.error(e.getMessage());
         }
@@ -29,7 +27,6 @@ public class JsonService {
 
     public <T> List<T> read(Class<T> clazz, String fileName) {
         try {
-            log.info("Reading data...");
             return jsonReader.readObject(clazz, fileName);
         } catch (IOException e) {
             log.error(e.getMessage());

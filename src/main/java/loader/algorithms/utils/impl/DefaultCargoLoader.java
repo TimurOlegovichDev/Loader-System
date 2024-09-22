@@ -25,25 +25,26 @@ public class DefaultCargoLoader implements CargoLoader {
 
     @Override
     public void tryLoadToTransport(Cargo cargo, Transport transport) {
-        log.trace("Trying to find empty space to load cargo: {}", cargo);
+        log.trace("Попытка найти пустое места для погрузки груза: {}", cargo);
         if (!canLoadCargo(cargo, transport)) {
-            throw new InvalidCargoSize("This cargo is too big for this transport: " + cargo);
+            throw new InvalidCargoSize("Этот груз слишком велик: " + cargo);
         }
         for (int i = transport.getBody().length - 1; i >= 0; i--) {
             for (int j = 0; j < transport.getBody()[i].length; j++) {
                 if (transportValidator.canInsertInTransport(i, j, cargo, transport)) {
-                    log.trace("Found empty space to load cargo: {}", cargo);
+                    log.trace("Найдено пустое место для погрузки: {}", cargo);
                     loadCargo(cargo, transport, i, j);
                     return;
                 }
             }
         }
-        throw new NoPlaceException("No empty space found to load cargo: " + cargo);
+        throw new NoPlaceException("Пустое место не найдено для данного груза: " + cargo);
     }
 
 
     @Override
     public void loadCargo(Cargo cargo, Transport transport, int heightIndex, int widthIndex) {
+        log.debug("Выполняется погрузка груза: {} по координатам {},{}", cargo, heightIndex, widthIndex);
         int i = heightIndex;
         char[][] body = transport.getBody();
         for (char[] boxLine : cargo.getForm()) {
@@ -54,5 +55,6 @@ public class DefaultCargoLoader implements CargoLoader {
             }
             i--;
         }
+        log.debug("Груз погружен в транспорт");
     }
 }
