@@ -16,6 +16,7 @@ import loader.utils.json.JsonWriter;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -89,6 +90,33 @@ class JsonServiceTest {
             System.out.println(transportDataManager.getCargos(transport));
         }
         assertArrayEquals(transportDataManager.getData().get(0).getBody(), transportMain.getBody());
+    }
+
+    @Test
+    void testWriteObject() {
+        Cargo cargo = new Cargo(new char[][]{{'1'}});
+        jsonService.writeObject(cargo, "cargo.json");
+        File file = new File("cargo.json");
+        assertTrue(file.exists());
+    }
+
+    @Test
+    void testRead() {
+        Cargo cargo = new Cargo(new char[][]{{'1'}});
+        List<Cargo> cargosToWrite = new ArrayList<>();
+        cargosToWrite.add(cargo);
+        jsonService.writeObject(cargosToWrite, "cargo.json");
+        List<Cargo> cargosAfterRead = jsonService.read(Cargo.class, "cargo.json");
+        assertEquals(1, cargosAfterRead.size());
+        assertArrayEquals(cargo.getForm(),
+                cargosAfterRead.get(0).getForm()
+        );
+    }
+
+    @Test
+    void testReadIOException() {
+        List<Cargo> cargos = jsonService.read(Cargo.class, "non-existent-file.json");
+        assertEquals(0, cargos.size());
     }
 
 }
