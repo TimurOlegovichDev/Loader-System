@@ -8,7 +8,11 @@ import java.util.List;
 
 public class CargoDataManager {
 
-    private final List<Cargo> cargoData = new ArrayList<>();
+    private final List<Cargo> cargoData;
+
+    public CargoDataManager(List<Cargo> cargoData) {
+        this.cargoData = cargoData;
+    }
 
     public List<Cargo> getData() {
         return new ArrayList<>(cargoData);

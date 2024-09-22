@@ -11,6 +11,7 @@ import loader.model.enums.AlgorithmTypes;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -19,54 +20,73 @@ public class AlgoTests {
 
     private final TransportationDataContainer transportationDataContainer =
             new TransportationDataContainer(
-                    new TransportDataManager(),
-                    new CargoDataManager()
+                    new TransportDataManager(new HashMap<>()),
+                    new CargoDataManager(new ArrayList<>())
             );
 
     @Test
     public void noPlaceExcThrowTestIfNullTransportData() {
         assertThrows(
                 NoPlaceException.class,
-                () -> AlgorithmTypes.MES.getAlgorithm().execute(
-                        transportationDataContainer.getCargoDataManager(),
-                        null
-                )
+                () -> {
+                    AlgorithmTypes.MES.getAlgorithm().execute(
+                            transportationDataContainer.getCargoDataManager(),
+                            null
+                    );
+                }
         );
         assertThrows(
                 NoPlaceException.class,
-                () -> AlgorithmTypes.MES.getAlgorithm().execute(
-                        transportationDataContainer.getCargoDataManager(),
-                        null
-                )
+                () -> {
+                    AlgorithmTypes.MES.getAlgorithm().execute(
+                            transportationDataContainer.getCargoDataManager(),
+                            null
+                    );
+                }
         );
     }
 
     @Test
     public void testLoadCargoSuccessfully() {
-        CargoDataManager cargoDataManager = new CargoDataManager();
-        cargoDataManager.add(new Cargo(new char[][]{{'1'}})); // 1x1 cargo
-        TransportDataManager transportDataManager = new TransportDataManager();
-        transportDataManager.add(new Transport());
+        transportationDataContainer.getCargoDataManager()
+                .add(new Cargo(new char[][]{{'1'}}));
+        transportationDataContainer.getTransportDataManager()
+                .add(new Transport());
         LoadingCargoAlgorithm algorithm = AlgorithmTypes.EL.getAlgorithm();
-        algorithm.execute(cargoDataManager, transportDataManager);
-        Transport transport = transportDataManager.getData().get(0);
+        algorithm.execute(
+                transportationDataContainer.getCargoDataManager(),
+                transportationDataContainer.getTransportDataManager()
+        );
+        Transport transport = transportationDataContainer
+                .getTransportDataManager().getData().get(0);
         List<Cargo> testList = new ArrayList<>();
         testList.add(new Cargo(new char[][]{{'1'}}));
-        assertArrayEquals(testList.get(0).getForm(), transportDataManager.getCargos(transport).get(0).getForm());
-        assertEquals(1, transportDataManager.getCargoWeightInTransport(transport));
+        assertArrayEquals(testList.get(0).getForm(),
+                transportationDataContainer.getTransportDataManager()
+                        .getCargos(transport).get(0).getForm()
+        );
+        assertEquals(1,
+                transportationDataContainer.getTransportDataManager()
+                        .getCargoWeightInTransport(transport)
+        );
     }
 
     @Test
     public void testNoPlaceFoundForCargo() {
-        CargoDataManager cargoDataManager = new CargoDataManager();
-        cargoDataManager.add(new Cargo(new char[][]{{'2'}, {'2'}})); // 2x1 cargo
-        TransportDataManager transportDataManager = new TransportDataManager();
-        transportDataManager.add(new Transport(new char[][]{{' ', '1'}})); // truck with no space
+        transportationDataContainer.getCargoDataManager()
+                .add(new Cargo(new char[][]{{'2'}, {'2'}})); // 2x1 cargo
+        transportationDataContainer.getTransportDataManager()
+                .add(new Transport(new char[][]{{' ', '1'}})); // truck with no space
+
         LoadingCargoAlgorithm algorithm = AlgorithmTypes.EL.getAlgorithm();
         assertThrows(
                 NoPlaceException.class,
-                () -> algorithm.execute(cargoDataManager, transportDataManager)
+                () -> {
+                    algorithm.execute(
+                            transportationDataContainer.getCargoDataManager(),
+                            transportationDataContainer.getTransportDataManager()
+                    );
+                }
         );
     }
-
 }

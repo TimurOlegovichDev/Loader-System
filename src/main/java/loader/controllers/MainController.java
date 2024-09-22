@@ -2,6 +2,8 @@ package loader.controllers;
 
 import loader.factories.cargo.DefaultCargoFactory;
 import loader.input.UserInputReceiver;
+import loader.model.dto.TransportDto;
+import loader.model.entites.Transport;
 import loader.model.enums.Scenarios;
 import loader.utils.CargoCounter;
 import loader.utils.FileHandler;
@@ -12,6 +14,8 @@ import loader.validator.CargoValidator;
 import lombok.extern.log4j.Log4j2;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 @Log4j2
 public class MainController {
@@ -93,7 +97,18 @@ public class MainController {
         String filepath = userInputReceiver.getInputLine(
                 "Введите путь к json файлу для сохранения данных: "
         );
-        jsonService.writeObject(transportationDataContainer.getTransportDataManager(), filepath);
+        List<TransportDto> truckDtos = new ArrayList<>();
+        for (Transport transport : transportationDataContainer
+                .getTransportDataManager().getData()) {
+            truckDtos.add(
+                    new TransportDto(
+                            transport.getBody(),
+                            transportationDataContainer.getTransportDataManager()
+                                    .getCargos(transport)
+                    )
+            );
+        }
+        jsonService.writeObject(truckDtos, filepath);
     }
 
     private void printTransports() {

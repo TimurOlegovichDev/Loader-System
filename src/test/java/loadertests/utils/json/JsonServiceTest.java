@@ -18,14 +18,15 @@ import org.junit.jupiter.api.Test;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class JsonServiceTest {
 
-    private final CargoDataManager cargoDataManager = new CargoDataManager();
-    private final TransportDataManager transportDataManager = new TransportDataManager();
+    private final CargoDataManager cargoDataManager = new CargoDataManager(new ArrayList<>());
+    private final TransportDataManager transportDataManager = new TransportDataManager(new HashMap<>());
     private final LoadingCargoAlgorithm algorithm = AlgorithmTypes.EL.getAlgorithm();
     private final JsonService jsonService = new JsonService(
             new JsonWriter(new ObjectMapper()),
@@ -78,7 +79,7 @@ class JsonServiceTest {
         List<TransportDto> transportDtos = jsonService.read(TransportDto.class, TEST_FILE_PATH);
         assertEquals(transportDtos.size(), TRUCKS_NUMBER_IN_FILE);
         Transport transportMain = new TruckFactory().createTransport();
-        TransportDataManager transportDataManager2 = new TransportDataManager();
+        TransportDataManager transportDataManager2 = new TransportDataManager(new HashMap<>());
         transportDataManager2.add(transportMain);
         algorithm.execute(cargoDataManager, transportDataManager2);
         for (TransportDto transportDto : transportDtos) {

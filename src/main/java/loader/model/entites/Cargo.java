@@ -18,8 +18,11 @@ public class Cargo {
 
     @JsonCreator
     public Cargo(@JsonProperty("form") @NonNull char[][] form) {
+        validateForm(form);
         this.form = form;
-        this.type = form[0][0]; // Используем первый символ формы, так как он гарантированно будет в массиве
+        // Используем первый символ формы, так как он гарантированно
+        // будет в массиве
+        this.type = form[0][0];
         weight = (int) Math.pow(Character.getNumericValue(type), 2);
         height = form.length;
         width = Arrays.stream(form)
@@ -42,6 +45,12 @@ public class Cargo {
 
     public char[][] getForm() {
         return Arrays.copyOf(form, form.length);
+    }
+
+    private void validateForm(char[][] form) {
+        if (form.length == 0 || form[0].length == 0) {
+            throw new IllegalArgumentException("Груз не может быть пустым");
+        }
     }
 
     @Override

@@ -24,7 +24,10 @@ public class CargoValidator {
         if (linesContainsLetter(lines)) {
             throw new InvalidCargoInput("Входные данные содержат нечисловые символы " + lines);
         }
+        // Получаем первый символ из массива формы груза,
+        // так как он гарантированно содержится в массиве и мы можем понять какой тип груза нужно обработать
         char symbol = lines.get(FIRST_ROW_INDEX).charAt(FIRST_COLUMN_INDEX);
+        // Возводим в квадрат, так как формат коробки это количество символов равное значению этого символа
         int expectedWeight = (int) Math.pow(Integer.parseInt(symbol + ""), 2);
         int actualWeight = 0;
         for (String line : lines) {

@@ -14,6 +14,8 @@ import loader.utils.json.JsonWriter;
 import lombok.extern.log4j.Log4j2;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
 
 @Log4j2
 public class LoaderApplication {
@@ -22,8 +24,12 @@ public class LoaderApplication {
         log.info("Программа запущена");
         new MainController(
                 new TransportationDataContainer(
-                        new TransportDataManager(),
-                        new CargoDataManager()
+                        new TransportDataManager(
+                                new HashMap<>()
+                        ),
+                        new CargoDataManager(
+                                new ArrayList<>()
+                        )
                 ),
                 new LoadingController(),
                 new UserInputReceiver(),

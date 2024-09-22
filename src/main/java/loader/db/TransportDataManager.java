@@ -5,13 +5,16 @@ import loader.model.entites.Transport;
 import lombok.NonNull;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 public class TransportDataManager {
 
-    private final Map<Transport, List<Cargo>> transportMap = new HashMap<>();
+    private final Map<Transport, List<Cargo>> transportMap;
+
+    public TransportDataManager(Map<Transport, List<Cargo>> transportMap) {
+        this.transportMap = transportMap;
+    }
 
     public List<Transport> getData() {
         return new ArrayList<>(transportMap.keySet());

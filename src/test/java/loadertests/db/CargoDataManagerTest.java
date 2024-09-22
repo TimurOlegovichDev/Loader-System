@@ -4,6 +4,7 @@ import loader.db.CargoDataManager;
 import loader.model.entites.Cargo;
 import org.junit.jupiter.api.Test;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -14,7 +15,7 @@ public class CargoDataManagerTest {
 
     @Test
     void testGetData() {
-        CargoDataManager manager = new CargoDataManager();
+        CargoDataManager manager = new CargoDataManager(new ArrayList<>());
         assertEquals(0, manager.getData().size());
 
         Cargo cargo1 = new Cargo(new char[][]{{'1'}});
@@ -31,7 +32,7 @@ public class CargoDataManagerTest {
 
     @Test
     void testAddSingleCargo() {
-        CargoDataManager manager = new CargoDataManager();
+        CargoDataManager manager = new CargoDataManager(new ArrayList<>());
         Cargo cargo = new Cargo(new char[][]{{'1'}});
 
         manager.add(cargo);
@@ -42,7 +43,7 @@ public class CargoDataManagerTest {
 
     @Test
     void testAddMultipleCargos() {
-        CargoDataManager manager = new CargoDataManager();
+        CargoDataManager manager = new CargoDataManager(new ArrayList<>());
         Cargo cargo1 = new Cargo(new char[][]{{'A'}});
         Cargo cargo2 = new Cargo(new char[][]{{'B'}});
         Cargo cargo3 = new Cargo(new char[][]{{'C'}});
@@ -56,7 +57,7 @@ public class CargoDataManagerTest {
 
     @Test
     void testToString() {
-        CargoDataManager manager = new CargoDataManager();
+        CargoDataManager manager = new CargoDataManager(new ArrayList<>());
         Cargo cargo1 = new Cargo(new char[][]{{'1'}});
         Cargo cargo2 = new Cargo(new char[][]{{'2', '2'}});
 
