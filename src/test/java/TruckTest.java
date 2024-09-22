@@ -1,14 +1,15 @@
 import loader.factories.transport.TruckFactory;
 import loader.model.entites.Transport;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class TruckTest {
 
     @Test
     public void graphicalBodyTest() {
         Transport truck = new TruckFactory().createTransport();
-        Assert.assertEquals(
+        assertEquals(
                 truck.toString(),
                 """       
                         +      +

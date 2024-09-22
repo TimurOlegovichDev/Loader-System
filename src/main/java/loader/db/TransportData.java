@@ -2,6 +2,7 @@ package loader.db;
 
 import loader.model.entites.Cargo;
 import loader.model.entites.Transport;
+import lombok.NonNull;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -24,7 +25,7 @@ public class TransportData {
         transportMap.put(transport, new ArrayList<>());
     }
 
-    public void add(List<Transport> transports) {
+    public void add(@NonNull List<Transport> transports) {
         transports.forEach(this::add);
     }
 

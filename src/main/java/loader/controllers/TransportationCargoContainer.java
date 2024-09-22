@@ -5,13 +5,13 @@ import loader.db.TransportData;
 import lombok.Getter;
 
 @Getter
-public class Repository {
+public class TransportationCargoContainer {
 
     private final TransportData transportData;
 
     private final CargoData cargoData;
 
-    public Repository(TransportData transportData, CargoData cargoData) {
+    public TransportationCargoContainer(TransportData transportData, CargoData cargoData) {
         this.transportData = transportData;
         this.cargoData = cargoData;
     }

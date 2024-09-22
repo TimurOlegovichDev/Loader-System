@@ -3,9 +3,9 @@ package loader.model.enums;
 import loader.algorithms.EvenLoadingAlgorithm;
 import loader.algorithms.LoadingCargoAlgorithm;
 import loader.algorithms.MinimumEmptySpaceAlgorithm;
-import loader.algorithms.utils.DefaultCargoLoader;
-import loader.algorithms.utils.DefaultCargoSorter;
-import loader.algorithms.utils.DefaultTransportValidator;
+import loader.algorithms.utils.impl.DefaultCargoLoader;
+import loader.algorithms.utils.impl.DefaultCargoSorter;
+import loader.algorithms.utils.impl.DefaultTransportValidator;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 

@@ -1,5 +1,6 @@
-package loader.algorithms.utils;
+package loader.algorithms.utils.impl;
 
+import loader.algorithms.utils.CargoSorter;
 import loader.model.entites.Cargo;
 
 import java.util.ArrayList;

@@ -1,9 +1,5 @@
 package loader.utils;
 
-import loader.db.TransportData;
-import loader.model.dto.TransportDto;
-import loader.model.entites.Transport;
-import loader.utils.json.JsonService;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.BufferedReader;
@@ -14,20 +10,6 @@ import java.util.List;
 
 @Slf4j
 public class FileHandler {
-
-    private final JsonService jsonService;
-
-    public FileHandler(JsonService jsonService) {
-        this.jsonService = jsonService;
-    }
-
-    public void saveAtJson(String filePath, TransportData transportData) {
-        List<TransportDto> transportDtos = new ArrayList<>();
-        for (Transport transport : transportData.getData()) {
-            transportDtos.add(new TransportDto(transport.getBody(), transportData.getCargos(transport)));
-        }
-        jsonService.writeObject(transportDtos, filePath);
-    }
 
     public List<String> read(String src) {
         log.debug("Reading file from path: {}", src);

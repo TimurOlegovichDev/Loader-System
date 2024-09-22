@@ -13,6 +13,12 @@ import java.util.Map;
 
 public class TruckInitializer {
 
+    private final JsonService jsonService;
+
+    public TruckInitializer(JsonService jsonService) {
+        this.jsonService = jsonService;
+    }
+
     public List<Transport> initialize(int numberOfTransport) {
         List<Transport> transports = new ArrayList<>();
         for (int i = 0; i < numberOfTransport; i++) {
@@ -22,7 +28,7 @@ public class TruckInitializer {
     }
 
     public Map<Transport, List<Cargo>> initializeFromJson(String filepath) {
-        List<TransportDto> transportDtos = new JsonService().read(TransportDto.class, filepath);
+        List<TransportDto> transportDtos = jsonService.read(TransportDto.class, filepath);
         Map<Transport, List<Cargo>> map = new HashMap<>();
         for (TransportDto transportDto : transportDtos) {
             map.put(

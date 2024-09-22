@@ -1,5 +1,7 @@
-package loader.algorithms.utils;
+package loader.algorithms.utils.impl;
 
+import loader.algorithms.utils.CargoLoader;
+import loader.algorithms.utils.TransportValidator;
 import loader.exceptions.InvalidCargoSize;
 import loader.exceptions.NoPlaceException;
 import loader.model.entites.Cargo;

@@ -1,6 +1,5 @@
 package loader.utils.json;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.IOException;
@@ -13,9 +12,9 @@ public class JsonService {
     private final JsonWriter jsonWriter;
     private final JsonReader jsonReader;
 
-    public JsonService() {
-        this.jsonWriter = new JsonWriter(new ObjectMapper());
-        this.jsonReader = new JsonReader(new ObjectMapper());
+    public JsonService(JsonWriter jsonWriter, JsonReader jsonReader) {
+        this.jsonWriter = jsonWriter;
+        this.jsonReader = jsonReader;
     }
 
     public void writeObject(Object object, String fileName) {

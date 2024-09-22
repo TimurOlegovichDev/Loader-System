@@ -15,9 +15,9 @@ public class CargoInitializer {
     private final CargoValidator validator;
     private final DefaultCargoFactory defaultCargoFactory;
 
-    public CargoInitializer() {
-        this.validator = new CargoValidator();
-        this.defaultCargoFactory = new DefaultCargoFactory();
+    public CargoInitializer(CargoValidator validator, DefaultCargoFactory defaultCargoFactory) {
+        this.validator = validator;
+        this.defaultCargoFactory = defaultCargoFactory;
     }
 
     public List<Cargo> initialize(List<String> forms) {
@@ -47,7 +47,7 @@ public class CargoInitializer {
         return initialBoxes;
     }
 
-    public char[][] getForm(List<String> lines) {
+    private char[][] getForm(List<String> lines) {
         log.trace("Converting lines to char array");
         char[][] form = new char[lines.size()][];
         int indexCharArray = 0;

@@ -14,7 +14,7 @@ public class CargoValidator {
     private final int FIRST_ROW_INDEX = 0;
     private final int FIRST_COLUMN_INDEX = 0;
 
-    public void validate(List<String> lines) {
+    public void validate(List<String> lines) throws InvalidCargoInput {
         log.debug("Validating box with lines: {}", lines);
         boxFormValidate(lines);
         log.debug("Box is valid: {}", lines);
@@ -22,7 +22,7 @@ public class CargoValidator {
 
     private void boxFormValidate(List<String> lines) throws InvalidCargoInput {
         if (linesContainsLetter(lines)) {
-            throw new InvalidCargoInput("The box format is damaged");
+            throw new InvalidCargoInput("Входные данные содержат нечисловые символы " + lines);
         }
         char symbol = lines.get(FIRST_ROW_INDEX).charAt(FIRST_COLUMN_INDEX);
         int correctWeight = (int) Math.pow(Integer.parseInt(symbol + ""), 2);

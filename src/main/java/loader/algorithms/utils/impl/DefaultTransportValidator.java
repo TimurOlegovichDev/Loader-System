@@ -1,5 +1,6 @@
-package loader.algorithms.utils;
+package loader.algorithms.utils.impl;
 
+import loader.algorithms.utils.TransportValidator;
 import loader.db.TransportData;
 import loader.exceptions.NoPlaceException;
 import loader.model.entites.Cargo;
@@ -10,7 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 public class DefaultTransportValidator implements TransportValidator {
 
     @Override
-    public void validateTransportData(TransportData transportData) {
+    public void validateTransportData(TransportData transportData) throws NoPlaceException {
         if (transportData == null || transportData.getData().isEmpty()) {
             throw new NoPlaceException("There is no truck to load");
         }

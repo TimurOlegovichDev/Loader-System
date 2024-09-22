@@ -1,11 +1,14 @@
 package loader.controllers;
 
+import loader.factories.cargo.DefaultCargoFactory;
 import loader.input.UserInputReceiver;
 import loader.model.enums.Scenarios;
 import loader.utils.CargoCounter;
 import loader.utils.FileHandler;
 import loader.utils.initializers.CargoInitializer;
 import loader.utils.initializers.TruckInitializer;
+import loader.utils.json.JsonService;
+import loader.validator.CargoValidator;
 import lombok.extern.log4j.Log4j2;
 
 import java.io.IOException;
@@ -13,26 +16,32 @@ import java.io.IOException;
 @Log4j2
 public class MainController {
 
-    private final Repository repository;
+    private final TransportationCargoContainer transportationCargoContainer;
     private final InitController initController;
     private final LoadingController loadingController;
     private final UserInputReceiver userInputReceiver;
     private final FileHandler fileHandler;
+    private final JsonService jsonService;
 
-    public MainController(Repository repository,
+    public MainController(TransportationCargoContainer transportationCargoContainer,
                           LoadingController loadingController,
                           UserInputReceiver userInputReceiver,
-                          FileHandler fileHandler) {
-        this.repository = repository;
+                          FileHandler fileHandler,
+                          JsonService jsonService) {
+        this.transportationCargoContainer = transportationCargoContainer;
         this.initController = new InitController(
-                new TruckInitializer(),
-                new CargoInitializer(),
-                repository,
+                new TruckInitializer(jsonService),
+                new CargoInitializer(
+                        new CargoValidator(),
+                        new DefaultCargoFactory()
+                ),
+                transportationCargoContainer,
                 new CargoCounter()
         );
         this.loadingController = loadingController;
         this.userInputReceiver = userInputReceiver;
         this.fileHandler = fileHandler;
+        this.jsonService = jsonService;
     }
 
     public void start() throws IOException {
@@ -69,21 +78,21 @@ public class MainController {
 
     private void loadCargos() {
         loadingController.startLoading(
-                repository.getCargoData(),
-                repository.getTransportData()
+                transportationCargoContainer.getCargoData(),
+                transportationCargoContainer.getTransportData()
         );
     }
 
     private void save() {
         String filepath = userInputReceiver.getInputLine("Enter file path to save data: ");
-        fileHandler.saveAtJson(filepath, repository.getTransportData());
+        jsonService.writeObject(transportationCargoContainer.getTransportData(), filepath);
     }
 
     private void printTransports() {
-        if (!repository.getTransportData().getData().isEmpty()) {
+        if (!transportationCargoContainer.getTransportData().getData().isEmpty()) {
             log.info("{}{}",
                     System.lineSeparator(),
-                    repository.getTransportData()
+                    transportationCargoContainer.getTransportData()
             );
         }
     }
