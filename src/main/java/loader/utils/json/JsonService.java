@@ -20,8 +20,9 @@ public class JsonService {
     public void writeObject(Object object, String fileName) {
         try {
             jsonWriter.writeObject(object, fileName);
+            log.info("Данные успешно записаны на диск");
         } catch (IOException e) {
-            log.error(e.getMessage());
+            log.error("При записи произошла ошибка {}", e.getMessage());
         }
     }
 
@@ -29,7 +30,7 @@ public class JsonService {
         try {
             return jsonReader.readObject(clazz, fileName);
         } catch (IOException e) {
-            log.error(e.getMessage());
+            log.error("При чтении произошла ошибка {}", e.getMessage());
         }
         return new ArrayList<>();
     }

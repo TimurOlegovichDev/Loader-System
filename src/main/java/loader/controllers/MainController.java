@@ -1,5 +1,6 @@
 package loader.controllers;
 
+import loader.db.TransportDataManager;
 import loader.factories.cargo.DefaultCargoFactory;
 import loader.input.UserInputReceiver;
 import loader.model.dto.TransportDto;
@@ -19,6 +20,11 @@ import java.util.List;
 
 @Log4j2
 public class MainController {
+
+    private static final String CARGO_FILE_PROMPT = "Введите путь к файлу для считывания груза: ";
+    private static final String TRANSPORT_FILE_PROMPT = "Введите путь к json файлу для добавления транспорта:";
+    private static final String SAVE_FILE_PROMPT = "Введите путь к json файлу для сохранения данных: ";
+    private static final String GET_TRANSPORT_NUMBER_PROMPT = "Введите количество транспорта, которое хотите создать: ";
 
     private final TransportationDataContainer transportationDataContainer;
     private final InitController initController;
@@ -50,12 +56,16 @@ public class MainController {
 
     public void start() throws IOException {
         for (Scenarios scenario : Scenarios.values()) {
-            switch (scenario) {
-                case INITIALIZE_ENTITIES -> initEntities();
-                case LOAD_CARGOS_INTO_TRANSPORT -> loadCargos();
-                case SAVE_DATA -> save();
-                case PRINT_DATA -> printTransports();
-            }
+            executeScenario(scenario);
+        }
+    }
+
+    private void executeScenario(Scenarios scenario) throws IOException {
+        switch (scenario) {
+            case INITIALIZE_ENTITIES -> initEntities();
+            case LOAD_CARGOS_INTO_TRANSPORT -> loadCargos();
+            case SAVE_DATA -> save();
+            case PRINT_DATA -> printTransports();
         }
     }
 
@@ -65,24 +75,18 @@ public class MainController {
     }
 
     private void initCargos() {
-        String filepath = userInputReceiver.getInputLine(
-                "Введите путь к файлу для считывания груза: "
-        );
+        String filepath = userInputReceiver.getInputLine(CARGO_FILE_PROMPT);
         initController.initializeCargos(fileHandler.read(filepath));
     }
 
     private void initTransports() {
         initTransportFromFile();
-        int num = userInputReceiver.getNumber(
-                "Введите количество транспорта, которое хотите создать: "
-        );
+        int num = userInputReceiver.getNumber(GET_TRANSPORT_NUMBER_PROMPT);
         initController.initializeTransport(num);
     }
 
     private void initTransportFromFile() {
-        String filepath = userInputReceiver.getInputLine(
-                "Введите путь к json файлу для добавления транспорта:"
-        );
+        String filepath = userInputReceiver.getInputLine(TRANSPORT_FILE_PROMPT);
         initController.initializeTransport(filepath);
     }
 
@@ -94,17 +98,14 @@ public class MainController {
     }
 
     private void save() {
-        String filepath = userInputReceiver.getInputLine(
-                "Введите путь к json файлу для сохранения данных: "
-        );
+        String filepath = userInputReceiver.getInputLine(SAVE_FILE_PROMPT);
         List<TransportDto> truckDtos = new ArrayList<>();
-        for (Transport transport : transportationDataContainer
-                .getTransportDataManager().getData()) {
+        TransportDataManager transportDataManager = transportationDataContainer.getTransportDataManager();
+        for (Transport transport : transportDataManager.getData()) {
             truckDtos.add(
                     new TransportDto(
                             transport.getBody(),
-                            transportationDataContainer.getTransportDataManager()
-                                    .getCargos(transport)
+                            transportDataManager.getCargos(transport)
                     )
             );
         }
@@ -114,11 +115,7 @@ public class MainController {
     private void printTransports() {
         log.info("Отображение транспорта");
         if (!transportationDataContainer.getTransportDataManager().getData().isEmpty()) {
-            log.info("{}{}",
-                    System.lineSeparator(),
-                    transportationDataContainer.getTransportDataManager()
-            );
+            log.info("{}{}", System.lineSeparator(), transportationDataContainer.getTransportDataManager());
         }
     }
-
 }
