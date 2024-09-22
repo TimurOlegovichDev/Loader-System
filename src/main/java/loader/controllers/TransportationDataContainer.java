@@ -15,5 +15,4 @@ public class TransportationDataContainer {
         this.transportDataManager = transportDataManager;
         this.cargoDataManager = cargoDataManager;
     }
-
 }

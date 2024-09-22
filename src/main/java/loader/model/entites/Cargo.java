@@ -36,6 +36,7 @@ public class Cargo {
                  int width,
                  int weight,
                  char type) {
+        validateForm(form);
         this.form = form;
         this.height = height;
         this.width = width;

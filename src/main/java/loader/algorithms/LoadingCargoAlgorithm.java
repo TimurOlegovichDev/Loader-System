@@ -19,5 +19,4 @@ public abstract class LoadingCargoAlgorithm {
     }
 
     public abstract void execute(CargoDataManager cargoDataManager, TransportDataManager transportDataManager);
-
 }

@@ -13,5 +13,4 @@ public class TruckFactory implements TransportFactory {
     public Transport createTransport(char[][] body) {
         return new Transport(body);
     }
-
 }

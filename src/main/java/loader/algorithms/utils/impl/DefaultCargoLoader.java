@@ -18,12 +18,6 @@ public class DefaultCargoLoader implements CargoLoader {
     }
 
     @Override
-    public boolean canLoadCargo(Cargo cargo, Transport transport) {
-        return cargo.getWidth() <= transport.getBody().length
-                && cargo.getHeight() <= transport.getBody()[0].length;
-    }
-
-    @Override
     public void tryLoadToTransport(Cargo cargo, Transport transport) {
         log.trace("Попытка найти пустое места для погрузки груза: {}", cargo);
         if (!canLoadCargo(cargo, transport)) {
@@ -41,6 +35,11 @@ public class DefaultCargoLoader implements CargoLoader {
         throw new NoPlaceException("Пустое место не найдено для данного груза: " + cargo);
     }
 
+    @Override
+    public boolean canLoadCargo(Cargo cargo, Transport transport) {
+        return cargo.getWidth() <= transport.getBody().length
+                && cargo.getHeight() <= transport.getBody()[0].length;
+    }
 
     @Override
     public void loadCargo(Cargo cargo, Transport transport, int heightIndex, int widthIndex) {

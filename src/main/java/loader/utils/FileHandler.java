@@ -19,12 +19,10 @@ public class FileHandler {
             while ((line = br.readLine()) != null) {
                 result.add(line.trim());
             }
-            br.close();
             log.debug("Файл прочитан успешно, количество прочитанных строк: {}", result.size());
         } catch (IOException e) {
             log.error(e.getMessage());
         }
         return result;
     }
-
 }

@@ -8,5 +8,4 @@ public class DefaultCargoFactory implements CargoFactory {
     public Cargo createCargo(char[][] form) {
         return new Cargo(form);
     }
-
 }

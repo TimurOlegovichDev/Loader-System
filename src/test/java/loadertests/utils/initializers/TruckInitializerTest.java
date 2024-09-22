@@ -1,9 +1,9 @@
-package loader.utils.initializers;
+package loadertests.utils.initializers;
 
-import loader.factories.transport.TruckFactory;
-import loader.model.dto.TransportDto;
 import loader.model.entites.Cargo;
 import loader.model.entites.Transport;
+import loader.model.structures.TransportJsonStructure;
+import loader.utils.initializers.TruckInitializer;
 import loader.utils.json.JsonService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -29,9 +29,6 @@ public class TruckInitializerTest {
     @Mock
     private JsonService jsonService;
 
-    @Mock
-    private TruckFactory truckFactory;
-
     @InjectMocks
     private TruckInitializer truckInitializer;
 
@@ -50,22 +47,22 @@ public class TruckInitializerTest {
 
     @Test
     void testInitializeFromJson_withValidJsonFile_returnsMapOfTransportsAndCargos() {
-        List<TransportDto> transportDtos = Arrays.asList(
-                new TransportDto(new char[][]{{'+', '1', '+'}}, List.of(new Cargo(new char[][]{{'1'}}))),
-                new TransportDto(new char[][]{{'+', '1', '+'}}, List.of(new Cargo(new char[][]{{'1'}})))
+        List<TransportJsonStructure> transportJsonStructures = Arrays.asList(
+                new TransportJsonStructure(new char[][]{{'+', '1', '+'}}, List.of(new Cargo(new char[][]{{'1'}}))),
+                new TransportJsonStructure(new char[][]{{'+', '1', '+'}}, List.of(new Cargo(new char[][]{{'1'}})))
         );
 
-        when(jsonService.read(TransportDto.class, VALID_JSON)).thenReturn(transportDtos);
+        when(jsonService.read(TransportJsonStructure.class, VALID_JSON)).thenReturn(transportJsonStructures);
 
         Map<Transport, List<Cargo>> actualMap = truckInitializer.initializeFromJson(VALID_JSON);
         assertEquals(2, actualMap.size());
         assertNotNull(actualMap);
-        verify(jsonService).read(TransportDto.class, VALID_JSON);
+        verify(jsonService).read(TransportJsonStructure.class, VALID_JSON);
     }
 
     @Test
     void testInitializeFromJson_withInvalidJsonFile_throwsException() {
-        when(jsonService.read(TransportDto.class, INVALID_JSON)).thenThrow(new RuntimeException("Invalid JSON file"));
+        when(jsonService.read(TransportJsonStructure.class, INVALID_JSON)).thenThrow(new RuntimeException("Invalid JSON file"));
 
         assertThrows(
                 RuntimeException.class,

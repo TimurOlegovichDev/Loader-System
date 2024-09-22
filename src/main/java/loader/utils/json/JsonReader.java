@@ -23,5 +23,4 @@ public class JsonReader {
         log.debug("Чтение успешно завершено!");
         return list;
     }
-
 }

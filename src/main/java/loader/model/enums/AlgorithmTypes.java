@@ -48,5 +48,4 @@ public enum AlgorithmTypes {
             return MES.algorithm;
         }
     }
-
 }

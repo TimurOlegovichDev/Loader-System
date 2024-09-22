@@ -29,5 +29,4 @@ public class UserInputReceiver {
         log.debug("Пользовательский ввод: {}", input);
         return input;
     }
-
 }

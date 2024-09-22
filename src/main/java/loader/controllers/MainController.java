@@ -3,9 +3,9 @@ package loader.controllers;
 import loader.db.TransportDataManager;
 import loader.factories.cargo.DefaultCargoFactory;
 import loader.input.UserInputReceiver;
-import loader.model.dto.TransportDto;
 import loader.model.entites.Transport;
 import loader.model.enums.Scenarios;
+import loader.model.structures.TransportJsonStructure;
 import loader.utils.CargoCounter;
 import loader.utils.FileHandler;
 import loader.utils.initializers.CargoInitializer;
@@ -14,7 +14,6 @@ import loader.utils.json.JsonService;
 import loader.validator.CargoValidator;
 import lombok.extern.log4j.Log4j2;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -54,13 +53,13 @@ public class MainController {
         this.jsonService = jsonService;
     }
 
-    public void start() throws IOException {
+    public void start() {
         for (Scenarios scenario : Scenarios.values()) {
             executeScenario(scenario);
         }
     }
 
-    private void executeScenario(Scenarios scenario) throws IOException {
+    private void executeScenario(Scenarios scenario) {
         switch (scenario) {
             case INITIALIZE_ENTITIES -> initEntities();
             case LOAD_CARGOS_INTO_TRANSPORT -> loadCargos();
@@ -69,7 +68,7 @@ public class MainController {
         }
     }
 
-    private void initEntities() throws IOException {
+    private void initEntities() {
         initCargos();
         initTransports();
     }
@@ -80,9 +79,9 @@ public class MainController {
     }
 
     private void initTransports() {
-        initTransportFromFile();
         int num = userInputReceiver.getNumber(GET_TRANSPORT_NUMBER_PROMPT);
         initController.initializeTransport(num);
+        initTransportFromFile();
     }
 
     private void initTransportFromFile() {
@@ -99,17 +98,17 @@ public class MainController {
 
     private void save() {
         String filepath = userInputReceiver.getInputLine(SAVE_FILE_PROMPT);
-        List<TransportDto> truckDtos = new ArrayList<>();
+        List<TransportJsonStructure> structures = new ArrayList<>();
         TransportDataManager transportDataManager = transportationDataContainer.getTransportDataManager();
         for (Transport transport : transportDataManager.getData()) {
-            truckDtos.add(
-                    new TransportDto(
+            structures.add(
+                    new TransportJsonStructure(
                             transport.getBody(),
                             transportDataManager.getCargos(transport)
                     )
             );
         }
-        jsonService.writeObject(truckDtos, filepath);
+        jsonService.writeObject(structures, filepath);
     }
 
     private void printTransports() {

@@ -1,9 +1,10 @@
 package loader.utils.initializers;
 
+import loader.factories.transport.TransportFactory;
 import loader.factories.transport.TruckFactory;
-import loader.model.dto.TransportDto;
 import loader.model.entites.Cargo;
 import loader.model.entites.Transport;
+import loader.model.structures.TransportJsonStructure;
 import loader.utils.json.JsonService;
 
 import java.util.ArrayList;
@@ -20,20 +21,28 @@ public class TruckInitializer {
     }
 
     public List<Transport> initialize(int numberOfTransport) {
+        TransportFactory transportFactory = new TruckFactory();
         List<Transport> transports = new ArrayList<>();
         for (int i = 0; i < numberOfTransport; i++) {
-            transports.add(new Transport());
+            transports.add(
+                    transportFactory.createTransport()
+            );
         }
         return transports;
     }
 
     public Map<Transport, List<Cargo>> initializeFromJson(String filepath) {
-        List<TransportDto> transportDtos = jsonService.read(TransportDto.class, filepath);
+        List<TransportJsonStructure> transportJsonStructures =
+                jsonService.read(TransportJsonStructure.class, filepath);
         Map<Transport, List<Cargo>> map = new HashMap<>();
-        for (TransportDto transportDto : transportDtos) {
+        for (TransportJsonStructure transportJsonStructure : transportJsonStructures) {
             map.put(
-                    new TruckFactory().createTransport(transportDto.getBody()),
-                    new ArrayList<>(transportDto.getCargos())
+                    new TruckFactory().createTransport(
+                            transportJsonStructure.getBody()
+                    ),
+                    new ArrayList<>(
+                            transportJsonStructure.getCargos()
+                    )
             );
         }
         return map;

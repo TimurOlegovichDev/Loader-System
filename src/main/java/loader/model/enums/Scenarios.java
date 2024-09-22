@@ -6,5 +6,4 @@ public enum Scenarios {
     LOAD_CARGOS_INTO_TRANSPORT,
     SAVE_DATA,
     PRINT_DATA
-
 }

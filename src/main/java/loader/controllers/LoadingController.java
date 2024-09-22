@@ -31,5 +31,4 @@ public class LoadingController {
                 );
         return AlgorithmTypes.of(algorithmName);
     }
-
 }

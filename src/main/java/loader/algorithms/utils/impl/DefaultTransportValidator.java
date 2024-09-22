@@ -18,7 +18,10 @@ public class DefaultTransportValidator implements TransportValidator {
     }
 
     @Override
-    public boolean canInsertInTransport(int heightIndex, int widthIndex, Cargo cargo, Transport transport) {
+    public boolean canInsertInTransport(int heightIndex,
+                                        int widthIndex,
+                                        Cargo cargo,
+                                        Transport transport) {
         log.trace("Проверка на возможность погрузки груза по координатам ({}, {})", heightIndex, widthIndex);
         char[][] cpBody = copyBody(transport.getBody());
         int height = heightIndex;

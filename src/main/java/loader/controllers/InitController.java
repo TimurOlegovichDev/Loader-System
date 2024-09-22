@@ -58,5 +58,4 @@ public class InitController {
             log.info("{}{}", System.lineSeparator(), transport.toString());
         }
     }
-
 }

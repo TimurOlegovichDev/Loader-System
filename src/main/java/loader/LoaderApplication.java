@@ -13,14 +13,13 @@ import loader.utils.json.JsonService;
 import loader.utils.json.JsonWriter;
 import lombok.extern.log4j.Log4j2;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
 @Log4j2
 public class LoaderApplication {
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) {
         log.info("Программа запущена");
         new MainController(
                 new TransportationDataContainer(
@@ -45,5 +44,4 @@ public class LoaderApplication {
         ).start();
         log.info("Завершение работы");
     }
-
 }

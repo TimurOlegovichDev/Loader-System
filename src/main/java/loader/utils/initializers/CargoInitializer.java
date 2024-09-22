@@ -61,5 +61,4 @@ public class CargoInitializer {
         log.trace("Конвертирование листа завершено");
         return form;
     }
-
 }

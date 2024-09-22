@@ -6,10 +6,10 @@ import loader.db.CargoDataManager;
 import loader.db.TransportDataManager;
 import loader.factories.cargo.DefaultCargoFactory;
 import loader.factories.transport.TruckFactory;
-import loader.model.dto.TransportDto;
 import loader.model.entites.Cargo;
 import loader.model.entites.Transport;
 import loader.model.enums.AlgorithmTypes;
+import loader.model.structures.TransportJsonStructure;
 import loader.utils.json.JsonReader;
 import loader.utils.json.JsonService;
 import loader.utils.json.JsonWriter;
@@ -55,19 +55,19 @@ class JsonServiceTest {
 
     @Test
     public void test_write_and_read_truck_to_data() {
-        List<TransportDto> transportDtos = new ArrayList<>();
+        List<TransportJsonStructure> transportJsonStructures = new ArrayList<>();
         for (Transport transport : transportDataManager.getData()) {
-            transportDtos.add(new TransportDto(transport.getBody(), transportDataManager.getCargos(transport)));
+            transportJsonStructures.add(new TransportJsonStructure(transport.getBody(), transportDataManager.getCargos(transport)));
             transportDataManager.remove(transport);
         }
         assertTrue(transportDataManager.getData().isEmpty());
-        jsonService.writeObject(transportDtos, TEST_FILE_PATH);
-        transportDtos.clear();
-        transportDtos = jsonService.read(TransportDto.class, TEST_FILE_PATH);
-        for (TransportDto transportDto : transportDtos) {
-            Transport transport = new TruckFactory().createTransport(transportDto.getBody());
+        jsonService.writeObject(transportJsonStructures, TEST_FILE_PATH);
+        transportJsonStructures.clear();
+        transportJsonStructures = jsonService.read(TransportJsonStructure.class, TEST_FILE_PATH);
+        for (TransportJsonStructure transportJsonStructure : transportJsonStructures) {
+            Transport transport = new TruckFactory().createTransport(transportJsonStructure.getBody());
             transportDataManager.add(transport);
-            for (Cargo cargo : transportDto.getCargos()) {
+            for (Cargo cargo : transportJsonStructure.getCargos()) {
                 transportDataManager.addCargoInTransport(transport, cargo);
             }
         }
@@ -76,16 +76,16 @@ class JsonServiceTest {
 
     @Test
     public void test_read_truck_json() {
-        List<TransportDto> transportDtos = jsonService.read(TransportDto.class, TEST_FILE_PATH);
-        assertEquals(transportDtos.size(), TRUCKS_NUMBER_IN_FILE);
+        List<TransportJsonStructure> transportJsonStructures = jsonService.read(TransportJsonStructure.class, TEST_FILE_PATH);
+        assertEquals(transportJsonStructures.size(), TRUCKS_NUMBER_IN_FILE);
         Transport transportMain = new TruckFactory().createTransport();
         TransportDataManager transportDataManager2 = new TransportDataManager(new HashMap<>());
         transportDataManager2.add(transportMain);
         algorithm.execute(cargoDataManager, transportDataManager2);
-        for (TransportDto transportDto : transportDtos) {
-            Transport transport = new TruckFactory().createTransport(transportDto.getBody());
+        for (TransportJsonStructure transportJsonStructure : transportJsonStructures) {
+            Transport transport = new TruckFactory().createTransport(transportJsonStructure.getBody());
             transportDataManager.add(transport);
-            for (Cargo cargo : transportDto.getCargos()) {
+            for (Cargo cargo : transportJsonStructure.getCargos()) {
                 transportDataManager.addCargoInTransport(transport, cargo);
             }
             System.out.println(transportDataManager.getCargos(transport));
