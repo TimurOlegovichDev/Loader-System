@@ -33,37 +33,26 @@ public class LoaderApplication {
     }
 
     private static MainController createMainController() {
-        TransportDataManager transportDataManager = createTransportDataManager();
-        TruckInitializer truckInitializer = createTruckInitializer();
-        CargoInitializer cargoInitializer = createCargoInitializer();
-        CargoDataManager cargoDataManager = createCargoDataManager();
-        CargoCounter cargoCounter = createCargoCounter();
-        ComponentInitializer initController = createComponentInitializer(truckInitializer, cargoInitializer, transportDataManager, cargoDataManager, cargoCounter);
+        TransportDataManager transportDataManager = new TransportDataManager(new HashMap<>());
+        TruckInitializer truckInitializer = new TruckInitializer(createJsonService());
+        CargoInitializer cargoInitializer = new CargoInitializer(
+                new CargoValidator(),
+                new DefaultCargoFactory()
+        );
+        CargoDataManager cargoDataManager = new CargoDataManager(new ArrayList<>());
+        CargoCounter cargoCounter = new CargoCounter();
+        ComponentInitializer initController = createComponentInitializer(
+                truckInitializer,
+                cargoInitializer,
+                transportDataManager,
+                cargoDataManager,
+                cargoCounter
+        );
         LoadingProcessor loadingProcessor = createLoadingProcessor(transportDataManager, cargoDataManager);
-        UserInputReceiver userInputReceiver = createUserInputReceiver();
-        FileHandler fileHandler = createFileHandler();
+        UserInputReceiver userInputReceiver = new UserInputReceiver();
+        FileHandler fileHandler = new FileHandler();
         JsonService jsonService = createJsonService();
         return new MainController(transportDataManager, initController, loadingProcessor, userInputReceiver, fileHandler, jsonService);
-    }
-
-    private static TransportDataManager createTransportDataManager() {
-        return new TransportDataManager(new HashMap<>());
-    }
-
-    private static TruckInitializer createTruckInitializer() {
-        return new TruckInitializer(createJsonService());
-    }
-
-    private static CargoInitializer createCargoInitializer() {
-        return new CargoInitializer(new CargoValidator(), new DefaultCargoFactory());
-    }
-
-    private static CargoDataManager createCargoDataManager() {
-        return new CargoDataManager(new ArrayList<>());
-    }
-
-    private static CargoCounter createCargoCounter() {
-        return new CargoCounter();
     }
 
     private static ComponentInitializer createComponentInitializer(TruckInitializer truckInitializer, CargoInitializer cargoInitializer, TransportDataManager transportDataManager, CargoDataManager cargoDataManager, CargoCounter cargoCounter) {
@@ -72,14 +61,6 @@ public class LoaderApplication {
 
     private static LoadingProcessor createLoadingProcessor(TransportDataManager transportDataManager, CargoDataManager cargoDataManager) {
         return new DefaultLoadingProcessor(transportDataManager, cargoDataManager);
-    }
-
-    private static UserInputReceiver createUserInputReceiver() {
-        return new UserInputReceiver();
-    }
-
-    private static FileHandler createFileHandler() {
-        return new FileHandler();
     }
 
     private static JsonService createJsonService() {
