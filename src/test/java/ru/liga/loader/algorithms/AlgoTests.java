@@ -6,8 +6,8 @@ import ru.liga.loader.db.CargoDataManager;
 import ru.liga.loader.db.TransportDataManager;
 import ru.liga.loader.enums.AlgorithmTypes;
 import ru.liga.loader.exception.NoPlaceException;
-import ru.liga.loader.model.entites.Cargo;
-import ru.liga.loader.model.entites.Transport;
+import ru.liga.loader.model.entity.Cargo;
+import ru.liga.loader.model.entity.Transport;
 
 import java.util.ArrayList;
 import java.util.HashMap;

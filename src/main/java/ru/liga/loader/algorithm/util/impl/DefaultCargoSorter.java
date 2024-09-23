@@ -2,7 +2,7 @@ package ru.liga.loader.algorithm.util.impl;
 
 import lombok.extern.slf4j.Slf4j;
 import ru.liga.loader.algorithm.util.CargoSorter;
-import ru.liga.loader.model.entites.Cargo;
+import ru.liga.loader.model.entity.Cargo;
 
 import java.util.ArrayList;
 import java.util.List;

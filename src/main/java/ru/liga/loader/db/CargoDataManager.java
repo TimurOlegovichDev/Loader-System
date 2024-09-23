@@ -1,7 +1,7 @@
 package ru.liga.loader.db;
 
 
-import ru.liga.loader.model.entites.Cargo;
+import ru.liga.loader.model.entity.Cargo;
 
 import java.util.ArrayList;
 import java.util.List;

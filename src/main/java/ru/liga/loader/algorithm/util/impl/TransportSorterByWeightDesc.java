@@ -3,8 +3,9 @@ package ru.liga.loader.algorithm.util.impl;
 import lombok.extern.slf4j.Slf4j;
 import ru.liga.loader.algorithm.util.TransportSorter;
 import ru.liga.loader.db.TransportDataManager;
-import ru.liga.loader.model.entites.Transport;
+import ru.liga.loader.model.entity.Transport;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -15,8 +16,8 @@ public class TransportSorterByWeightDesc implements TransportSorter {
 
     @Override
     public List<Transport> sort(TransportDataManager transportDataManager) {
-        log.debug("Сортировка транспорта по весу груза в порядке возрастания...");
-        List<Transport> sorted = transportDataManager.getData().stream()
+        log.debug("Сортировка транспорта по весу груза в порядке убывания...");
+        List<Transport> sorted = new ArrayList<>(transportDataManager.getData()).stream()
                 .sorted(Comparator.comparingInt(transportDataManager::getCargoWeightInTransport))
                 .collect(Collectors.toList());
         Collections.reverse(sorted);

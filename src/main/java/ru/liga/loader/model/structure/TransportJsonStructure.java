@@ -1,6 +1,6 @@
-package ru.liga.loader.model.structures;
+package ru.liga.loader.model.structure;
 
-import ru.liga.loader.model.entites.Cargo;
+import ru.liga.loader.model.entity.Cargo;
 
 import java.util.List;
 

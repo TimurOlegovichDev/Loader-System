@@ -1,8 +1,8 @@
 package ru.liga.loader.db;
 
 import lombok.NonNull;
-import ru.liga.loader.model.entites.Cargo;
-import ru.liga.loader.model.entites.Transport;
+import ru.liga.loader.model.entity.Cargo;
+import ru.liga.loader.model.entity.Transport;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -6,7 +6,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import ru.liga.loader.factory.cargo.DefaultCargoFactory;
-import ru.liga.loader.model.entites.Cargo;
+import ru.liga.loader.model.entity.Cargo;
 import ru.liga.loader.util.initializers.CargoInitializer;
 import ru.liga.loader.validator.CargoValidator;
 

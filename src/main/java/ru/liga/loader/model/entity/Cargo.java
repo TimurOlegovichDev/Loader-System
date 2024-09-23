@@ -1,4 +1,4 @@
-package ru.liga.loader.model.entites;
+package ru.liga.loader.model.entity;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;

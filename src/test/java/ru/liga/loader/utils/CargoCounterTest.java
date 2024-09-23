@@ -2,7 +2,7 @@ package ru.liga.loader.utils;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import ru.liga.loader.model.entites.Cargo;
+import ru.liga.loader.model.entity.Cargo;
 import ru.liga.loader.util.CargoCounter;
 
 import java.util.ArrayList;

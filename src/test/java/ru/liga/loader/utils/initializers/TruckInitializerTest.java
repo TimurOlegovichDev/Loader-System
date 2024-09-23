@@ -5,9 +5,9 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import ru.liga.loader.model.entites.Cargo;
-import ru.liga.loader.model.entites.Transport;
-import ru.liga.loader.model.structures.TransportJsonStructure;
+import ru.liga.loader.model.entity.Cargo;
+import ru.liga.loader.model.entity.Transport;
+import ru.liga.loader.model.structure.TransportJsonStructure;
 import ru.liga.loader.util.initializers.TruckInitializer;
 import ru.liga.loader.util.json.JsonService;
 

@@ -1,6 +1,6 @@
 package ru.liga.loader.util;
 
-import ru.liga.loader.model.entites.Cargo;
+import ru.liga.loader.model.entity.Cargo;
 
 import java.util.HashMap;
 import java.util.List;

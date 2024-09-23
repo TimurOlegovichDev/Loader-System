@@ -3,7 +3,7 @@ package ru.liga.loader.util.initializers;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import ru.liga.loader.factory.cargo.DefaultCargoFactory;
-import ru.liga.loader.model.entites.Cargo;
+import ru.liga.loader.model.entity.Cargo;
 import ru.liga.loader.validator.CargoValidator;
 
 import java.util.ArrayList;

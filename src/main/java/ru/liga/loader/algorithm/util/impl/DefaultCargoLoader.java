@@ -4,8 +4,8 @@ import lombok.extern.slf4j.Slf4j;
 import ru.liga.loader.algorithm.util.CargoLoader;
 import ru.liga.loader.exception.InvalidCargoSize;
 import ru.liga.loader.exception.NoPlaceException;
-import ru.liga.loader.model.entites.Cargo;
-import ru.liga.loader.model.entites.Transport;
+import ru.liga.loader.model.entity.Cargo;
+import ru.liga.loader.model.entity.Transport;
 
 @Slf4j
 public class DefaultCargoLoader implements CargoLoader {

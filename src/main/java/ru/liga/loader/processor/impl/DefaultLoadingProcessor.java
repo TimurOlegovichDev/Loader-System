@@ -21,14 +21,11 @@ public class DefaultLoadingProcessor implements LoadingProcessor {
     }
 
     public void load(LoadingCargoAlgorithm algorithm) {
-        log.info("Старт процесса погрузки...");
         try {
             algorithm.execute();
         } catch (Exception e) {
             log.error("Процесс погрузки прерван: {}", e.getMessage());
-            return;
         }
-        log.info("Процесс погрузки успешно завершен.");
     }
 
     public LoadingCargoAlgorithm getAlgorithm(String algorithmName) {
