@@ -20,8 +20,6 @@ public class Cargo {
     public Cargo(@JsonProperty("form") @NonNull char[][] form) {
         validateForm(form);
         this.form = form;
-        // Используем первый символ формы, так как он гарантированно
-        // будет в массиве
         this.type = form[0][0];
         weight = (int) Math.pow(Character.getNumericValue(type), 2);
         height = form.length;

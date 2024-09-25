@@ -44,7 +44,7 @@ public class CargoInitializer {
             }
             try {
                 validator.validate(sublist);
-                Collections.reverse(sublist); // to solve the problem of overturned loads
+                Collections.reverse(sublist);
                 initialBoxes.add(defaultCargoFactory.createCargo(getForm(sublist)));
             } catch (Exception e) {
                 log.warn("Обнаружено исключение для коробки {}: {}", sublist, e.getMessage());

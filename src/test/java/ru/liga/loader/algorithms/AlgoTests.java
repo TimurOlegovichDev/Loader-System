@@ -45,8 +45,8 @@ public class AlgoTests {
 
     @Test
     public void testNoPlaceFoundForCargo() {
-        cargoDataManager.add(new Cargo(new char[][]{{'2'}, {'2'}})); // 2x1 cargo
-        transportDataManager.add(new Transport(new char[][]{{' ', '1'}})); // truck with no space
+        cargoDataManager.add(new Cargo(new char[][]{{'2'}, {'2'}}));
+        transportDataManager.add(new Transport(new char[][]{{' ', '1'}}));
         LoadingCargoAlgorithm algorithm = AlgorithmTypes.createElAlgorithm(transportDataManager, cargoDataManager);
         assertThrows(
                 NoPlaceException.class,
