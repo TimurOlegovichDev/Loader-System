@@ -11,6 +11,13 @@ import java.util.List;
 @Slf4j
 public class FileHandler {
 
+    /**
+     * Метод читает файл по указанному пути и возвращает список строк, прочитанных из файла.
+     *
+     * @param src путь к файлу для чтения
+     * @return список строк, прочитанных из файла
+     */
+
     public List<String> read(String src) {
         log.debug("Чтение файла: {}", src);
         List<String> result = new ArrayList<>();

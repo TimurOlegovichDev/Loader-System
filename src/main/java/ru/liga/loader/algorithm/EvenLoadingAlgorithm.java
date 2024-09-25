@@ -25,6 +25,16 @@ public class EvenLoadingAlgorithm implements LoadingCargoAlgorithm {
     private final CargoDataManager cargoDataManager;
     private final CargoLoader cargoLoader;
 
+    /**
+     * Выполняет алгоритм равномерной погрузки грузов.
+     * Этот метод сортирует список грузов по весу, а затем пытается загрузить каждый груз
+     * в транспортное средство. Если загрузка груза не удается из-за его размера,
+     * то соответствующее предупреждение регистрируется в журнале.
+     *
+     * @see CargoSorter#sort(List)
+     * @see #loadCargo(Cargo)
+     */
+
     @Override
     public void execute() {
         log.info("Старт алгоритма равномерной погрузки");

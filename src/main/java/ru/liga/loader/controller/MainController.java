@@ -1,5 +1,6 @@
 package ru.liga.loader.controller;
 
+import lombok.Builder;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import ru.liga.loader.db.TransportDataManager;
@@ -17,6 +18,7 @@ import java.util.List;
 
 @Slf4j
 @RequiredArgsConstructor
+@Builder
 public class MainController {
 
     private static final String CARGO_FILE_PROMPT = "Введите путь к файлу для считывания груза: ";
@@ -30,6 +32,13 @@ public class MainController {
     private final UserInputReceiver userInputReceiver;
     private final FileHandler fileHandler;
     private final JsonService jsonService;
+
+    /**
+     * Начинает выполнение всех сценариев.
+     * Этот метод проходит по всем возможным сценариям и выполняет каждый из них.
+     *
+     * @see #executeScenario(Scenarios)
+     */
 
     public void start() {
         for (Scenarios scenario : Scenarios.values()) {

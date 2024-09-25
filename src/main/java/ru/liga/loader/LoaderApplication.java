@@ -25,6 +25,10 @@ import java.util.HashMap;
 @Log4j2
 public class LoaderApplication {
 
+    /**
+     * Создает экземляр главного контроллера с необходимыми зависимостями и запускает его
+     */
+
     public static void main(String[] args) {
         log.info("Программа запущена");
         MainController mainController = createMainController();
@@ -41,26 +45,25 @@ public class LoaderApplication {
         );
         CargoDataManager cargoDataManager = new CargoDataManager(new ArrayList<>());
         CargoCounter cargoCounter = new CargoCounter();
-        ComponentInitializer initController = createComponentInitializer(
+        ComponentInitializer initController = new ComponentInitializer(
                 truckInitializer,
                 cargoInitializer,
                 transportDataManager,
                 cargoDataManager,
                 cargoCounter
         );
-        LoadingProcessor loadingProcessor = createLoadingProcessor(transportDataManager, cargoDataManager);
+        LoadingProcessor loadingProcessor = new DefaultLoadingProcessor(transportDataManager, cargoDataManager);
         UserInputReceiver userInputReceiver = new UserInputReceiver();
         FileHandler fileHandler = new FileHandler();
         JsonService jsonService = createJsonService();
-        return new MainController(transportDataManager, initController, loadingProcessor, userInputReceiver, fileHandler, jsonService);
-    }
-
-    private static ComponentInitializer createComponentInitializer(TruckInitializer truckInitializer, CargoInitializer cargoInitializer, TransportDataManager transportDataManager, CargoDataManager cargoDataManager, CargoCounter cargoCounter) {
-        return new ComponentInitializer(truckInitializer, cargoInitializer, transportDataManager, cargoDataManager, cargoCounter);
-    }
-
-    private static LoadingProcessor createLoadingProcessor(TransportDataManager transportDataManager, CargoDataManager cargoDataManager) {
-        return new DefaultLoadingProcessor(transportDataManager, cargoDataManager);
+        return MainController.builder()
+                .transportDataManager(transportDataManager)
+                .initController(initController)
+                .defaultLoadingProcessor(loadingProcessor)
+                .userInputReceiver(userInputReceiver)
+                .fileHandler(fileHandler)
+                .jsonService(jsonService)
+                .build();
     }
 
     private static JsonService createJsonService() {

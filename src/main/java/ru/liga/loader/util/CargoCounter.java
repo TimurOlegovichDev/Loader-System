@@ -10,6 +10,13 @@ public class CargoCounter {
 
     private final int INCREMENT_VALUE = 1;
 
+    /**
+     * Подсчитывает количество грузов каждого типа.
+     *
+     * @param cargos список грузов для подсчета
+     * @return мапа с количеством грузов для каждого типа
+     */
+
     public Map<Character, Integer> countCargos(List<Cargo> cargos) {
         Map<Character, Integer> cargosCount = new HashMap<>();
         for (Cargo cargo : cargos) {

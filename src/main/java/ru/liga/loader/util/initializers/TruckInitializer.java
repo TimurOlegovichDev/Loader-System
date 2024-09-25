@@ -18,6 +18,14 @@ public class TruckInitializer {
 
     private final JsonService jsonService;
 
+    /**
+     * Инициализирует грузовые автомобили по количеству.
+     * Этот метод инициализирует грузовые автомобили по введеному количеству и возвращает список грузовых автомобилей.
+     *
+     * @param numberOfTransport количество грузовых автомобилей
+     * @return список грузовых автомобилей
+     */
+
     public List<Transport> initialize(int numberOfTransport) {
         TransportFactory transportFactory = new TruckFactory();
         List<Transport> transports = new ArrayList<>();
@@ -28,6 +36,14 @@ public class TruckInitializer {
         }
         return transports;
     }
+
+    /**
+     * Инициализирует грузовые автомобили из файла JSON.
+     * Этот метод инициализирует грузовые автомобили из файла JSON и возвращает мапу грузовых автомобилей и грузов.
+     *
+     * @param filepath путь к файлу JSON
+     * @return карта грузовых автомобилей и грузов
+     */
 
     public Map<Transport, List<Cargo>> initializeFromJson(String filepath) {
         List<TransportJsonStructure> transportJsonStructures =

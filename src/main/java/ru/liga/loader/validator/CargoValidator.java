@@ -14,6 +14,13 @@ public class CargoValidator {
     private final int FIRST_ROW_INDEX = 0;
     private final int FIRST_COLUMN_INDEX = 0;
 
+    /**
+     * Метод валидирует груз по заданным строкам и бросает исключение, если груз невалиден.
+     *
+     * @param lines строки, представляющие груз
+     * @throws InvalidCargoInput если груз невалиден
+     */
+
     public void validate(List<String> lines) throws InvalidCargoInput {
         log.debug("Валидация коробки: {}", lines);
         boxFormValidate(lines);

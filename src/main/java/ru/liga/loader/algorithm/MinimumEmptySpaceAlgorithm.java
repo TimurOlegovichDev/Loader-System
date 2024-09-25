@@ -24,6 +24,16 @@ public class MinimumEmptySpaceAlgorithm implements LoadingCargoAlgorithm {
     private final CargoDataManager cargoDataManager;
     private final CargoLoader cargoLoader;
 
+    /**
+     * Выполняет алгоритм плотной погрузки грузов.
+     * Этот метод сортирует список грузов по весу и список транспортных средств по весу уже загруженного груза,
+     * а затем пытается загрузить каждый груз в транспортное средство.
+     *
+     * @see CargoSorter#sort(List)
+     * @see TransportSorter#sort(TransportDataManager)
+     * @see #loadCargo(Cargo, List)
+     */
+
     @Override
     public void execute() {
         log.info("Старт алгоритма плотной погрузки");

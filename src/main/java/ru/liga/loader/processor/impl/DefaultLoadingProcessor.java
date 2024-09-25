@@ -15,12 +15,26 @@ public class DefaultLoadingProcessor implements LoadingProcessor {
     private final TransportDataManager transportDataManager;
     private final CargoDataManager cargoDataManager;
 
+    /**
+     * Обрабатывает загрузку грузов по указанному алгоритму.
+     * Этот метод получает алгоритм загрузки грузов по указанному имени и выполняет его.
+     *
+     * @param algorithmName имя алгоритма загрузки грузов
+     */
+
     @Override
     public void process(String algorithmName) {
         load(getAlgorithm(algorithmName));
     }
 
-    public void load(LoadingCargoAlgorithm algorithm) {
+    /**
+     * Загружает грузы в транспортные средства по указанному алгоритму.
+     * Этот метод выполняет алгоритм загрузки грузов и загружает грузы в транспортные средства.
+     *
+     * @param algorithm алгоритм загрузки грузов
+     */
+
+    private void load(LoadingCargoAlgorithm algorithm) {
         try {
             algorithm.execute();
         } catch (Exception e) {
@@ -28,7 +42,7 @@ public class DefaultLoadingProcessor implements LoadingProcessor {
         }
     }
 
-    public LoadingCargoAlgorithm getAlgorithm(String algorithmName) {
+    private LoadingCargoAlgorithm getAlgorithm(String algorithmName) {
         switch (AlgorithmTypes.of(algorithmName)) {
             case EL -> {
                 return AlgorithmTypes.createElAlgorithm(

@@ -17,6 +17,15 @@ public class CargoInitializer {
     private final CargoValidator validator;
     private final DefaultCargoFactory defaultCargoFactory;
 
+    /**
+     * Инициализирует грузы по заданным формам.
+     * Получает формы грузов из списка и проверяет их на допустимый формат,
+     * в случае ошибочного формата, сообщение об ошибке записывается в журнал и груз в список
+     * не вносится. В результате мы получаем список грузов правильного формата.
+     *
+     * @param forms формы грузов
+     * @return список грузов
+     */
 
     public List<Cargo> initialize(List<String> forms) {
         log.debug("Инициализация коробок");

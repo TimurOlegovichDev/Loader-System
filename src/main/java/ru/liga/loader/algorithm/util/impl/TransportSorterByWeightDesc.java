@@ -14,6 +14,15 @@ import java.util.stream.Collectors;
 @Slf4j
 public class TransportSorterByWeightDesc implements TransportSorter {
 
+    /**
+     * Сортирует список транспортных средств по весу груза в порядке убывания.
+     * Этот метод создает копию списка транспортных средств, полученного из менеджера данных транспортных средств,
+     * сортирует ее по весу груза в порядке возрастания и возвращает отсортированный список.
+     *
+     * @param transportDataManager менеджер данных транспортных средств, из которого берется список транспортных средств
+     * @return отсортированный список транспортных средств
+     */
+
     @Override
     public List<Transport> sort(TransportDataManager transportDataManager) {
         log.debug("Сортировка транспорта по весу груза в порядке убывания...");

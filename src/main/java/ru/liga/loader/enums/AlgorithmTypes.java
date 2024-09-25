@@ -19,6 +19,14 @@ public enum AlgorithmTypes {
     MES,
     EL;
 
+    /**
+     * Возвращает тип алгоритма загрузки грузов по его имени.
+     * Если указанное имя алгоритма не найдено, то возвращается тип MES.
+     *
+     * @param algorithmName имя алгоритма загрузки грузов
+     * @return тип алгоритма загрузки грузов
+     */
+
     public static AlgorithmTypes of(String algorithmName) {
         try {
             return AlgorithmTypes.valueOf(algorithmName.toUpperCase());
@@ -27,6 +35,15 @@ public enum AlgorithmTypes {
             return MES;
         }
     }
+
+    /**
+     * Создает алгоритм равномерной загрузки грузов.
+     * Этот метод создает экземпляр алгоритма равномерной загрузки грузов с указанными менеджерами данных.
+     *
+     * @param transportDataManager менеджер данных транспортных средств для получения информации о транспорте для погрузки
+     * @param cargoDataManager     менеджер данных грузов, которые нужно будет загрузить
+     * @return алгоритм равномерной загрузки грузов
+     */
 
     public static LoadingCargoAlgorithm createElAlgorithm(TransportDataManager transportDataManager,
                                                           CargoDataManager cargoDataManager) {
@@ -38,6 +55,15 @@ public enum AlgorithmTypes {
                 new DefaultCargoLoader()
         );
     }
+
+    /**
+     * Создает алгоритм плотной загрузки грузов.
+     * Этот метод создает экземпляр алгоритма плотной загрузки грузов с указанными менеджерами данных.
+     *
+     * @param transportDataManager менеджер данных транспортных средств для получения информации о транспорте для погрузки
+     * @param cargoDataManager     менеджер данных грузов, которые нужно будет загрузить
+     * @return алгоритм плотной загрузки грузов
+     */
 
     public static LoadingCargoAlgorithm createMesAlgorithm(TransportDataManager transportDataManager,
                                                            CargoDataManager cargoDataManager) {

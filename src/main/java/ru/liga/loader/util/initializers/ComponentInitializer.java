@@ -21,11 +21,27 @@ public class ComponentInitializer {
     private final CargoDataManager cargoDataManager;
     private final CargoCounter cargoCounter;
 
+    /**
+     * Инициализирует грузы по заданным формам.
+     * Этот метод инициализирует грузы по заданным формам и добавляет их в менеджер данных грузов.
+     *
+     * @param forms формы грузов
+     */
 
     public void initializeCargos(List<String> forms) {
         List<Cargo> cargos = cargoInitializer.initialize(forms);
         cargoDataManager.add(cargos);
     }
+
+    /**
+     * Инициализирует транспортные средства из файла JSON.
+     * Этот метод инициализирует транспортные средства из файла JSON
+     * и добавляет их в менеджер данных транспортных средств.
+     * Также подсчитывает количество грузов в каждом транспортном средстве из файла
+     * и заносит данные в журнал
+     *
+     * @param filePath путь к файлу JSON
+     */
 
     public void initializeTransport(String filePath) {
         Map<Transport, List<Cargo>> transportListMap =
@@ -35,6 +51,12 @@ public class ComponentInitializer {
         log.info("Транспорт добавлен в базу данных");
     }
 
+    /**
+     * Инициализирует транспортные средства по количеству.
+     * Этот метод инициализирует транспортные средства по количеству и добавляет их в менеджер данных транспортных средств.
+     *
+     * @param numberOfTransport количество транспортных средств
+     */
 
     public void initializeTransport(int numberOfTransport) {
         List<Transport> transports =
