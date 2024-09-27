@@ -37,7 +37,12 @@ public class MinimumEmptySpaceAlgorithm implements LoadingCargoAlgorithm {
     @Override
     public void execute() {
         log.info("Старт алгоритма плотной погрузки");
-        List<Cargo> cargos = cargoSorter.sort(cargoDataManager.getData());
+        List<Cargo> cargos = cargoSorter.sort(
+                cargoDataManager.getData()
+                        .values().stream()
+                        .flatMap(List::stream)
+                        .toList()
+        );
         List<Transport> transports = transportSorter.sort(transportDataManager);
         for (Cargo cargo : cargos) {
             log.info("Погрузка груза: {}", cargo);
@@ -51,12 +56,12 @@ public class MinimumEmptySpaceAlgorithm implements LoadingCargoAlgorithm {
             try {
                 cargoLoader.load(cargo, transport);
                 transportDataManager.addCargoInTransport(transport, cargo);
-                log.debug("Груз успешно загружен: {}", cargo);
+                log.info("Груз успешно загружен: {}", cargo);
                 return;
             } catch (NoPlaceException e) {
                 log.debug(e.getMessage());
             } catch (InvalidCargoSize i) {
-                log.debug(i.getMessage());
+                log.warn(i.getMessage());
                 return;
             }
         }

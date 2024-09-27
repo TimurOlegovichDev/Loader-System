@@ -23,7 +23,7 @@ public class DefaultCargoSorter implements CargoSorter {
     public List<Cargo> sort(List<Cargo> cargos) {
         log.debug("Сортировка груза по весу...");
         List<Cargo> sortedCargos = new ArrayList<>(cargos);
-        sortedCargos.sort((x, y) -> Integer.compare(y.getWeight(), x.getWeight()));
+        sortedCargos.sort((x, y) -> Integer.compare(y.getArea(), x.getArea()));
         return sortedCargos;
     }
 }

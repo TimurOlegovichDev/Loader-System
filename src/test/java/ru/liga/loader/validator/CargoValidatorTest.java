@@ -1,91 +1,105 @@
 package ru.liga.loader.validator;
 
-import org.assertj.core.api.SoftAssertions;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import ru.liga.loader.exception.InvalidCargoInput;
+import ru.liga.loader.model.structure.CargoJsonStructure;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
-import static org.junit.Assert.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class CargoValidatorTest {
 
-    private final CargoValidator cargoValidator = new CargoValidator();
+    @Test
+    void testValidCargo() throws InvalidCargoInput {
+        CargoJsonStructure cargo = new CargoJsonStructure(
+                "Valid Cargo",
+                new char[][]{
+                        {'A', 'A', 'A'},
+                        {'A', ' ', 'A'},
+                        {'A', 'A', 'A'}
+                },
+                3,
+                3,
+                9,
+                'A'
+        );
+        CargoJsonStructure cargo2 = new CargoJsonStructure(
+                "Valid Cargo",
+                new char[][]{
+                        {'A'},
+                },
+                1,
+                1,
+                1,
+                'A'
+        );
+        CargoValidator validator = new CargoValidator();
+        assertDoesNotThrow(
+                () -> validator.validate(cargo)
+        );
+        assertDoesNotThrow(
+                () -> validator.validate(cargo2)
+        );
+    }
 
     @Test
-    public void test_with_valid_data() {
-        List<List<String>> validList = new ArrayList<>(List.of(
-                new ArrayList<>(List.of(
-                        "9999",
-                        "999",
-                        "99"
-                )),
-                new ArrayList<>(List.of(
-                        "555",
-                        "55"
-                )),
-                new ArrayList<>(List.of(
-                        "77",
-                        "77777"
-                )),
-                new ArrayList<>(List.of(
-                        "1"
-                ))
-        ));
-        SoftAssertions softly = new SoftAssertions();
-        for (List<String> list : validList) {
-            softly.assertThatCode(
-                    () -> new CargoValidator().validate(list)
-            ).doesNotThrowAnyException();
-        }
-        softly.assertAll();
+    void testDiagonalCargo() throws InvalidCargoInput {
+        CargoJsonStructure cargo = new CargoJsonStructure(
+                "Valid Cargo",
+                new char[][]{
+                        {'A', ' ', 'A'},
+                        {' ', 'A', ' '},
+                        {'A', ' ', 'A'}
+                },
+                3,
+                3,
+                9,
+                'A'
+        );
+        CargoValidator validator = new CargoValidator();
+        assertThrows(InvalidCargoInput.class,
+                () -> validator.validate(cargo)
+        );
     }
 
     @Test
-    public void test_throw_InvalidCargoException() {
-        List<List<String>> invalidList = new ArrayList<>(List.of(
-                new ArrayList<>(List.of( // Не хватает символов
-                        "9999",
-                        "999"
-                )),
-                new ArrayList<>(List.of( // Содержатся буквы
-                        "555",
-                        "55s"
-                )),
-                new ArrayList<>(List.of(  // Избыточность символов
-                        "777",
-                        "77777"
-                )),
-                new ArrayList<>(List.of( // Состоит только из букв
-                        "a"
-                ))
-        ));
-        SoftAssertions softly = new SoftAssertions();
-        for (List<String> list : invalidList) {
-            softly.assertThatThrownBy(
-                    () -> cargoValidator.validate(list)
-            ).isInstanceOf(InvalidCargoInput.class);
-        }
-        softly.assertAll();
+    void testInvalidArea() {
+        CargoJsonStructure cargo = new CargoJsonStructure(
+                "Invalid Area",
+                new char[][]{
+                        {'A', 'A', 'A'},
+                        {'A', ' ', 'A'},
+                        {'A', 'A', 'A'}
+                },
+                3,
+                3,
+                10,
+                'A'
+        );
+        CargoValidator validator = new CargoValidator();
+        InvalidCargoInput exception = assertThrows(InvalidCargoInput.class, () -> validator.validate(cargo));
+        assertEquals("Ожидаемыемые значения отличаются от исходных!" + System.lineSeparator() +
+                "Ожидаемый размер груза: 10" + System.lineSeparator() +
+                "Фактический размер груза: 9" + System.lineSeparator() +
+                "Проверяемый груз: Invalid Area", exception.getMessage());
     }
 
-    @org.junit.Test
-    public void testValidate_InvalidBox_NonNumericCharacters() {
-        List<String> lines = Arrays.asList("123", "456", "abc");
-        assertThrows(InvalidCargoInput.class, () -> cargoValidator.validate(lines));
-    }
-
-    @org.junit.Test
-    public void testValidate_InvalidBox_DamagedFormat() {
-        List<String> lines = Arrays.asList("111", "112", "111");
-        assertThrows(InvalidCargoInput.class, () -> cargoValidator.validate(lines));
-    }
-
-    @org.junit.Test
-    public void testValidate_InvalidBox_DamagedWeight() {
-        List<String> lines = Arrays.asList("111", "111", "11");
-        assertThrows(InvalidCargoInput.class, () -> cargoValidator.validate(lines));
+    @Test
+    void testInvalidForm() {
+        CargoJsonStructure cargo = new CargoJsonStructure(
+                "Invalid Form",
+                new char[][]{
+                        {'A', 'B', 'A'},
+                        {'A', ' ', 'A'},
+                        {'A', 'A', 'A'}
+                },
+                3,
+                3,
+                9,
+                'A'
+        );
+        CargoValidator validator = new CargoValidator();
+        InvalidCargoInput exception = assertThrows(InvalidCargoInput.class, () -> validator.validate(cargo));
+        assertEquals("Груз поврежден, имеется символ другого типа: B" + System.lineSeparator() +
+                "Проверяемый груз: Invalid Form", exception.getMessage());
     }
 }

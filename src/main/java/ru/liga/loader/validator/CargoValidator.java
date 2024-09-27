@@ -2,64 +2,79 @@ package ru.liga.loader.validator;
 
 import lombok.extern.slf4j.Slf4j;
 import ru.liga.loader.exception.InvalidCargoInput;
+import ru.liga.loader.model.structure.CargoJsonStructure;
 
-import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import java.util.Arrays;
 
 @Slf4j
 public class CargoValidator {
 
-    private final Pattern NUMBERS_PATTERN = Pattern.compile("[0-9]+");
-    private final int FIRST_ROW_INDEX = 0;
-    private final int FIRST_COLUMN_INDEX = 0;
-
     /**
-     * Метод валидирует груз по заданным строкам и бросает исключение, если груз невалиден.
+     * Метод проверяет груз и бросает исключение, если груз содержит ошибку.
      *
-     * @param lines строки, представляющие груз
+     * @param cargo грузовая структура, полученная из json файла
      * @throws InvalidCargoInput если груз невалиден
      */
 
-    public void validate(List<String> lines) throws InvalidCargoInput {
-        log.debug("Валидация коробки: {}", lines);
-        boxFormValidate(lines);
-        log.debug("Коробка валидна: {}", lines);
+    public void validate(CargoJsonStructure cargo) throws InvalidCargoInput {
+        log.debug("Валидация груза: {}", cargo.getName());
+        validateCargoArea(cargo);
+        validateCargoForm(cargo);
+        checkNeighborhood(cargo);
+        log.debug("Груз валиден: {}", cargo.getName());
     }
 
-    private void boxFormValidate(List<String> lines) throws InvalidCargoInput {
-        if (linesContainsLetter(lines)) {
-            throw new InvalidCargoInput("Входные данные содержат нечисловые символы " + lines);
-        }
-        char symbol = lines.get(FIRST_ROW_INDEX).charAt(FIRST_COLUMN_INDEX);
-        int expectedWeight = getWeight(symbol);
-        int actualWeight = 0;
-        for (String line : lines) {
-            if (line.isEmpty()) {
-                continue;
-            }
-            for (char c : line.toCharArray()) {
-                actualWeight += Character.getNumericValue(c);
-            }
-        }
-        if (actualWeight != expectedWeight) {
-            throw new InvalidCargoInput("Вес коробки отличается от ожидаемого: текущий: "
-                    + actualWeight + " ожидаемый: "
-                    + expectedWeight);
+    private void validateCargoArea(CargoJsonStructure cargo) throws InvalidCargoInput {
+        int actualHeight = cargo.getForm().length;
+        int actualWidth = Arrays.stream(cargo.getForm())
+                .mapToInt(arr -> arr.length)
+                .max()
+                .orElse(0);
+        int expectedArea = cargo.getArea();
+        int actualArea = actualWidth * actualHeight;
+        if (actualArea != expectedArea) {
+            throw new InvalidCargoInput(
+                    "Ожидаемыемые значения отличаются от исходных!" + System.lineSeparator() +
+                            "Ожидаемый размер груза: " + expectedArea + System.lineSeparator() +
+                            "Фактический размер груза: " + actualArea + System.lineSeparator() +
+                            "Проверяемый груз:", cargo.getName());
         }
     }
 
-    private boolean linesContainsLetter(List<String> lines) throws InvalidCargoInput {
-        for (String line : lines) {
-            Matcher matcher = NUMBERS_PATTERN.matcher(line);
-            if (!matcher.matches()) {
-                return true;
+    private void validateCargoForm(CargoJsonStructure cargo) {
+        char allowedChar = cargo.getType();
+        for (char[] chars : cargo.getForm()) {
+            for (char c : chars) {
+                if (c != ' ' && c != allowedChar) {
+                    throw new InvalidCargoInput(
+                            "Груз поврежден, имеется символ другого типа: " + c + System.lineSeparator() +
+                                    "Проверяемый груз:", cargo.getName()
+                    );
+                }
             }
         }
-        return false;
     }
 
-    private int getWeight(char symbol) {
-        return (int) Math.pow(Character.getNumericValue(symbol), 2);
+    private void checkNeighborhood(CargoJsonStructure cargo) {
+        char[][] array = cargo.getForm();
+        if (array.length == 1 && array[0].length == 1) {
+            return;
+        }
+        for (int i = 0; i < array.length; i++) {
+            for (int j = 0; j < array[i].length; j++) {
+                if (array[i][j] != ' ') {
+                    boolean hasNeighbor = i > 0 && array[i - 1][j] != ' ';
+                    if (i < array.length - 1 && array[i + 1][j] != ' ') hasNeighbor = true;
+                    if (j > 0 && array[i][j - 1] != ' ') hasNeighbor = true;
+                    if (j < array[i].length - 1 && array[i][j + 1] != ' ') hasNeighbor = true;
+                    if (!hasNeighbor) {
+                        throw new InvalidCargoInput(
+                                "Неправильная форма груза!" + System.lineSeparator() +
+                                        "Проверяемый груз:", cargo.getName()
+                        );
+                    }
+                }
+            }
+        }
     }
 }

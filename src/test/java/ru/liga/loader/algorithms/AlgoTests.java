@@ -18,12 +18,12 @@ import static org.junit.jupiter.api.Assertions.*;
 public class AlgoTests {
 
     private final TransportDataManager transportDataManager = new TransportDataManager(new HashMap<>());
-    private final CargoDataManager cargoDataManager = new CargoDataManager(new ArrayList<>());
+    private final CargoDataManager cargoDataManager = new CargoDataManager(new HashMap<>());
 
     @Test
     public void testLoadCargoSuccessfully() {
-        cargoDataManager.add(new Cargo(new char[][]{{'1'}}));
-        transportDataManager.add(new Transport());
+        cargoDataManager.add(new Cargo("", new char[][]{{'1'}}));
+        transportDataManager.add(new Transport(6, 6));
         LoadingCargoAlgorithm algorithm =
                 AlgorithmTypes.createElAlgorithm(
                         transportDataManager,
@@ -32,7 +32,7 @@ public class AlgoTests {
         algorithm.execute();
         Transport transport = transportDataManager.getData().get(0);
         List<Cargo> testList = new ArrayList<>();
-        testList.add(new Cargo(new char[][]{{'1'}}));
+        testList.add(new Cargo("", new char[][]{{'1'}}));
         assertArrayEquals(
                 testList.get(0).getForm(),
                 transportDataManager.getCargos(transport).get(0).getForm()
@@ -45,7 +45,7 @@ public class AlgoTests {
 
     @Test
     public void testNoPlaceFoundForCargo() {
-        cargoDataManager.add(new Cargo(new char[][]{{'2'}, {'2'}}));
+        cargoDataManager.add(new Cargo("", new char[][]{{'2'}, {'2'}}));
         transportDataManager.add(new Transport(new char[][]{{' ', '1'}}));
         LoadingCargoAlgorithm algorithm = AlgorithmTypes.createElAlgorithm(transportDataManager, cargoDataManager);
         assertThrows(

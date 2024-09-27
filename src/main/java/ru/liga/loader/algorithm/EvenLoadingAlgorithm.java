@@ -38,7 +38,12 @@ public class EvenLoadingAlgorithm implements LoadingCargoAlgorithm {
     @Override
     public void execute() {
         log.info("Старт алгоритма равномерной погрузки");
-        List<Cargo> cargos = cargoSorter.sort(cargoDataManager.getData());
+        List<Cargo> cargos = cargoSorter.sort(
+                cargoDataManager.getData()
+                        .values().stream()
+                        .flatMap(List::stream)
+                        .toList()
+        );
         for (Cargo cargo : cargos) {
             log.info("Погрузка груза: {}", cargo);
             try {
@@ -70,6 +75,9 @@ public class EvenLoadingAlgorithm implements LoadingCargoAlgorithm {
     }
 
     private Optional<Transport> getFirstTransport(List<Transport> transports) {
+        if (transports.isEmpty()) {
+            return Optional.empty();
+        }
         return Optional.ofNullable(transports.get(0));
     }
 }

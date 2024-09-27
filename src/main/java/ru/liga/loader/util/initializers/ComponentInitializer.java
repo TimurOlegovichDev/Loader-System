@@ -22,15 +22,17 @@ public class ComponentInitializer {
     private final CargoCounter cargoCounter;
 
     /**
-     * Инициализирует грузы по заданным формам.
-     * Этот метод инициализирует грузы по заданным формам и добавляет их в менеджер данных грузов.
+     * Инициализирует грузы из json файла.
+     * Этот метод инициализирует грузы по заданным формам и добавляет их в главный репозиторий.
      *
-     * @param forms формы грузов
+     * @param filePath путь к файлу
      */
 
-    public void initializeCargos(List<String> forms) {
-        List<Cargo> cargos = cargoInitializer.initialize(forms);
-        cargoDataManager.add(cargos);
+    public void initializeCargos(String filePath) {
+        Map<String, List<Cargo>> cargoMap =
+                cargoInitializer.initializeFromJson(filePath);
+        cargoDataManager.add(cargoMap);
+        log.info("Груз добавлен в базу данных");
     }
 
     /**
@@ -69,8 +71,8 @@ public class ComponentInitializer {
         for (Transport transport : map.keySet()) {
             List<Cargo> cargos = map.get(transport);
             cargoCounter.countCargos(cargos)
-                    .forEach((symbol, count) ->
-                            log.info("Тип груза: {}, количество: {}", symbol, count)
+                    .forEach((name, count) ->
+                            log.info("Название груза: {}, количество: {}", name, count)
                     );
             log.info("{}{}", System.lineSeparator(), transport.toString());
         }

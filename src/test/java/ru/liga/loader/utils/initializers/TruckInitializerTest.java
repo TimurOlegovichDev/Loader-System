@@ -37,7 +37,7 @@ public class TruckInitializerTest {
         int numberOfTransport = 3;
         List<Transport> expectedTransports = new ArrayList<>();
         for (int i = 0; i < numberOfTransport; i++) {
-            expectedTransports.add(new Transport());
+            expectedTransports.add(new Transport(6, 6));
         }
 
         List<Transport> actualTransports = truckInitializer.initialize(numberOfTransport);
@@ -48,8 +48,8 @@ public class TruckInitializerTest {
     @Test
     void testInitializeFromJson_withValidJsonFile_returnsMapOfTransportsAndCargos() {
         List<TransportJsonStructure> transportJsonStructures = Arrays.asList(
-                new TransportJsonStructure(new char[][]{{'+', '1', '+'}}, List.of(new Cargo(new char[][]{{'1'}}))),
-                new TransportJsonStructure(new char[][]{{'+', '1', '+'}}, List.of(new Cargo(new char[][]{{'1'}})))
+                new TransportJsonStructure(new char[][]{{'+', '1', '+'}}, List.of(new Cargo("", new char[][]{{'1'}}))),
+                new TransportJsonStructure(new char[][]{{'+', '1', '+'}}, List.of(new Cargo("", new char[][]{{'1'}})))
         );
 
         when(jsonService.read(TransportJsonStructure.class, VALID_JSON)).thenReturn(transportJsonStructures);

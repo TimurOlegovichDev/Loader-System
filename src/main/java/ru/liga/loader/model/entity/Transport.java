@@ -8,14 +8,11 @@ import java.util.Arrays;
 @Slf4j
 public class Transport {
 
-    private final int DEFAULT_BODY_WIDTH = 6;
-    private final int DEFAULT_BODY_HEIGHT = 6;
-
     @Getter
     private final char[][] body;
 
-    public Transport() {
-        body = new char[DEFAULT_BODY_HEIGHT][DEFAULT_BODY_WIDTH];
+    public Transport(int bodyWidth, int bodyHeight) {
+        body = new char[bodyHeight][bodyWidth];
         Arrays.stream(body).forEach(row -> Arrays.fill(row, ' '));
     }
 

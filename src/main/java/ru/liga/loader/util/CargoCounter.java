@@ -17,19 +17,18 @@ public class CargoCounter {
      * @return мапа с количеством грузов для каждого типа
      */
 
-    public Map<Character, Integer> countCargos(List<Cargo> cargos) {
-        Map<Character, Integer> cargosCount = new HashMap<>();
+    public Map<String, Integer> countCargos(List<Cargo> cargos) {
+        Map<String, Integer> cargosCount = new HashMap<>();
         for (Cargo cargo : cargos) {
-            char symbol = cargo.getType();
-            incrementCount(cargosCount, symbol);
+            incrementCount(cargosCount, cargo.getName());
         }
         return cargosCount;
     }
 
-    private void incrementCount(Map<Character, Integer> countMap, char symbol) {
+    private void incrementCount(Map<String, Integer> countMap, String name) {
         countMap.put(
-                symbol,
-                countMap.getOrDefault(symbol, 0) + INCREMENT_VALUE
+                name,
+                countMap.getOrDefault(name, 0) + INCREMENT_VALUE
         );
     }
 }

@@ -4,11 +4,14 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import ru.liga.loader.factory.cargo.DefaultCargoFactory;
 import ru.liga.loader.model.entity.Cargo;
+import ru.liga.loader.model.structure.CargoJsonStructure;
+import ru.liga.loader.util.json.JsonService;
 import ru.liga.loader.validator.CargoValidator;
 
 import java.util.ArrayList;
-import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -16,6 +19,7 @@ public class CargoInitializer {
 
     private final CargoValidator validator;
     private final DefaultCargoFactory defaultCargoFactory;
+    private final JsonService jsonService;
 
     /**
      * Инициализирует грузы по заданным формам.
@@ -23,49 +27,25 @@ public class CargoInitializer {
      * в случае ошибочного формата, сообщение об ошибке записывается в журнал и груз в список
      * не вносится. В результате мы получаем список грузов правильного формата.
      *
-     * @param forms формы грузов
+     * @param filepath путь к файлу
      * @return список грузов
      */
 
-    public List<Cargo> initialize(List<String> forms) {
-        log.debug("Инициализация коробок");
-        List<Cargo> initialBoxes = new ArrayList<>();
-        int start = 0;
-        while (start < forms.size()) {
-            log.debug("Инициализация коробки: {}", forms);
-            int end = start;
-            while (end < forms.size() && !forms.get(end).isEmpty()) {
-                end++;
-            }
-            List<String> sublist = forms.subList(start, end);
-            start = end + 1;
-            if (sublist.isEmpty()) {
-                continue;
-            }
+    public Map<String, List<Cargo>> initializeFromJson(String filepath) {
+        List<CargoJsonStructure> cargoJsonStructures =
+                jsonService.read(CargoJsonStructure.class, filepath);
+        Map<String, List<Cargo>> map = new HashMap<>();
+        for (CargoJsonStructure cargoJsonStructure : cargoJsonStructures) {
             try {
-                validator.validate(sublist);
-                Collections.reverse(sublist);
-                initialBoxes.add(defaultCargoFactory.createCargo(getForm(sublist)));
+                validator.validate(cargoJsonStructure);
+                if (!map.containsKey(cargoJsonStructure.getName())) {
+                    map.put(cargoJsonStructure.getName(), new ArrayList<>());
+                }
+                map.get(cargoJsonStructure.getName()).add(new Cargo(cargoJsonStructure));
             } catch (Exception e) {
-                log.warn("Обнаружено исключение для коробки {}: {}", sublist, e.getMessage());
+                log.error(e.getMessage());
             }
         }
-        return initialBoxes;
-    }
-
-    private char[][] getForm(List<String> lines) {
-        log.trace("Конвертирование листа в массив символов");
-        char[][] form = new char[lines.size()][];
-        int indexCharArray = 0;
-        for (String line : lines) {
-            if (line.isEmpty()) continue;
-            char[] charRow = new char[line.length()];
-            for (int i = 0; i < line.length(); i++) {
-                charRow[i] = line.charAt(i);
-            }
-            form[indexCharArray++] = charRow;
-        }
-        log.trace("Конвертирование листа завершено");
-        return form;
+        return map;
     }
 }

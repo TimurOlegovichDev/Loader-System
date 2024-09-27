@@ -4,66 +4,60 @@ import org.junit.jupiter.api.Test;
 import ru.liga.loader.model.entity.Cargo;
 
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class CargoDataManagerTest {
 
     @Test
     void testGetData() {
-        CargoDataManager manager = new CargoDataManager(new ArrayList<>());
+        CargoDataManager manager = new CargoDataManager(new HashMap<>());
         assertEquals(0, manager.getData().size());
 
-        Cargo cargo1 = new Cargo(new char[][]{{'1'}});
-        Cargo cargo2 = new Cargo(new char[][]{{'1'}});
+        List<Cargo> data = new ArrayList<>(
+                List.of(
+                        new Cargo("FirstType", new char[][]{{'1'}}),
+                        new Cargo("FirstType", new char[][]{{'1'}}),
+                        new Cargo("FirstType", new char[][]{{'1'}}),
+                        new Cargo("SecondType", new char[][]{{'1'}}),
+                        new Cargo("SecondType", new char[][]{{'1'}}),
+                        new Cargo("SecondType", new char[][]{{'1'}}),
+                        new Cargo("ThirdType", new char[][]{{'1'}}),
+                        new Cargo("ThirdType", new char[][]{{'1'}}),
+                        new Cargo("ThirdType", new char[][]{{'1'}}),
+                        new Cargo("ThirdType", new char[][]{{'1'}})
+                )
+        );
 
-        manager.add(cargo1);
-        manager.add(cargo2);
-
-        List<Cargo> data = manager.getData();
-        assertEquals(2, data.size());
-        assertTrue(data.contains(cargo1));
-        assertTrue(data.contains(cargo2));
-    }
-
-    @Test
-    void testAddSingleCargo() {
-        CargoDataManager manager = new CargoDataManager(new ArrayList<>());
-        Cargo cargo = new Cargo(new char[][]{{'1'}});
-
-        manager.add(cargo);
-
-        assertEquals(1, manager.getData().size());
-        assertTrue(manager.getData().contains(cargo));
-    }
-
-    @Test
-    void testAddMultipleCargos() {
-        CargoDataManager manager = new CargoDataManager(new ArrayList<>());
-        Cargo cargo1 = new Cargo(new char[][]{{'A'}});
-        Cargo cargo2 = new Cargo(new char[][]{{'B'}});
-        Cargo cargo3 = new Cargo(new char[][]{{'C'}});
-
-        List<Cargo> cargos = Arrays.asList(cargo1, cargo2, cargo3);
-        manager.add(cargos);
-
+        for (Cargo cargo : data) {
+            manager.add(cargo);
+        }
         assertEquals(3, manager.getData().size());
-        assertTrue(manager.getData().containsAll(cargos));
+        assertEquals(3, manager.getData().get("FirstType").size());
+        assertEquals(3, manager.getData().get("SecondType").size());
+        assertEquals(4, manager.getData().get("ThirdType").size());
     }
+
 
     @Test
-    void testToString() {
-        CargoDataManager manager = new CargoDataManager(new ArrayList<>());
-        Cargo cargo1 = new Cargo(new char[][]{{'1'}});
-        Cargo cargo2 = new Cargo(new char[][]{{'2', '2'}});
-
-        manager.add(cargo1);
-        manager.add(cargo2);
-
-        String expected = cargo1 + "\n" + cargo2 + "\n";
-        assertEquals(expected, manager.toString());
+    void test_add_map() {
+        CargoDataManager manager = new CargoDataManager(new HashMap<>());
+        Map<String, List<Cargo>> map = new HashMap<>();
+        List<Cargo> data = new ArrayList<>(
+                List.of(
+                        new Cargo("FirstType", new char[][]{{'1'}}),
+                        new Cargo("SecondType", new char[][]{{'1'}}),
+                        new Cargo("ThirdType", new char[][]{{'1'}})
+                )
+        );
+        data.forEach(cargo -> map.put(cargo.getName(), new ArrayList<>(List.of(cargo))));
+        manager.add(map);
+        for (Map.Entry<String, List<Cargo>> entry : map.entrySet()) {
+            assertEquals(entry.getValue().size(), map.get(entry.getKey()).size());
+        }
     }
+
 }

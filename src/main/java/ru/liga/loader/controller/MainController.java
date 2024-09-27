@@ -62,7 +62,7 @@ public class MainController {
 
     private void initCargos() {
         String filepath = userInputReceiver.getInputLine(CARGO_FILE_PROMPT);
-        initController.initializeCargos(fileHandler.read(filepath));
+        initController.initializeCargos(filepath);
     }
 
     private void initTransports() {

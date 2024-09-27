@@ -19,8 +19,8 @@ public class TransportDataManagerTest {
     void testGetData() {
         assertEquals(0, manager.getData().size());
 
-        Transport transport1 = new Transport();
-        Transport transport2 = new Transport();
+        Transport transport1 = new Transport(6, 6);
+        Transport transport2 = new Transport(6, 6);
 
         manager.add(transport1);
         manager.add(transport2);
@@ -33,11 +33,11 @@ public class TransportDataManagerTest {
 
     @Test
     void testGetCargos() {
-        Transport transport = new Transport();
+        Transport transport = new Transport(6, 6);
         manager.add(transport);
         assertEquals(0, manager.getCargos(transport).size());
-        Cargo cargo1 = new Cargo(new char[][]{{'A'}});
-        Cargo cargo2 = new Cargo(new char[][]{{'B'}});
+        Cargo cargo1 = new Cargo("", new char[][]{{'A'}});
+        Cargo cargo2 = new Cargo("1", new char[][]{{'B'}});
         manager.addCargoInTransport(transport, cargo1);
         manager.addCargoInTransport(transport, cargo2);
         List<Cargo> cargos = manager.getCargos(transport);
@@ -48,7 +48,7 @@ public class TransportDataManagerTest {
 
     @Test
     void testAddTransport() {
-        Transport transport = new Transport();
+        Transport transport = new Transport(6, 6);
         manager.add(transport);
         assertEquals(1, manager.getData().size());
         assertTrue(manager.getData().contains(transport));
@@ -56,9 +56,9 @@ public class TransportDataManagerTest {
 
     @Test
     void testAddTransports() {
-        Transport transport1 = new Transport();
-        Transport transport2 = new Transport();
-        Transport transport3 = new Transport();
+        Transport transport1 = new Transport(6, 6);
+        Transport transport2 = new Transport(6, 6);
+        Transport transport3 = new Transport(6, 6);
         List<Transport> transports = Arrays.asList(transport1, transport2, transport3);
         manager.add(transports);
         assertEquals(3, manager.getData().size());
@@ -67,8 +67,8 @@ public class TransportDataManagerTest {
 
     @Test
     void testAddCargoInTransport() {
-        Transport transport = new Transport();
-        Cargo cargo = new Cargo(new char[][]{{'A'}});
+        Transport transport = new Transport(6, 6);
+        Cargo cargo = new Cargo("", new char[][]{{'A'}});
         manager.add(transport);
         manager.addCargoInTransport(transport, cargo);
         List<Cargo> cargos = manager.getCargos(transport);
@@ -78,18 +78,18 @@ public class TransportDataManagerTest {
 
     @Test
     void testGetCargoWeightInTransport() {
-        Transport transport = new Transport();
-        Cargo cargo1 = new Cargo(new char[][]{{'1'}}); // weight = 1
-        Cargo cargo2 = new Cargo(new char[][]{{'2', '2'}}); // weight = 4
+        Transport transport = new Transport(6, 6);
+        Cargo cargo1 = new Cargo("", new char[][]{{'1'}});
+        Cargo cargo2 = new Cargo("1", new char[][]{{'2', '2'}});
         manager.add(transport);
         manager.addCargoInTransport(transport, cargo1);
         manager.addCargoInTransport(transport, cargo2);
-        assertEquals(5, manager.getCargoWeightInTransport(transport));
+        assertEquals(3, manager.getCargoWeightInTransport(transport));
     }
 
     @Test
     void testRemove() {
-        Transport transport = new Transport();
+        Transport transport = new Transport(6, 6);
         manager.add(transport);
         assertEquals(1, manager.getData().size());
         manager.remove(transport);
@@ -98,8 +98,8 @@ public class TransportDataManagerTest {
 
     @Test
     void testToString() {
-        Transport transport1 = new Transport();
-        Transport transport2 = new Transport();
+        Transport transport1 = new Transport(6, 6);
+        Transport transport2 = new Transport(6, 6);
         manager.add(transport1);
         manager.add(transport2);
         String expected = transport1 + System.lineSeparator() + transport2 + System.lineSeparator();

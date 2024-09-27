@@ -1,6 +1,7 @@
 package ru.liga.loader.factory.cargo;
 
 import ru.liga.loader.model.entity.Cargo;
+import ru.liga.loader.model.structure.CargoJsonStructure;
 
 public class DefaultCargoFactory implements CargoFactory {
 
@@ -13,7 +14,12 @@ public class DefaultCargoFactory implements CargoFactory {
      */
 
     @Override
-    public Cargo createCargo(char[][] form) {
-        return new Cargo(form);
+    public Cargo createCargo(String name, char[][] form) {
+        return new Cargo(name, form);
+    }
+
+    @Override
+    public Cargo createCargo(CargoJsonStructure cargoJsonStructure) {
+        return new Cargo(cargoJsonStructure);
     }
 }

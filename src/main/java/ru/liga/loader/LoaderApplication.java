@@ -1,7 +1,7 @@
 package ru.liga.loader;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import lombok.extern.log4j.Log4j2;
+import lombok.extern.slf4j.Slf4j;
 import ru.liga.loader.controller.MainController;
 import ru.liga.loader.db.CargoDataManager;
 import ru.liga.loader.db.TransportDataManager;
@@ -19,10 +19,9 @@ import ru.liga.loader.util.json.JsonService;
 import ru.liga.loader.util.json.JsonWriter;
 import ru.liga.loader.validator.CargoValidator;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 
-@Log4j2
+@Slf4j
 public class LoaderApplication {
 
     /**
@@ -37,13 +36,15 @@ public class LoaderApplication {
     }
 
     private static MainController createMainController() {
+        JsonService jsonService = createJsonService();
         TransportDataManager transportDataManager = new TransportDataManager(new HashMap<>());
         TruckInitializer truckInitializer = new TruckInitializer(createJsonService());
         CargoInitializer cargoInitializer = new CargoInitializer(
                 new CargoValidator(),
-                new DefaultCargoFactory()
+                new DefaultCargoFactory(),
+                jsonService
         );
-        CargoDataManager cargoDataManager = new CargoDataManager(new ArrayList<>());
+        CargoDataManager cargoDataManager = new CargoDataManager(new HashMap<>());
         CargoCounter cargoCounter = new CargoCounter();
         ComponentInitializer initController = new ComponentInitializer(
                 truckInitializer,
@@ -55,7 +56,6 @@ public class LoaderApplication {
         LoadingProcessor loadingProcessor = new DefaultLoadingProcessor(transportDataManager, cargoDataManager);
         UserInputReceiver userInputReceiver = new UserInputReceiver();
         FileHandler fileHandler = new FileHandler();
-        JsonService jsonService = createJsonService();
         return MainController.builder()
                 .transportDataManager(transportDataManager)
                 .initController(initController)

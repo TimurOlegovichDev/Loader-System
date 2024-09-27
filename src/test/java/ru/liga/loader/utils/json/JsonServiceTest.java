@@ -11,12 +11,12 @@ import ru.liga.loader.factory.cargo.DefaultCargoFactory;
 import ru.liga.loader.factory.transport.TruckFactory;
 import ru.liga.loader.model.entity.Cargo;
 import ru.liga.loader.model.entity.Transport;
+import ru.liga.loader.model.structure.CargoJsonStructure;
 import ru.liga.loader.model.structure.TransportJsonStructure;
 import ru.liga.loader.util.json.JsonReader;
 import ru.liga.loader.util.json.JsonService;
 import ru.liga.loader.util.json.JsonWriter;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -25,7 +25,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class JsonServiceTest {
 
-    private final CargoDataManager cargoDataManager = new CargoDataManager(new ArrayList<>());
+    private final CargoDataManager cargoDataManager = new CargoDataManager(new HashMap<>());
     private final TransportDataManager transportDataManager = new TransportDataManager(new HashMap<>());
     private final LoadingCargoAlgorithm algorithm = AlgorithmTypes.createElAlgorithm(
             transportDataManager,
@@ -42,14 +42,18 @@ class JsonServiceTest {
     @BeforeEach
     public void setUp() {
         Transport transport = new TruckFactory().createTransport();
-        Cargo box = new DefaultCargoFactory().createCargo(new char[][]{
-                {'4', '4'},
-                {'4', '4'}
-        });
-        Cargo box2 = new DefaultCargoFactory().createCargo(new char[][]{
-                {'7', '7', '7', '7'},
-                {'7', '7', '7'}
-        });
+        Cargo box = new DefaultCargoFactory().createCargo(
+                "",
+                new char[][]{
+                        {'4', '4'},
+                        {'4', '4'}
+                });
+        Cargo box2 = new DefaultCargoFactory().createCargo(
+                "",
+                new char[][]{
+                        {'7', '7', '7', '7'},
+                        {'7', '7', '7'}
+                });
         cargoDataManager.add(box);
         cargoDataManager.add(box2);
         transportDataManager.add(transport);
@@ -100,25 +104,16 @@ class JsonServiceTest {
     }
 
     @Test
-    void testWriteObject() {
-        Cargo cargo = new Cargo(new char[][]{{'1'}});
-        jsonService.writeObject(cargo, "cargo.json");
-        File file = new File("cargo.json");
-        assertTrue(file.exists());
-    }
-
-    @Test
-    void testRead() {
-        Cargo cargo = new Cargo(new char[][]{{'1'}});
-        List<Cargo> cargosToWrite = new ArrayList<>();
-        cargosToWrite.add(cargo);
-        jsonService.writeObject(cargosToWrite, "cargo.json");
-        List<Cargo> cargosAfterRead = jsonService.read(Cargo.class, "cargo.json");
-        assertEquals(1, cargosAfterRead.size());
-        assertArrayEquals(cargo.getForm(),
-                cargosAfterRead.get(0).getForm()
+    void test_write_and_read_cargo_json() {
+        Cargo cargo = new Cargo("Small box", new char[][]{{'1'}});
+        jsonService.writeObject(new ArrayList<>(List.of(cargo)), "D:\\WorkSpaces\\Java\\LoaderSystem\\src\\test\\resources\\jsons\\valid-cargos.json");
+        List<CargoJsonStructure> structures = jsonService.read(CargoJsonStructure.class, "D:\\WorkSpaces\\Java\\LoaderSystem\\src\\test\\resources\\jsons\\valid-cargos.json");
+        assertArrayEquals(
+                cargo.getForm(),
+                structures.get(0).getForm()
         );
     }
+
 
     @Test
     void testReadIOException() {

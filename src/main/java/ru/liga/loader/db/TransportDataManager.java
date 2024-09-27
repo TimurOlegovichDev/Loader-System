@@ -92,7 +92,7 @@ public class TransportDataManager {
             return weight;
         }
         for (Cargo cargoInTransport : cargos) {
-            weight += cargoInTransport.getWeight();
+            weight += cargoInTransport.getArea();
         }
         return weight;
     }

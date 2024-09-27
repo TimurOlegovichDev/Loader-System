@@ -12,7 +12,7 @@ public class TruckFactory implements TransportFactory {
 
     @Override
     public Transport createTransport() {
-        return new Transport();
+        return new Transport(6, 6);
     }
 
     /**
