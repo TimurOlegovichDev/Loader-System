@@ -1,25 +1,37 @@
-package ru.liga.loader.util.initializers;
+package ru.liga.loader.service;
 
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import ru.liga.loader.db.CargoDataManager;
-import ru.liga.loader.db.TransportDataManager;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import ru.liga.loader.model.entity.Cargo;
 import ru.liga.loader.model.entity.Transport;
+import ru.liga.loader.repository.CargoDataRepository;
+import ru.liga.loader.repository.TransportDataRepository;
 import ru.liga.loader.util.CargoCounter;
+import ru.liga.loader.util.initializers.CargoInitializer;
+import ru.liga.loader.util.initializers.TruckInitializer;
 
 import java.util.List;
 import java.util.Map;
 
 @Slf4j
-@RequiredArgsConstructor
-public class ComponentInitializer {
+@Service
+public class InitializeService {
 
     private final TruckInitializer truckInitializer;
     private final CargoInitializer cargoInitializer;
-    private final TransportDataManager transportDataManager;
-    private final CargoDataManager cargoDataManager;
+    private final TransportDataRepository transportDataRepository;
+    private final CargoDataRepository cargoDataRepository;
     private final CargoCounter cargoCounter;
+
+    @Autowired
+    public InitializeService(TruckInitializer truckInitializer, CargoInitializer cargoInitializer, TransportDataRepository transportDataRepository, CargoDataRepository cargoDataRepository, CargoCounter cargoCounter) {
+        this.truckInitializer = truckInitializer;
+        this.cargoInitializer = cargoInitializer;
+        this.transportDataRepository = transportDataRepository;
+        this.cargoDataRepository = cargoDataRepository;
+        this.cargoCounter = cargoCounter;
+    }
 
     /**
      * Инициализирует грузы из json файла.
@@ -29,9 +41,9 @@ public class ComponentInitializer {
      */
 
     public void initializeCargos(String filePath) {
-        Map<String, List<Cargo>> cargoMap =
+        Map<String, Cargo> cargoMap =
                 cargoInitializer.initializeFromJson(filePath);
-        cargoDataManager.add(cargoMap);
+        cargoDataRepository.add(cargoMap);
         log.info("Груз добавлен в базу данных");
     }
 
@@ -49,7 +61,7 @@ public class ComponentInitializer {
         Map<Transport, List<Cargo>> transportListMap =
                 truckInitializer.initializeFromJson(filePath);
         countCargos(transportListMap);
-        transportDataManager.add(transportListMap);
+        transportDataRepository.add(transportListMap);
         log.info("Транспорт добавлен в базу данных");
     }
 
@@ -63,7 +75,7 @@ public class ComponentInitializer {
     public void initializeTransport(int numberOfTransport) {
         List<Transport> transports =
                 truckInitializer.initialize(numberOfTransport);
-        transportDataManager.add(transports);
+        transportDataRepository.add(transports);
     }
 
     private void countCargos(Map<Transport, List<Cargo>> map) {

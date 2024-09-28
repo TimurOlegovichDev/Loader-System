@@ -5,12 +5,12 @@ import lombok.extern.slf4j.Slf4j;
 import ru.liga.loader.algorithm.EvenLoadingAlgorithm;
 import ru.liga.loader.algorithm.LoadingCargoAlgorithm;
 import ru.liga.loader.algorithm.MinimumEmptySpaceAlgorithm;
-import ru.liga.loader.algorithm.util.impl.DefaultCargoLoader;
 import ru.liga.loader.algorithm.util.impl.DefaultCargoSorter;
 import ru.liga.loader.algorithm.util.impl.TransportSorterByWeightAsc;
 import ru.liga.loader.algorithm.util.impl.TransportSorterByWeightDesc;
-import ru.liga.loader.db.CargoDataManager;
-import ru.liga.loader.db.TransportDataManager;
+import ru.liga.loader.repository.CargoDataRepository;
+import ru.liga.loader.repository.TransportDataRepository;
+import ru.liga.loader.service.DefaultCargoLoaderServiceService;
 
 @Getter
 @Slf4j
@@ -40,19 +40,19 @@ public enum AlgorithmTypes {
      * Создает алгоритм равномерной загрузки грузов.
      * Этот метод создает экземпляр алгоритма равномерной загрузки грузов с указанными менеджерами данных.
      *
-     * @param transportDataManager менеджер данных транспортных средств для получения информации о транспорте для погрузки
-     * @param cargoDataManager     менеджер данных грузов, которые нужно будет загрузить
+     * @param transportDataRepository менеджер данных транспортных средств для получения информации о транспорте для погрузки
+     * @param cargoDataRepository     менеджер данных грузов, которые нужно будет загрузить
      * @return алгоритм равномерной загрузки грузов
      */
 
-    public static LoadingCargoAlgorithm createElAlgorithm(TransportDataManager transportDataManager,
-                                                          CargoDataManager cargoDataManager) {
+    public static LoadingCargoAlgorithm createElAlgorithm(TransportDataRepository transportDataRepository,
+                                                          CargoDataRepository cargoDataRepository) {
         return new EvenLoadingAlgorithm(
                 new DefaultCargoSorter(),
                 new TransportSorterByWeightAsc(),
-                transportDataManager,
-                cargoDataManager,
-                new DefaultCargoLoader()
+                transportDataRepository,
+                cargoDataRepository,
+                new DefaultCargoLoaderServiceService()
         );
     }
 
@@ -60,19 +60,19 @@ public enum AlgorithmTypes {
      * Создает алгоритм плотной загрузки грузов.
      * Этот метод создает экземпляр алгоритма плотной загрузки грузов с указанными менеджерами данных.
      *
-     * @param transportDataManager менеджер данных транспортных средств для получения информации о транспорте для погрузки
-     * @param cargoDataManager     менеджер данных грузов, которые нужно будет загрузить
+     * @param transportDataRepository менеджер данных транспортных средств для получения информации о транспорте для погрузки
+     * @param cargoDataRepository     менеджер данных грузов, которые нужно будет загрузить
      * @return алгоритм плотной загрузки грузов
      */
 
-    public static LoadingCargoAlgorithm createMesAlgorithm(TransportDataManager transportDataManager,
-                                                           CargoDataManager cargoDataManager) {
+    public static LoadingCargoAlgorithm createMesAlgorithm(TransportDataRepository transportDataRepository,
+                                                           CargoDataRepository cargoDataRepository) {
         return new MinimumEmptySpaceAlgorithm(
                 new DefaultCargoSorter(),
                 new TransportSorterByWeightDesc(),
-                transportDataManager,
-                cargoDataManager,
-                new DefaultCargoLoader()
+                transportDataRepository,
+                cargoDataRepository,
+                new DefaultCargoLoaderServiceService()
         );
     }
 }

@@ -1,19 +1,26 @@
 package ru.liga.loader.processor.impl;
 
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import ru.liga.loader.algorithm.LoadingCargoAlgorithm;
-import ru.liga.loader.db.CargoDataManager;
-import ru.liga.loader.db.TransportDataManager;
 import ru.liga.loader.enums.AlgorithmTypes;
 import ru.liga.loader.processor.LoadingProcessor;
+import ru.liga.loader.repository.CargoDataRepository;
+import ru.liga.loader.repository.TransportDataRepository;
 
 @Slf4j
-@RequiredArgsConstructor
+@Service
 public class DefaultLoadingProcessor implements LoadingProcessor {
 
-    private final TransportDataManager transportDataManager;
-    private final CargoDataManager cargoDataManager;
+    private final TransportDataRepository transportDataRepository;
+    private final CargoDataRepository cargoDataRepository;
+
+    @Autowired
+    public DefaultLoadingProcessor(TransportDataRepository transportDataRepository, CargoDataRepository cargoDataRepository) {
+        this.transportDataRepository = transportDataRepository;
+        this.cargoDataRepository = cargoDataRepository;
+    }
 
     /**
      * Обрабатывает загрузку грузов по указанному алгоритму.
@@ -46,20 +53,20 @@ public class DefaultLoadingProcessor implements LoadingProcessor {
         switch (AlgorithmTypes.of(algorithmName)) {
             case EL -> {
                 return AlgorithmTypes.createElAlgorithm(
-                        transportDataManager,
-                        cargoDataManager
+                        transportDataRepository,
+                        cargoDataRepository
                 );
             }
             case MES -> {
                 return AlgorithmTypes.createMesAlgorithm(
-                        transportDataManager,
-                        cargoDataManager
+                        transportDataRepository,
+                        cargoDataRepository
                 );
             }
         }
         return AlgorithmTypes.createMesAlgorithm(
-                transportDataManager,
-                cargoDataManager
+                transportDataRepository,
+                cargoDataRepository
         );
     }
 }

@@ -1,14 +1,17 @@
-package ru.liga.loader.util.json;
+package ru.liga.loader.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
+import ru.liga.loader.util.json.JsonReader;
+import ru.liga.loader.util.json.JsonWriter;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
 @RequiredArgsConstructor
+@Service
 public class JsonService {
 
     private final JsonWriter jsonWriter;
@@ -26,7 +29,7 @@ public class JsonService {
         try {
             jsonWriter.writeObject(object, fileName);
             log.info("Данные успешно записаны на диск");
-        } catch (IOException e) {
+        } catch (Throwable e) {
             log.error("При записи произошла ошибка {}", e.getMessage());
         }
     }
@@ -43,7 +46,7 @@ public class JsonService {
     public <T> List<T> read(Class<T> clazz, String fileName) {
         try {
             return jsonReader.readObject(clazz, fileName);
-        } catch (IOException e) {
+        } catch (Throwable e) {
             log.error("При чтении произошла ошибка {}", e.getMessage());
         }
         return new ArrayList<>();

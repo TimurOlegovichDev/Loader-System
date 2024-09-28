@@ -1,4 +1,4 @@
-package ru.liga.loader.db;
+package ru.liga.loader.repository;
 
 import org.junit.jupiter.api.Test;
 import ru.liga.loader.model.entity.Cargo;
@@ -8,13 +8,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class CargoDataManagerTest {
+public class CargoDataRepositoryTest {
 
     @Test
     void testGetData() {
-        CargoDataManager manager = new CargoDataManager(new HashMap<>());
+        CargoDataRepository manager = new CargoDataRepository(new HashMap<>());
         assertEquals(0, manager.getData().size());
 
         List<Cargo> data = new ArrayList<>(
@@ -36,16 +37,14 @@ public class CargoDataManagerTest {
             manager.add(cargo);
         }
         assertEquals(3, manager.getData().size());
-        assertEquals(3, manager.getData().get("FirstType").size());
-        assertEquals(3, manager.getData().get("SecondType").size());
-        assertEquals(4, manager.getData().get("ThirdType").size());
+        assertEquals(3, manager.getData().size());
     }
 
 
     @Test
     void test_add_map() {
-        CargoDataManager manager = new CargoDataManager(new HashMap<>());
-        Map<String, List<Cargo>> map = new HashMap<>();
+        CargoDataRepository manager = new CargoDataRepository(new HashMap<>());
+        Map<String, Cargo> map = new HashMap<>();
         List<Cargo> data = new ArrayList<>(
                 List.of(
                         new Cargo("FirstType", new char[][]{{'1'}}),
@@ -53,10 +52,9 @@ public class CargoDataManagerTest {
                         new Cargo("ThirdType", new char[][]{{'1'}})
                 )
         );
-        data.forEach(cargo -> map.put(cargo.getName(), new ArrayList<>(List.of(cargo))));
         manager.add(map);
-        for (Map.Entry<String, List<Cargo>> entry : map.entrySet()) {
-            assertEquals(entry.getValue().size(), map.get(entry.getKey()).size());
+        for (Cargo cargo : data) {
+            assertArrayEquals(cargo.getForm(), map.get(cargo.getName()).getForm());
         }
     }
 

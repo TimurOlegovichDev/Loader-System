@@ -1,11 +1,13 @@
 package ru.liga.loader.util;
 
+import org.springframework.stereotype.Component;
 import ru.liga.loader.model.entity.Cargo;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+@Component
 public class CargoCounter {
 
     private final int INCREMENT_VALUE = 1;

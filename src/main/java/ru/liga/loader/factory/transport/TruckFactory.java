@@ -1,7 +1,9 @@
 package ru.liga.loader.factory.transport;
 
+import org.springframework.stereotype.Component;
 import ru.liga.loader.model.entity.Transport;
 
+@Component
 public class TruckFactory implements TransportFactory {
 
     /**

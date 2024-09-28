@@ -1,28 +1,43 @@
 package ru.liga.loader.algorithm;
 
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import ru.liga.loader.algorithm.util.CargoLoader;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Component;
 import ru.liga.loader.algorithm.util.CargoSorter;
 import ru.liga.loader.algorithm.util.TransportSorter;
-import ru.liga.loader.db.CargoDataManager;
-import ru.liga.loader.db.TransportDataManager;
 import ru.liga.loader.exception.InvalidCargoSize;
 import ru.liga.loader.exception.NoPlaceException;
 import ru.liga.loader.model.entity.Cargo;
 import ru.liga.loader.model.entity.Transport;
+import ru.liga.loader.repository.CargoDataRepository;
+import ru.liga.loader.repository.TransportDataRepository;
+import ru.liga.loader.service.CargoLoaderService;
 
 import java.util.List;
 
 @Slf4j
-@RequiredArgsConstructor
+@Component
 public class MinimumEmptySpaceAlgorithm implements LoadingCargoAlgorithm {
 
     private final CargoSorter cargoSorter;
     private final TransportSorter transportSorter;
-    private final TransportDataManager transportDataManager;
-    private final CargoDataManager cargoDataManager;
-    private final CargoLoader cargoLoader;
+    private final TransportDataRepository transportDataRepository;
+    private final CargoDataRepository cargoDataRepository;
+    private final CargoLoaderService cargoLoaderService;
+
+    @Autowired
+    public MinimumEmptySpaceAlgorithm(CargoSorter cargoSorter,
+                                      @Qualifier("transportSorterByWeightDesc") TransportSorter transportSorter,
+                                      TransportDataRepository transportDataRepository,
+                                      CargoDataRepository cargoDataRepository,
+                                      CargoLoaderService cargoLoaderService) {
+        this.cargoSorter = cargoSorter;
+        this.transportSorter = transportSorter;
+        this.transportDataRepository = transportDataRepository;
+        this.cargoDataRepository = cargoDataRepository;
+        this.cargoLoaderService = cargoLoaderService;
+    }
 
     /**
      * Выполняет алгоритм плотной погрузки грузов.
@@ -30,7 +45,7 @@ public class MinimumEmptySpaceAlgorithm implements LoadingCargoAlgorithm {
      * а затем пытается загрузить каждый груз в транспортное средство.
      *
      * @see CargoSorter#sort(List)
-     * @see TransportSorter#sort(TransportDataManager)
+     * @see TransportSorter#sort(TransportDataRepository)
      * @see #loadCargo(Cargo, List)
      */
 
@@ -38,12 +53,9 @@ public class MinimumEmptySpaceAlgorithm implements LoadingCargoAlgorithm {
     public void execute() {
         log.info("Старт алгоритма плотной погрузки");
         List<Cargo> cargos = cargoSorter.sort(
-                cargoDataManager.getData()
-                        .values().stream()
-                        .flatMap(List::stream)
-                        .toList()
+                cargoDataRepository.getData().values().stream().toList()
         );
-        List<Transport> transports = transportSorter.sort(transportDataManager);
+        List<Transport> transports = transportSorter.sort(transportDataRepository);
         for (Cargo cargo : cargos) {
             log.info("Погрузка груза: {}", cargo);
             loadCargo(cargo, transports);
@@ -54,8 +66,8 @@ public class MinimumEmptySpaceAlgorithm implements LoadingCargoAlgorithm {
     private void loadCargo(Cargo cargo, List<Transport> transports) {
         for (Transport transport : transports) {
             try {
-                cargoLoader.load(cargo, transport);
-                transportDataManager.addCargoInTransport(transport, cargo);
+                cargoLoaderService.load(cargo, transport);
+                transportDataRepository.addCargoInTransport(transport, cargo);
                 log.info("Груз успешно загружен: {}", cargo);
                 return;
             } catch (NoPlaceException e) {

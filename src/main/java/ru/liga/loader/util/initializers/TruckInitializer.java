@@ -1,22 +1,28 @@
 package ru.liga.loader.util.initializers;
 
-import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import ru.liga.loader.factory.transport.TransportFactory;
 import ru.liga.loader.factory.transport.TruckFactory;
 import ru.liga.loader.model.entity.Cargo;
 import ru.liga.loader.model.entity.Transport;
 import ru.liga.loader.model.structure.TransportJsonStructure;
-import ru.liga.loader.util.json.JsonService;
+import ru.liga.loader.service.JsonService;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@RequiredArgsConstructor
+@Component
 public class TruckInitializer {
 
     private final JsonService jsonService;
+
+    @Autowired
+    public TruckInitializer(JsonService jsonService) {
+        this.jsonService = jsonService;
+    }
 
     /**
      * Инициализирует грузовые автомобили по количеству.

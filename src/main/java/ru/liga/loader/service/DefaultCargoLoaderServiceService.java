@@ -1,14 +1,15 @@
-package ru.liga.loader.algorithm.util.impl;
+package ru.liga.loader.service;
 
 import lombok.extern.slf4j.Slf4j;
-import ru.liga.loader.algorithm.util.CargoLoader;
+import org.springframework.stereotype.Service;
 import ru.liga.loader.exception.InvalidCargoSize;
 import ru.liga.loader.exception.NoPlaceException;
 import ru.liga.loader.model.entity.Cargo;
 import ru.liga.loader.model.entity.Transport;
 
 @Slf4j
-public class DefaultCargoLoader implements CargoLoader {
+@Service
+public class DefaultCargoLoaderServiceService implements CargoLoaderService {
 
     /**
      * Загружает указанный груз в транспорт.

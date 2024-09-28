@@ -1,4 +1,4 @@
-package ru.liga.loader.db;
+package ru.liga.loader.repository;
 
 import org.junit.jupiter.api.Test;
 import ru.liga.loader.model.entity.Cargo;
@@ -11,9 +11,9 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class TransportDataManagerTest {
+public class TransportDataRepositoryTest {
 
-    private final TransportDataManager manager = new TransportDataManager(new HashMap<>());
+    private final TransportDataRepository manager = new TransportDataRepository(new HashMap<>());
 
     @Test
     void testGetData() {

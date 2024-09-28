@@ -1,6 +1,7 @@
 package ru.liga.loader.algorithm.util.impl;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Component;
 import ru.liga.loader.algorithm.util.CargoSorter;
 import ru.liga.loader.model.entity.Cargo;
 
@@ -8,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
+@Component
 public class DefaultCargoSorter implements CargoSorter {
 
     /**

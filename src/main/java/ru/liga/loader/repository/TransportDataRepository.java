@@ -1,6 +1,8 @@
-package ru.liga.loader.db;
+package ru.liga.loader.repository;
 
 import lombok.NonNull;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 import ru.liga.loader.model.entity.Cargo;
 import ru.liga.loader.model.entity.Transport;
 
@@ -8,11 +10,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public class TransportDataManager {
+@Repository
+public class TransportDataRepository {
 
     private final Map<Transport, List<Cargo>> transportMap;
 
-    public TransportDataManager(Map<Transport, List<Cargo>> transportMap) {
+    @Autowired
+    public TransportDataRepository(Map<Transport, List<Cargo>> transportMap) {
         this.transportMap = transportMap;
     }
 

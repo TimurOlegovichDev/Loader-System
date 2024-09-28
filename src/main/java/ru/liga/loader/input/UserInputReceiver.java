@@ -1,10 +1,12 @@
 package ru.liga.loader.input;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
 
 import java.util.Scanner;
 
 @Slf4j
+@Service
 public class UserInputReceiver {
 
     private final Scanner scanner = new Scanner(System.in);

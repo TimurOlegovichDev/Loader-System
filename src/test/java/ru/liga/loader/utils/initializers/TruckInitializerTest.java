@@ -8,8 +8,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import ru.liga.loader.model.entity.Cargo;
 import ru.liga.loader.model.entity.Transport;
 import ru.liga.loader.model.structure.TransportJsonStructure;
+import ru.liga.loader.service.JsonService;
 import ru.liga.loader.util.initializers.TruckInitializer;
-import ru.liga.loader.util.json.JsonService;
 
 import java.util.ArrayList;
 import java.util.Arrays;

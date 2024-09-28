@@ -4,8 +4,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import ru.liga.loader.algorithm.LoadingCargoAlgorithm;
-import ru.liga.loader.db.CargoDataManager;
-import ru.liga.loader.db.TransportDataManager;
 import ru.liga.loader.enums.AlgorithmTypes;
 import ru.liga.loader.factory.cargo.DefaultCargoFactory;
 import ru.liga.loader.factory.transport.TruckFactory;
@@ -13,8 +11,10 @@ import ru.liga.loader.model.entity.Cargo;
 import ru.liga.loader.model.entity.Transport;
 import ru.liga.loader.model.structure.CargoJsonStructure;
 import ru.liga.loader.model.structure.TransportJsonStructure;
+import ru.liga.loader.repository.CargoDataRepository;
+import ru.liga.loader.repository.TransportDataRepository;
+import ru.liga.loader.service.JsonService;
 import ru.liga.loader.util.json.JsonReader;
-import ru.liga.loader.util.json.JsonService;
 import ru.liga.loader.util.json.JsonWriter;
 
 import java.util.ArrayList;
@@ -25,11 +25,11 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class JsonServiceTest {
 
-    private final CargoDataManager cargoDataManager = new CargoDataManager(new HashMap<>());
-    private final TransportDataManager transportDataManager = new TransportDataManager(new HashMap<>());
+    private final CargoDataRepository cargoDataRepository = new CargoDataRepository(new HashMap<>());
+    private final TransportDataRepository transportDataRepository = new TransportDataRepository(new HashMap<>());
     private final LoadingCargoAlgorithm algorithm = AlgorithmTypes.createElAlgorithm(
-            transportDataManager,
-            cargoDataManager
+            transportDataRepository,
+            cargoDataRepository
     );
     private final JsonService jsonService = new JsonService(
             new JsonWriter(new ObjectMapper()),
@@ -54,31 +54,31 @@ class JsonServiceTest {
                         {'7', '7', '7', '7'},
                         {'7', '7', '7'}
                 });
-        cargoDataManager.add(box);
-        cargoDataManager.add(box2);
-        transportDataManager.add(transport);
+        cargoDataRepository.add(box);
+        cargoDataRepository.add(box2);
+        transportDataRepository.add(transport);
         algorithm.execute();
     }
 
     @Test
     public void test_write_and_read_truck_to_data() {
         List<TransportJsonStructure> transportJsonStructures = new ArrayList<>();
-        for (Transport transport : transportDataManager.getData()) {
-            transportJsonStructures.add(new TransportJsonStructure(transport.getBody(), transportDataManager.getCargos(transport)));
-            transportDataManager.remove(transport);
+        for (Transport transport : transportDataRepository.getData()) {
+            transportJsonStructures.add(new TransportJsonStructure(transport.getBody(), transportDataRepository.getCargos(transport)));
+            transportDataRepository.remove(transport);
         }
-        assertTrue(transportDataManager.getData().isEmpty());
+        assertTrue(transportDataRepository.getData().isEmpty());
         jsonService.writeObject(transportJsonStructures, TEST_FILE_PATH);
         transportJsonStructures.clear();
         transportJsonStructures = jsonService.read(TransportJsonStructure.class, TEST_FILE_PATH);
         for (TransportJsonStructure transportJsonStructure : transportJsonStructures) {
             Transport transport = new TruckFactory().createTransport(transportJsonStructure.getBody());
-            transportDataManager.add(transport);
+            transportDataRepository.add(transport);
             for (Cargo cargo : transportJsonStructure.getCargos()) {
-                transportDataManager.addCargoInTransport(transport, cargo);
+                transportDataRepository.addCargoInTransport(transport, cargo);
             }
         }
-        assertEquals(transportDataManager.getData().size(), TRUCKS_NUMBER_IN_FILE);
+        assertEquals(transportDataRepository.getData().size(), TRUCKS_NUMBER_IN_FILE);
     }
 
     @Test
@@ -86,21 +86,21 @@ class JsonServiceTest {
         List<TransportJsonStructure> transportJsonStructures = jsonService.read(TransportJsonStructure.class, TEST_FILE_PATH);
         assertEquals(transportJsonStructures.size(), TRUCKS_NUMBER_IN_FILE);
         Transport transportMain = new TruckFactory().createTransport();
-        TransportDataManager transportDataManager2 = new TransportDataManager(new HashMap<>());
-        transportDataManager2.add(transportMain);
+        TransportDataRepository transportDataRepository2 = new TransportDataRepository(new HashMap<>());
+        transportDataRepository2.add(transportMain);
         AlgorithmTypes.createElAlgorithm(
-                transportDataManager2,
-                cargoDataManager
+                transportDataRepository2,
+                cargoDataRepository
         ).execute();
         for (TransportJsonStructure transportJsonStructure : transportJsonStructures) {
             Transport transport = new TruckFactory().createTransport(transportJsonStructure.getBody());
-            transportDataManager.add(transport);
+            transportDataRepository.add(transport);
             for (Cargo cargo : transportJsonStructure.getCargos()) {
-                transportDataManager.addCargoInTransport(transport, cargo);
+                transportDataRepository.addCargoInTransport(transport, cargo);
             }
-            System.out.println(transportDataManager.getCargos(transport));
+            System.out.println(transportDataRepository.getCargos(transport));
         }
-        assertArrayEquals(transportDataManager.getData().get(0).getBody(), transportMain.getBody());
+        assertArrayEquals(transportDataRepository.getData().get(0).getBody(), transportMain.getBody());
     }
 
     @Test

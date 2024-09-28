@@ -1,12 +1,14 @@
 package ru.liga.loader.validator;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Component;
 import ru.liga.loader.exception.InvalidCargoInput;
 import ru.liga.loader.model.structure.CargoJsonStructure;
 
 import java.util.Arrays;
 
 @Slf4j
+@Component
 public class CargoValidator {
 
     /**

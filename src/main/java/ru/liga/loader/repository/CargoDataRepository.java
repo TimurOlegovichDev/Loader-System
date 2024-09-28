@@ -1,17 +1,19 @@
-package ru.liga.loader.db;
+package ru.liga.loader.repository;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 import ru.liga.loader.model.entity.Cargo;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
-public class CargoDataManager {
+@Repository
+public class CargoDataRepository {
 
-    private final Map<String, List<Cargo>> cargoData;
+    private final Map<String, Cargo> cargoData;
 
-    public CargoDataManager(Map<String, List<Cargo>> cargoData) {
+    @Autowired
+    public CargoDataRepository(Map<String, Cargo> cargoData) {
         this.cargoData = cargoData;
     }
 
@@ -21,7 +23,7 @@ public class CargoDataManager {
      * @return копия списка грузов
      */
 
-    public Map<String, List<Cargo>> getData() {
+    public Map<String, Cargo> getData() {
         return new HashMap<>(cargoData);
     }
 
@@ -33,10 +35,7 @@ public class CargoDataManager {
 
 
     public void add(Cargo cargo) {
-        if (!cargoData.containsKey(cargo.getName())) {
-            cargoData.put(cargo.getName(), new ArrayList<>());
-        }
-        cargoData.get(cargo.getName()).add(cargo);
+        cargoData.put(cargo.getName(), cargo);
     }
 
     /**
@@ -45,7 +44,7 @@ public class CargoDataManager {
      * @param cargos список грузов, который будет добавлен
      */
 
-    public void add(Map<String, List<Cargo>> cargos) {
+    public void add(Map<String, Cargo> cargos) {
         cargoData.putAll(cargos);
     }
 
@@ -58,14 +57,9 @@ public class CargoDataManager {
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
-        for (Map.Entry<String, List<Cargo>> entry : cargoData.entrySet()) {
-            sb.append(entry.getKey())
-                    .append(":")
+        for (Cargo cargo : cargoData.values()) {
+            sb.append(cargo.toString())
                     .append(System.lineSeparator());
-            for (Cargo cargo : entry.getValue()) {
-                sb.append(cargo.toString())
-                        .append(System.lineSeparator());
-            }
         }
         return sb.toString();
     }

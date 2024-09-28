@@ -66,8 +66,7 @@ public class Cargo {
                 .append(" название: ")
                 .append(name)
                 .append(System.lineSeparator())
-                .append(" груз: ")
-                .append(System.lineSeparator());
+                .append(" груз: ");
         for (char[] arr : form) {
             sb.append(Arrays.toString(arr));
         }
