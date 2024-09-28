@@ -2,21 +2,22 @@ package ru.liga.loader.repository;
 
 import org.junit.jupiter.api.Test;
 import ru.liga.loader.model.entity.Cargo;
+import ru.liga.loader.repository.impl.DefaultCrudCargoRepository;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class CargoDataRepositoryTest {
+public class DefaultCrudCargoRepositoryTest {
 
     @Test
     void testGetData() {
-        CargoDataRepository manager = new CargoDataRepository(new HashMap<>());
-        assertEquals(0, manager.getData().size());
+        DefaultCrudCargoRepository manager = new DefaultCrudCargoRepository(new HashMap<>());
+        assertEquals(0, manager.getAll().size());
 
         List<Cargo> data = new ArrayList<>(
                 List.of(
@@ -36,14 +37,13 @@ public class CargoDataRepositoryTest {
         for (Cargo cargo : data) {
             manager.add(cargo);
         }
-        assertEquals(3, manager.getData().size());
-        assertEquals(3, manager.getData().size());
+        assertEquals(3, manager.getAll().size());
     }
 
 
     @Test
     void test_add_map() {
-        CargoDataRepository manager = new CargoDataRepository(new HashMap<>());
+        DefaultCrudCargoRepository manager = new DefaultCrudCargoRepository(new HashMap<>());
         Map<String, Cargo> map = new HashMap<>();
         List<Cargo> data = new ArrayList<>(
                 List.of(
@@ -52,9 +52,15 @@ public class CargoDataRepositoryTest {
                         new Cargo("ThirdType", new char[][]{{'1'}})
                 )
         );
-        manager.add(map);
         for (Cargo cargo : data) {
-            assertArrayEquals(cargo.getForm(), map.get(cargo.getName()).getForm());
+            map.put(cargo.getName(), cargo);
+        }
+        manager.addAll(map);
+        for (Cargo cargo : data) {
+            assertArrayEquals(
+                    cargo.getForm(),
+                    map.get(cargo.getName()).getForm()
+            );
         }
     }
 

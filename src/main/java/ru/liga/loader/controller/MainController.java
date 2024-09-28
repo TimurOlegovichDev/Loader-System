@@ -7,7 +7,8 @@ import ru.liga.loader.input.UserInputReceiver;
 import ru.liga.loader.model.entity.Transport;
 import ru.liga.loader.model.structure.TransportJsonStructure;
 import ru.liga.loader.processor.LoadingProcessor;
-import ru.liga.loader.repository.TransportDataRepository;
+import ru.liga.loader.repository.TransportRepository;
+import ru.liga.loader.repository.impl.DefaultCrudTransportRepository;
 import ru.liga.loader.service.InitializeService;
 import ru.liga.loader.service.JsonService;
 
@@ -18,14 +19,13 @@ import java.util.List;
 @Service
 public class MainController {
 
-    private final TransportDataRepository transportDataRepository;
+    private final TransportRepository transportDataRepository;
     private final InitializeService initController;
     private final LoadingProcessor defaultLoadingProcessor;
-    private final UserInputReceiver userInputReceiver;
     private final JsonService jsonService;
 
     @Autowired
-    public MainController(TransportDataRepository transportDataRepository,
+    public MainController(DefaultCrudTransportRepository transportDataRepository,
                           InitializeService initController,
                           LoadingProcessor defaultLoadingProcessor,
                           UserInputReceiver userInputReceiver,
@@ -33,7 +33,6 @@ public class MainController {
         this.transportDataRepository = transportDataRepository;
         this.initController = initController;
         this.defaultLoadingProcessor = defaultLoadingProcessor;
-        this.userInputReceiver = userInputReceiver;
         this.jsonService = jsonService;
     }
 
@@ -51,7 +50,7 @@ public class MainController {
 
     public void save(String filePath) {
         List<TransportJsonStructure> structures = new ArrayList<>();
-        for (Transport transport : transportDataRepository.getData()) {
+        for (Transport transport : transportDataRepository.getKeys()) {
             structures.add(
                     new TransportJsonStructure(
                             transport.getBody(),
@@ -64,7 +63,7 @@ public class MainController {
 
     public String printTransports() {
         StringBuilder stringBuilder = new StringBuilder("Отображение транспорта:");
-        if (!transportDataRepository.getData().isEmpty()) {
+        if (!transportDataRepository.getKeys().isEmpty()) {
             stringBuilder.append(System.lineSeparator())
                     .append(transportDataRepository);
         }

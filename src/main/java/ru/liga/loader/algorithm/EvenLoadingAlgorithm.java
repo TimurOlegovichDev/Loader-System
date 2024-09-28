@@ -10,8 +10,8 @@ import ru.liga.loader.exception.InvalidCargoSize;
 import ru.liga.loader.exception.NoPlaceException;
 import ru.liga.loader.model.entity.Cargo;
 import ru.liga.loader.model.entity.Transport;
-import ru.liga.loader.repository.CargoDataRepository;
-import ru.liga.loader.repository.TransportDataRepository;
+import ru.liga.loader.repository.impl.DefaultCrudCargoRepository;
+import ru.liga.loader.repository.impl.DefaultCrudTransportRepository;
 import ru.liga.loader.service.CargoLoaderService;
 
 import java.util.List;
@@ -23,15 +23,15 @@ public class EvenLoadingAlgorithm implements LoadingCargoAlgorithm {
 
     private final CargoSorter cargoSorter;
     private final TransportSorter transportSorter;
-    private final TransportDataRepository transportDataRepository;
-    private final CargoDataRepository cargoDataRepository;
+    private final DefaultCrudTransportRepository transportDataRepository;
+    private final DefaultCrudCargoRepository cargoDataRepository;
     private final CargoLoaderService cargoLoaderService;
 
     @Autowired
     public EvenLoadingAlgorithm(CargoSorter cargoSorter,
                                 @Qualifier("transportSorterByWeightAsc") TransportSorter transportSorter,
-                                TransportDataRepository transportDataRepository,
-                                CargoDataRepository cargoDataRepository,
+                                DefaultCrudTransportRepository transportDataRepository,
+                                DefaultCrudCargoRepository cargoDataRepository,
                                 CargoLoaderService cargoLoaderService) {
         this.cargoSorter = cargoSorter;
         this.transportSorter = transportSorter;
@@ -54,7 +54,7 @@ public class EvenLoadingAlgorithm implements LoadingCargoAlgorithm {
     public void execute() {
         log.info("Старт алгоритма равномерной погрузки");
         List<Cargo> cargos = cargoSorter.sort(
-                cargoDataRepository.getData().values().stream().toList()
+                cargoDataRepository.getAll()
         );
         for (Cargo cargo : cargos) {
             log.info("Погрузка груза: {}", cargo);

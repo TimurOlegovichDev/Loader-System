@@ -4,7 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import ru.liga.loader.algorithm.util.TransportSorter;
 import ru.liga.loader.model.entity.Transport;
-import ru.liga.loader.repository.TransportDataRepository;
+import ru.liga.loader.repository.impl.DefaultCrudTransportRepository;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -25,9 +25,9 @@ public class TransportSorterByWeightAsc implements TransportSorter {
      */
 
     @Override
-    public List<Transport> sort(TransportDataRepository transportDataRepository) {
+    public List<Transport> sort(DefaultCrudTransportRepository transportDataRepository) {
         log.debug("Сортировка транспорта по весу груза в порядке возрастания...");
-        return new ArrayList<>(transportDataRepository.getData()).stream()
+        return new ArrayList<>(transportDataRepository.getKeys()).stream()
                 .sorted(Comparator.comparingInt(transportDataRepository::getCargoWeightInTransport))
                 .collect(Collectors.toList());
     }

@@ -8,8 +8,8 @@ import ru.liga.loader.algorithm.MinimumEmptySpaceAlgorithm;
 import ru.liga.loader.algorithm.util.impl.DefaultCargoSorter;
 import ru.liga.loader.algorithm.util.impl.TransportSorterByWeightAsc;
 import ru.liga.loader.algorithm.util.impl.TransportSorterByWeightDesc;
-import ru.liga.loader.repository.CargoDataRepository;
-import ru.liga.loader.repository.TransportDataRepository;
+import ru.liga.loader.repository.impl.DefaultCrudCargoRepository;
+import ru.liga.loader.repository.impl.DefaultCrudTransportRepository;
 import ru.liga.loader.service.DefaultCargoLoaderServiceService;
 
 @Getter
@@ -45,8 +45,8 @@ public enum AlgorithmTypes {
      * @return алгоритм равномерной загрузки грузов
      */
 
-    public static LoadingCargoAlgorithm createElAlgorithm(TransportDataRepository transportDataRepository,
-                                                          CargoDataRepository cargoDataRepository) {
+    public static LoadingCargoAlgorithm createElAlgorithm(DefaultCrudTransportRepository transportDataRepository,
+                                                          DefaultCrudCargoRepository cargoDataRepository) {
         return new EvenLoadingAlgorithm(
                 new DefaultCargoSorter(),
                 new TransportSorterByWeightAsc(),
@@ -65,8 +65,8 @@ public enum AlgorithmTypes {
      * @return алгоритм плотной загрузки грузов
      */
 
-    public static LoadingCargoAlgorithm createMesAlgorithm(TransportDataRepository transportDataRepository,
-                                                           CargoDataRepository cargoDataRepository) {
+    public static LoadingCargoAlgorithm createMesAlgorithm(DefaultCrudTransportRepository transportDataRepository,
+                                                           DefaultCrudCargoRepository cargoDataRepository) {
         return new MinimumEmptySpaceAlgorithm(
                 new DefaultCargoSorter(),
                 new TransportSorterByWeightDesc(),

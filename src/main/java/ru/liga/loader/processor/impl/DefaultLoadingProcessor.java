@@ -6,18 +6,18 @@ import org.springframework.stereotype.Service;
 import ru.liga.loader.algorithm.LoadingCargoAlgorithm;
 import ru.liga.loader.enums.AlgorithmTypes;
 import ru.liga.loader.processor.LoadingProcessor;
-import ru.liga.loader.repository.CargoDataRepository;
-import ru.liga.loader.repository.TransportDataRepository;
+import ru.liga.loader.repository.impl.DefaultCrudCargoRepository;
+import ru.liga.loader.repository.impl.DefaultCrudTransportRepository;
 
 @Slf4j
 @Service
 public class DefaultLoadingProcessor implements LoadingProcessor {
 
-    private final TransportDataRepository transportDataRepository;
-    private final CargoDataRepository cargoDataRepository;
+    private final DefaultCrudTransportRepository transportDataRepository;
+    private final DefaultCrudCargoRepository cargoDataRepository;
 
     @Autowired
-    public DefaultLoadingProcessor(TransportDataRepository transportDataRepository, CargoDataRepository cargoDataRepository) {
+    public DefaultLoadingProcessor(DefaultCrudTransportRepository transportDataRepository, DefaultCrudCargoRepository cargoDataRepository) {
         this.transportDataRepository = transportDataRepository;
         this.cargoDataRepository = cargoDataRepository;
     }

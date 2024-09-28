@@ -16,22 +16,22 @@ public class CargoCounterTest {
 
     private final CargoCounter counter = new CargoCounter();
     private final List<Cargo> cargos = new ArrayList<>();
-    Map<Character, Integer> result = new HashMap<>();
+    Map<String, Integer> result = new HashMap<>();
 
     @BeforeEach
     void setUp() {
-        cargos.add(new Cargo("", new char[][]{{'1'}}));
         cargos.add(new Cargo("1", new char[][]{{'1'}}));
-        cargos.add(new Cargo("2", new char[][]{{'5', '5'}, {'5', '5', '5'}}));
+        cargos.add(new Cargo("1", new char[][]{{'1'}}));
+        cargos.add(new Cargo("5", new char[][]{{'5', '5'}, {'5', '5', '5'}}));
         cargos.add(new Cargo("3", new char[][]{{'3', '3', '3'}}));
-        cargos.add(new Cargo("4", new char[][]{{'3', '3', '3'}}));
-        cargos.add(new Cargo("5", new char[][]{{'2', '2'}}));
-        cargos.add(new Cargo("6", new char[][]{{'2', '2'}}));
-        cargos.add(new Cargo("7", new char[][]{{'2', '2'}}));
-        result.put('1', 2);
-        result.put('3', 2);
-        result.put('5', 1);
-        result.put('2', 3);
+        cargos.add(new Cargo("3", new char[][]{{'3', '3', '3'}}));
+        cargos.add(new Cargo("2", new char[][]{{'2', '2'}}));
+        cargos.add(new Cargo("2", new char[][]{{'2', '2'}}));
+        cargos.add(new Cargo("2", new char[][]{{'2', '2'}}));
+        result.put("1", 2);
+        result.put("3", 2);
+        result.put("5", 1);
+        result.put("2", 3);
     }
 
     @Test

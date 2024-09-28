@@ -5,8 +5,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.liga.loader.model.entity.Cargo;
 import ru.liga.loader.model.entity.Transport;
-import ru.liga.loader.repository.CargoDataRepository;
-import ru.liga.loader.repository.TransportDataRepository;
+import ru.liga.loader.repository.impl.DefaultCrudCargoRepository;
+import ru.liga.loader.repository.impl.DefaultCrudTransportRepository;
 import ru.liga.loader.util.CargoCounter;
 import ru.liga.loader.util.initializers.CargoInitializer;
 import ru.liga.loader.util.initializers.TruckInitializer;
@@ -20,12 +20,12 @@ public class InitializeService {
 
     private final TruckInitializer truckInitializer;
     private final CargoInitializer cargoInitializer;
-    private final TransportDataRepository transportDataRepository;
-    private final CargoDataRepository cargoDataRepository;
+    private final DefaultCrudTransportRepository transportDataRepository;
+    private final DefaultCrudCargoRepository cargoDataRepository;
     private final CargoCounter cargoCounter;
 
     @Autowired
-    public InitializeService(TruckInitializer truckInitializer, CargoInitializer cargoInitializer, TransportDataRepository transportDataRepository, CargoDataRepository cargoDataRepository, CargoCounter cargoCounter) {
+    public InitializeService(TruckInitializer truckInitializer, CargoInitializer cargoInitializer, DefaultCrudTransportRepository transportDataRepository, DefaultCrudCargoRepository cargoDataRepository, CargoCounter cargoCounter) {
         this.truckInitializer = truckInitializer;
         this.cargoInitializer = cargoInitializer;
         this.transportDataRepository = transportDataRepository;
@@ -43,7 +43,7 @@ public class InitializeService {
     public void initializeCargos(String filePath) {
         Map<String, Cargo> cargoMap =
                 cargoInitializer.initializeFromJson(filePath);
-        cargoDataRepository.add(cargoMap);
+        cargoDataRepository.addAll(cargoMap);
         log.info("Груз добавлен в базу данных");
     }
 
@@ -58,10 +58,10 @@ public class InitializeService {
      */
 
     public void initializeTransport(String filePath) {
-        Map<Transport, List<Cargo>> transportListMap =
+        Map<Transport, List<Cargo>> transportMap =
                 truckInitializer.initializeFromJson(filePath);
-        countCargos(transportListMap);
-        transportDataRepository.add(transportListMap);
+        countCargos(transportMap);
+        transportDataRepository.addAll(transportMap);
         log.info("Транспорт добавлен в базу данных");
     }
 
