@@ -8,9 +8,11 @@ import ru.liga.loader.algorithm.MinimumEmptySpaceAlgorithm;
 import ru.liga.loader.algorithm.util.impl.DefaultCargoSorter;
 import ru.liga.loader.algorithm.util.impl.TransportSorterByWeightAsc;
 import ru.liga.loader.algorithm.util.impl.TransportSorterByWeightDesc;
-import ru.liga.loader.repository.impl.DefaultCrudCargoRepository;
-import ru.liga.loader.repository.impl.DefaultCrudTransportRepository;
-import ru.liga.loader.service.DefaultCargoLoaderServiceService;
+import ru.liga.loader.model.entity.Cargo;
+import ru.liga.loader.repository.TransportCrudRepository;
+import ru.liga.loader.service.DefaultCargoLoaderService;
+
+import java.util.List;
 
 @Getter
 @Slf4j
@@ -41,18 +43,18 @@ public enum AlgorithmTypes {
      * Этот метод создает экземпляр алгоритма равномерной загрузки грузов с указанными менеджерами данных.
      *
      * @param transportDataRepository менеджер данных транспортных средств для получения информации о транспорте для погрузки
-     * @param cargoDataRepository     менеджер данных грузов, которые нужно будет загрузить
+     * @param cargos                  список грузов, которые нужно будет загрузить
      * @return алгоритм равномерной загрузки грузов
      */
 
-    public static LoadingCargoAlgorithm createElAlgorithm(DefaultCrudTransportRepository transportDataRepository,
-                                                          DefaultCrudCargoRepository cargoDataRepository) {
+    public static LoadingCargoAlgorithm createElAlgorithm(TransportCrudRepository transportDataRepository,
+                                                          List<Cargo> cargos) {
         return new EvenLoadingAlgorithm(
                 new DefaultCargoSorter(),
                 new TransportSorterByWeightAsc(),
                 transportDataRepository,
-                cargoDataRepository,
-                new DefaultCargoLoaderServiceService()
+                cargos,
+                new DefaultCargoLoaderService()
         );
     }
 
@@ -61,18 +63,18 @@ public enum AlgorithmTypes {
      * Этот метод создает экземпляр алгоритма плотной загрузки грузов с указанными менеджерами данных.
      *
      * @param transportDataRepository менеджер данных транспортных средств для получения информации о транспорте для погрузки
-     * @param cargoDataRepository     менеджер данных грузов, которые нужно будет загрузить
+     * @param cargos                  список грузов, которые нужно будет загрузить
      * @return алгоритм плотной загрузки грузов
      */
 
-    public static LoadingCargoAlgorithm createMesAlgorithm(DefaultCrudTransportRepository transportDataRepository,
-                                                           DefaultCrudCargoRepository cargoDataRepository) {
+    public static LoadingCargoAlgorithm createMesAlgorithm(TransportCrudRepository transportDataRepository,
+                                                           List<Cargo> cargos) {
         return new MinimumEmptySpaceAlgorithm(
                 new DefaultCargoSorter(),
                 new TransportSorterByWeightDesc(),
                 transportDataRepository,
-                cargoDataRepository,
-                new DefaultCargoLoaderServiceService()
+                cargos,
+                new DefaultCargoLoaderService()
         );
     }
 }

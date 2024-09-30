@@ -11,7 +11,6 @@ import ru.liga.loader.model.structure.TransportJsonStructure;
 import ru.liga.loader.service.JsonService;
 import ru.liga.loader.util.initializers.TruckInitializer;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -31,19 +30,6 @@ public class TruckInitializerTest {
 
     @InjectMocks
     private TruckInitializer truckInitializer;
-
-    @Test
-    void testInitialize_withValidNumberOfTransport_returnsListOfTransports() {
-        int numberOfTransport = 3;
-        List<Transport> expectedTransports = new ArrayList<>();
-        for (int i = 0; i < numberOfTransport; i++) {
-            expectedTransports.add(new Transport(6, 6));
-        }
-
-        List<Transport> actualTransports = truckInitializer.initialize(numberOfTransport);
-        assertEquals(expectedTransports.size(), actualTransports.size());
-        assertNotNull(actualTransports);
-    }
 
     @Test
     void testInitializeFromJson_withValidJsonFile_returnsMapOfTransportsAndCargos() {

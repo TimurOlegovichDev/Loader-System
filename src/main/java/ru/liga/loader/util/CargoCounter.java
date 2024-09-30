@@ -19,7 +19,7 @@ public class CargoCounter {
      * @return мапа с количеством грузов для каждого типа
      */
 
-    public Map<String, Integer> countCargos(List<Cargo> cargos) {
+    public Map<String, Integer> count(List<Cargo> cargos) {
         Map<String, Integer> cargosCount = new HashMap<>();
         for (Cargo cargo : cargos) {
             incrementCount(cargosCount, cargo.getName());

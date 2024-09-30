@@ -22,7 +22,7 @@ public class JsonWriter {
     public void writeObject(Object object, String fileName) throws Exception {
         log.debug("Сохранение данных в: {}", fileName);
         if (!fileName.endsWith(".json")) {
-            fileName += ".json";
+            fileName = fileName + ".json";
         }
         mapper.enable(SerializationFeature.INDENT_OUTPUT);
         File file = new File(fileName);

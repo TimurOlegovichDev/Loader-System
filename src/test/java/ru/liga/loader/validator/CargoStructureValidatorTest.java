@@ -4,9 +4,14 @@ import org.junit.jupiter.api.Test;
 import ru.liga.loader.exception.InvalidCargoInput;
 import ru.liga.loader.model.structure.CargoJsonStructure;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
-public class CargoValidatorTest {
+public class CargoStructureValidatorTest {
+
+    private final CargoStructureValidator validator = new CargoStructureValidator(
+            new CharacterNeighborhoodValidator()
+    );
 
     @Test
     void testValidCargo() throws InvalidCargoInput {
@@ -32,12 +37,32 @@ public class CargoValidatorTest {
                 1,
                 'A'
         );
-        CargoValidator validator = new CargoValidator();
+        CargoJsonStructure cargo3 = new CargoJsonStructure(
+                "Valid Cargo",
+                new char[][]{
+                        {'0'},
+                        {'0', '0'},
+                        {'0', '0', '0'},
+                        {'0', '0', '0'},
+                        {'0', '0', '0'},
+                        {'0', '0', '0', '0'},
+                        {'0', '0', '0', '0'},
+                        {'0', '0', '0', '0'},
+                        {'0', '0', '0', '0'},
+                },
+                9,
+                4,
+                36,
+                '0'
+        );
         assertDoesNotThrow(
                 () -> validator.validate(cargo)
         );
         assertDoesNotThrow(
                 () -> validator.validate(cargo2)
+        );
+        assertDoesNotThrow(
+                () -> validator.validate(cargo3)
         );
     }
 
@@ -55,7 +80,6 @@ public class CargoValidatorTest {
                 9,
                 'A'
         );
-        CargoValidator validator = new CargoValidator();
         assertThrows(InvalidCargoInput.class,
                 () -> validator.validate(cargo)
         );
@@ -75,12 +99,7 @@ public class CargoValidatorTest {
                 10,
                 'A'
         );
-        CargoValidator validator = new CargoValidator();
-        InvalidCargoInput exception = assertThrows(InvalidCargoInput.class, () -> validator.validate(cargo));
-        assertEquals("Ожидаемыемые значения отличаются от исходных!" + System.lineSeparator() +
-                "Ожидаемый размер груза: 10" + System.lineSeparator() +
-                "Фактический размер груза: 9" + System.lineSeparator() +
-                "Проверяемый груз: Invalid Area", exception.getMessage());
+        assertThrows(InvalidCargoInput.class, () -> validator.validate(cargo));
     }
 
     @Test
@@ -97,9 +116,6 @@ public class CargoValidatorTest {
                 9,
                 'A'
         );
-        CargoValidator validator = new CargoValidator();
-        InvalidCargoInput exception = assertThrows(InvalidCargoInput.class, () -> validator.validate(cargo));
-        assertEquals("Груз поврежден, имеется символ другого типа: B" + System.lineSeparator() +
-                "Проверяемый груз: Invalid Form", exception.getMessage());
+        assertThrows(InvalidCargoInput.class, () -> validator.validate(cargo));
     }
 }

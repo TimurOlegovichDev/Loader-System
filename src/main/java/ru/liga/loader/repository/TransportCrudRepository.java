@@ -5,7 +5,7 @@ import ru.liga.loader.model.entity.Transport;
 
 import java.util.List;
 
-public interface TransportRepository extends CrudRepository<Transport, List<Cargo>> {
+public interface TransportCrudRepository extends CrudRepository<Transport, List<Cargo>> {
 
     void add(List<Transport> entities);
 
@@ -15,5 +15,5 @@ public interface TransportRepository extends CrudRepository<Transport, List<Carg
 
     void add(Transport transport);
 
-    int getCargoWeightInTransport(Transport transport);
+    int getCargoAreaInTransport(Transport transport);
 }

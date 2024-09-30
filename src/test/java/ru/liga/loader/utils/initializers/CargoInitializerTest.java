@@ -6,13 +6,13 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import ru.liga.loader.factory.cargo.DefaultCargoFactory;
 import ru.liga.loader.util.initializers.CargoInitializer;
-import ru.liga.loader.validator.CargoValidator;
+import ru.liga.loader.validator.CargoStructureValidator;
 
 @ExtendWith(MockitoExtension.class)
 public class CargoInitializerTest {
 
     @Mock
-    private CargoValidator cargoValidator;
+    private CargoStructureValidator cargoStructureValidator;
 
     @Mock
     private DefaultCargoFactory defaultCargoFactory;

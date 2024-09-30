@@ -3,7 +3,7 @@ package ru.liga.loader.repository.impl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import ru.liga.loader.model.entity.Cargo;
-import ru.liga.loader.repository.CargoRepository;
+import ru.liga.loader.repository.CargoCrudRepository;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,7 +11,7 @@ import java.util.Map;
 import java.util.Set;
 
 @Repository
-public class DefaultCrudCargoRepository implements CargoRepository {
+public class DefaultCrudCargoRepository implements CargoCrudRepository {
 
     private final Map<String, Cargo> cargoData;
 

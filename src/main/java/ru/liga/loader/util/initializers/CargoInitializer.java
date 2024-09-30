@@ -7,7 +7,7 @@ import ru.liga.loader.factory.cargo.DefaultCargoFactory;
 import ru.liga.loader.model.entity.Cargo;
 import ru.liga.loader.model.structure.CargoJsonStructure;
 import ru.liga.loader.service.JsonService;
-import ru.liga.loader.validator.CargoValidator;
+import ru.liga.loader.validator.CargoStructureValidator;
 
 import java.util.HashMap;
 import java.util.List;
@@ -17,12 +17,12 @@ import java.util.Map;
 @Component
 public class CargoInitializer {
 
-    private final CargoValidator validator;
+    private final CargoStructureValidator validator;
     private final DefaultCargoFactory defaultCargoFactory;
     private final JsonService jsonService;
 
     @Autowired
-    public CargoInitializer(CargoValidator validator, DefaultCargoFactory defaultCargoFactory, JsonService jsonService) {
+    public CargoInitializer(CargoStructureValidator validator, DefaultCargoFactory defaultCargoFactory, JsonService jsonService) {
         this.validator = validator;
         this.defaultCargoFactory = defaultCargoFactory;
         this.jsonService = jsonService;
@@ -46,11 +46,11 @@ public class CargoInitializer {
             try {
                 validator.validate(cargoJsonStructure);
                 map.put(
-                        cargoJsonStructure.getName(),
+                        cargoJsonStructure.name(),
                         defaultCargoFactory.createCargo(cargoJsonStructure)
                 );
             } catch (Exception e) {
-                log.error(e.getMessage());
+                log.error("{} {}", e.getMessage(), cargoJsonStructure.name());
             }
         }
         return map;

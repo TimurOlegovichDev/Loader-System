@@ -33,12 +33,12 @@ public class Cargo {
 
     @JsonCreator
     public Cargo(CargoJsonStructure cargoJsonStructure) {
-        this.name = cargoJsonStructure.getName();
-        this.form = cargoJsonStructure.getForm();
-        this.height = cargoJsonStructure.getHeight();
-        this.width = cargoJsonStructure.getWidth();
-        this.area = cargoJsonStructure.getArea();
-        this.type = cargoJsonStructure.getType();
+        this.name = cargoJsonStructure.name();
+        this.form = cargoJsonStructure.form();
+        this.height = cargoJsonStructure.height();
+        this.width = cargoJsonStructure.width();
+        this.area = cargoJsonStructure.area();
+        this.type = cargoJsonStructure.type();
     }
 
     /**

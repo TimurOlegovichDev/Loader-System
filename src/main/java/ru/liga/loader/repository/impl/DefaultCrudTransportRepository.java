@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import ru.liga.loader.model.entity.Cargo;
 import ru.liga.loader.model.entity.Transport;
-import ru.liga.loader.repository.TransportRepository;
+import ru.liga.loader.repository.TransportCrudRepository;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,7 +12,7 @@ import java.util.Map;
 import java.util.Set;
 
 @Repository
-public class DefaultCrudTransportRepository implements TransportRepository {
+public class DefaultCrudTransportRepository implements TransportCrudRepository {
 
     private final Map<Transport, List<Cargo>> transportMap;
 
@@ -72,7 +72,7 @@ public class DefaultCrudTransportRepository implements TransportRepository {
     }
 
     @Override
-    public int getCargoWeightInTransport(Transport transport) {
+    public int getCargoAreaInTransport(Transport transport) {
         int weight = 0;
         List<Cargo> cargos = getCargos(transport);
         if (cargos == null) {

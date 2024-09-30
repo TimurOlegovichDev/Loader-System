@@ -6,5 +6,7 @@ public interface TransportFactory {
 
     Transport createTransport();
 
+    Transport createTransport(int width, int height);
+
     Transport createTransport(char[][] body);
 }

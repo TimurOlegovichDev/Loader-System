@@ -7,6 +7,7 @@ import ru.liga.loader.factory.transport.TruckFactory;
 import ru.liga.loader.model.entity.Cargo;
 import ru.liga.loader.model.entity.Transport;
 import ru.liga.loader.model.structure.TransportJsonStructure;
+import ru.liga.loader.model.structure.TransportSizeStructure;
 import ru.liga.loader.service.JsonService;
 
 import java.util.ArrayList;
@@ -25,19 +26,21 @@ public class TruckInitializer {
     }
 
     /**
-     * Инициализирует грузовые автомобили по количеству.
-     * Этот метод инициализирует грузовые автомобили по введеному количеству и возвращает список грузовых автомобилей.
+     * Инициализирует грузовые автомобили по заданным размерам.
      *
-     * @param numberOfTransport количество грузовых автомобилей
+     * @param sizeStructures список размеров для инициализации
      * @return список грузовых автомобилей
      */
 
-    public List<Transport> initialize(int numberOfTransport) {
+    public List<Transport> initialize(List<TransportSizeStructure> sizeStructures) {
         TransportFactory transportFactory = new TruckFactory();
         List<Transport> transports = new ArrayList<>();
-        for (int i = 0; i < numberOfTransport; i++) {
+        for (TransportSizeStructure sizeStructure : sizeStructures) {
             transports.add(
-                    transportFactory.createTransport()
+                    transportFactory.createTransport(
+                            sizeStructure.width(),
+                            sizeStructure.height()
+                    )
             );
         }
         return transports;
@@ -58,10 +61,10 @@ public class TruckInitializer {
         for (TransportJsonStructure transportJsonStructure : transportJsonStructures) {
             map.put(
                     new TruckFactory().createTransport(
-                            transportJsonStructure.getBody()
+                            transportJsonStructure.body()
                     ),
                     new ArrayList<>(
-                            transportJsonStructure.getCargos()
+                            transportJsonStructure.cargos()
                     )
             );
         }

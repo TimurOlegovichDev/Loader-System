@@ -10,8 +10,7 @@ import ru.liga.loader.exception.InvalidCargoSize;
 import ru.liga.loader.exception.NoPlaceException;
 import ru.liga.loader.model.entity.Cargo;
 import ru.liga.loader.model.entity.Transport;
-import ru.liga.loader.repository.impl.DefaultCrudCargoRepository;
-import ru.liga.loader.repository.impl.DefaultCrudTransportRepository;
+import ru.liga.loader.repository.TransportCrudRepository;
 import ru.liga.loader.service.CargoLoaderService;
 
 import java.util.List;
@@ -23,20 +22,20 @@ public class EvenLoadingAlgorithm implements LoadingCargoAlgorithm {
 
     private final CargoSorter cargoSorter;
     private final TransportSorter transportSorter;
-    private final DefaultCrudTransportRepository transportDataRepository;
-    private final DefaultCrudCargoRepository cargoDataRepository;
+    private final TransportCrudRepository transportDataRepository;
+    private final List<Cargo> cargos;
     private final CargoLoaderService cargoLoaderService;
 
     @Autowired
     public EvenLoadingAlgorithm(CargoSorter cargoSorter,
                                 @Qualifier("transportSorterByWeightAsc") TransportSorter transportSorter,
-                                DefaultCrudTransportRepository transportDataRepository,
-                                DefaultCrudCargoRepository cargoDataRepository,
+                                TransportCrudRepository transportDataRepository,
+                                List<Cargo> cargos,
                                 CargoLoaderService cargoLoaderService) {
         this.cargoSorter = cargoSorter;
         this.transportSorter = transportSorter;
         this.transportDataRepository = transportDataRepository;
-        this.cargoDataRepository = cargoDataRepository;
+        this.cargos = cargos;
         this.cargoLoaderService = cargoLoaderService;
     }
 
@@ -53,10 +52,7 @@ public class EvenLoadingAlgorithm implements LoadingCargoAlgorithm {
     @Override
     public void execute() {
         log.info("Старт алгоритма равномерной погрузки");
-        List<Cargo> cargos = cargoSorter.sort(
-                cargoDataRepository.getAll()
-        );
-        for (Cargo cargo : cargos) {
+        for (Cargo cargo : cargoSorter.sort(cargos)) {
             log.info("Погрузка груза: {}", cargo);
             try {
                 loadCargo(cargo);

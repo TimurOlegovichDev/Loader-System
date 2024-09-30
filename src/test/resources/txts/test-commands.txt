@@ -1,0 +1,7 @@
+Импортировать транспорт из файла D:\\WorkSpaces\\Java\\LoaderSystem\\cargo.json
+Импортировать груз из файла D:\\WorkSpaces\\Java\\LoaderSystem\\src\\test\\resources\\jsons\\valid-cargos.json
+Добавить транспорт с указаным размером 30x30
+Добавить транспорт 1x4
+Выполнить автоматическую погрузку mes
+Вывести в консоль
+Загрузить посылки по названию

@@ -17,7 +17,8 @@ public class DefaultLoadingProcessor implements LoadingProcessor {
     private final DefaultCrudCargoRepository cargoDataRepository;
 
     @Autowired
-    public DefaultLoadingProcessor(DefaultCrudTransportRepository transportDataRepository, DefaultCrudCargoRepository cargoDataRepository) {
+    public DefaultLoadingProcessor(DefaultCrudTransportRepository transportDataRepository,
+                                   DefaultCrudCargoRepository cargoDataRepository) {
         this.transportDataRepository = transportDataRepository;
         this.cargoDataRepository = cargoDataRepository;
     }
@@ -31,7 +32,7 @@ public class DefaultLoadingProcessor implements LoadingProcessor {
 
     @Override
     public void process(String algorithmName) {
-        load(getAlgorithm(algorithmName));
+        process(getAlgorithm(algorithmName));
     }
 
     /**
@@ -41,7 +42,8 @@ public class DefaultLoadingProcessor implements LoadingProcessor {
      * @param algorithm алгоритм загрузки грузов
      */
 
-    private void load(LoadingCargoAlgorithm algorithm) {
+    @Override
+    public void process(LoadingCargoAlgorithm algorithm) {
         try {
             algorithm.execute();
         } catch (Exception e) {
@@ -54,19 +56,19 @@ public class DefaultLoadingProcessor implements LoadingProcessor {
             case EL -> {
                 return AlgorithmTypes.createElAlgorithm(
                         transportDataRepository,
-                        cargoDataRepository
+                        cargoDataRepository.getAll()
                 );
             }
             case MES -> {
                 return AlgorithmTypes.createMesAlgorithm(
                         transportDataRepository,
-                        cargoDataRepository
+                        cargoDataRepository.getAll()
                 );
             }
         }
         return AlgorithmTypes.createMesAlgorithm(
                 transportDataRepository,
-                cargoDataRepository
+                cargoDataRepository.getAll()
         );
     }
 }

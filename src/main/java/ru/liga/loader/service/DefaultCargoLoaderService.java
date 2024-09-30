@@ -9,7 +9,15 @@ import ru.liga.loader.model.entity.Transport;
 
 @Slf4j
 @Service
-public class DefaultCargoLoaderServiceService implements CargoLoaderService {
+public class DefaultCargoLoaderService implements CargoLoaderService {
+
+    private static char[][] mirrorVertically(char[][] array) {
+        char[][] mirroredArray = new char[array.length][];
+        for (int i = 0; i < array.length; i++) {
+            mirroredArray[array.length - 1 - i] = array[i].clone();
+        }
+        return mirroredArray;
+    }
 
     /**
      * Загружает указанный груз в транспорт.
@@ -45,7 +53,7 @@ public class DefaultCargoLoaderServiceService implements CargoLoaderService {
         char[][] cpBody = copyBody(transport.getBody());
         int height = heightIndex;
         log.debug(cargo.toString());
-        for (char[] boxLine : cargo.getForm()) {
+        for (char[] boxLine : mirrorVertically(cargo.getForm())) {
             int width = widthIndex;
             for (Character character : boxLine) {
                 try {
@@ -83,7 +91,7 @@ public class DefaultCargoLoaderServiceService implements CargoLoaderService {
         log.debug("Выполняется погрузка груза: {} по координатам {},{}", cargo, heightIndex, widthIndex);
         int i = heightIndex;
         char[][] body = transport.getBody();
-        for (char[] boxLine : cargo.getForm()) {
+        for (char[] boxLine : mirrorVertically(cargo.getForm())) {
             int j = widthIndex;
             for (Character character : boxLine) {
                 body[i][j] = character;

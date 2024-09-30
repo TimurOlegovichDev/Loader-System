@@ -5,10 +5,10 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.util.Arrays;
 
+@Getter
 @Slf4j
 public class Transport {
 
-    @Getter
     private final char[][] body;
 
     public Transport(int bodyWidth, int bodyHeight) {

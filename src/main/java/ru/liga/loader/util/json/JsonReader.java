@@ -22,7 +22,10 @@ public class JsonReader {
     public <T> List<T> readObject(Class<T> clazz, String fileName) throws Exception {
         log.debug("Чтение json файла {}", fileName);
         File file = new File(fileName);
-        List<T> list = mapper.readValue(file, mapper.getTypeFactory().constructCollectionType(List.class, clazz));
+        List<T> list = mapper.readValue(
+                file,
+                mapper.getTypeFactory().constructCollectionType(List.class, clazz)
+        );
         log.debug("Чтение успешно завершено!");
         return list;
     }

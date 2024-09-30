@@ -38,7 +38,7 @@ public class CargoCounterTest {
     void test_count_cargos() {
         assertArrayEquals(
                 result.entrySet().toArray(),
-                counter.countCargos(cargos).entrySet().toArray()
+                counter.count(cargos).entrySet().toArray()
         );
     }
 }

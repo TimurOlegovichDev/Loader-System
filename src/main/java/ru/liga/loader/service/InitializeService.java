@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.liga.loader.model.entity.Cargo;
 import ru.liga.loader.model.entity.Transport;
+import ru.liga.loader.model.structure.TransportSizeStructure;
 import ru.liga.loader.repository.impl.DefaultCrudCargoRepository;
 import ru.liga.loader.repository.impl.DefaultCrudTransportRepository;
 import ru.liga.loader.util.CargoCounter;
@@ -44,7 +45,7 @@ public class InitializeService {
         Map<String, Cargo> cargoMap =
                 cargoInitializer.initializeFromJson(filePath);
         cargoDataRepository.addAll(cargoMap);
-        log.info("Груз добавлен в базу данных");
+        log.debug("Добавлено груза: {}", cargoMap.size());
     }
 
     /**
@@ -62,27 +63,32 @@ public class InitializeService {
                 truckInitializer.initializeFromJson(filePath);
         countCargos(transportMap);
         transportDataRepository.addAll(transportMap);
-        log.info("Транспорт добавлен в базу данных");
+        for (Transport transport : transportMap.keySet()) {
+            for (Cargo cargo : transportMap.get(transport)) {
+                cargoDataRepository.add(cargo);
+            }
+        }
+        log.debug("Добавлено транспорта из файла: {}", transportMap.size());
     }
 
     /**
-     * Инициализирует транспортные средства по количеству.
-     * Этот метод инициализирует транспортные средства по количеству и добавляет их в менеджер данных транспортных средств.
+     * Инициализирует транспортные средства по размерам.
      *
-     * @param numberOfTransport количество транспортных средств
+     * @param list список размеров
      */
 
-    public void initializeTransport(int numberOfTransport) {
+    public void initializeTransport(List<TransportSizeStructure> list) {
         List<Transport> transports =
-                truckInitializer.initialize(numberOfTransport);
+                truckInitializer.initialize(list);
         transportDataRepository.add(transports);
+        log.debug("Добавлено транспорта из полученных размеров: {}", transports.size());
     }
 
     private void countCargos(Map<Transport, List<Cargo>> map) {
         log.info("Информация о транспорте");
         for (Transport transport : map.keySet()) {
             List<Cargo> cargos = map.get(transport);
-            cargoCounter.countCargos(cargos)
+            cargoCounter.count(cargos)
                     .forEach((name, count) ->
                             log.info("Название груза: {}, количество: {}", name, count)
                     );

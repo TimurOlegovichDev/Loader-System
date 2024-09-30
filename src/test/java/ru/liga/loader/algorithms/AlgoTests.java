@@ -22,7 +22,7 @@ public class AlgoTests {
     public void testNoPlaceFoundForCargo() {
         cargoDataRepository.add(new Cargo("", new char[][]{{'2'}, {'2'}}));
         transportDataRepository.add(new Transport(new char[][]{{' ', '1'}}));
-        LoadingCargoAlgorithm algorithm = AlgorithmTypes.createElAlgorithm(transportDataRepository, cargoDataRepository);
+        LoadingCargoAlgorithm algorithm = AlgorithmTypes.createElAlgorithm(transportDataRepository, cargoDataRepository.getAll());
         assertThrows(
                 NoPlaceException.class,
                 algorithm::execute
