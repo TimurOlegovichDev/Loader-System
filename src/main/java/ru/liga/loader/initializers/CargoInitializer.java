@@ -1,4 +1,4 @@
-package ru.liga.loader.util.initializers;
+package ru.liga.loader.initializers;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,7 +7,7 @@ import ru.liga.loader.factory.cargo.DefaultCargoFactory;
 import ru.liga.loader.model.entity.Cargo;
 import ru.liga.loader.model.structure.CargoJsonStructure;
 import ru.liga.loader.service.JsonService;
-import ru.liga.loader.validator.CargoStructureValidator;
+import ru.liga.loader.validator.impl.CargoStructureValidator;
 
 import java.util.HashMap;
 import java.util.List;

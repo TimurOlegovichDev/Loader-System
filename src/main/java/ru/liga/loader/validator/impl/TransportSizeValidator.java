@@ -1,6 +1,7 @@
-package ru.liga.loader.validator;
+package ru.liga.loader.validator.impl;
 
 import org.springframework.stereotype.Component;
+import ru.liga.loader.validator.Validator;
 
 @Component
 public class TransportSizeValidator implements Validator<String> {

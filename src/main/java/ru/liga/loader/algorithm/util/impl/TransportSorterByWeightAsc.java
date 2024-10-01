@@ -28,7 +28,7 @@ public class TransportSorterByWeightAsc implements TransportSorter {
     public List<Transport> sort(TransportCrudRepository transportDataRepository) {
         log.debug("Сортировка транспорта по весу груза в порядке возрастания...");
         return new ArrayList<>(transportDataRepository.getKeys()).stream()
-                .sorted(Comparator.comparingInt(transportDataRepository::getCargoAreaInTransport))
+                .sorted(Comparator.comparingInt(transportDataRepository::percentageOfOccupancy))
                 .collect(Collectors.toList());
     }
 }

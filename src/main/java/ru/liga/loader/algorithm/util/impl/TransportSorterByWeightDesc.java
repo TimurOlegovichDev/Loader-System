@@ -29,7 +29,7 @@ public class TransportSorterByWeightDesc implements TransportSorter {
     public List<Transport> sort(TransportCrudRepository transportDataRepository) {
         log.debug("Сортировка транспорта по весу груза в порядке убывания...");
         List<Transport> sorted = new ArrayList<>(transportDataRepository.getKeys()).stream()
-                .sorted(Comparator.comparingInt(transportDataRepository::getCargoAreaInTransport))
+                .sorted(Comparator.comparingInt(transportDataRepository::percentageOfOccupancy))
                 .collect(Collectors.toList());
         Collections.reverse(sorted);
         return sorted;

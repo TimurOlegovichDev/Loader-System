@@ -3,6 +3,7 @@ package ru.liga.loader.factory.transport;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import ru.liga.loader.model.entity.Transport;
+import ru.liga.loader.model.structure.TransportJsonStructure;
 
 @Component
 @Slf4j
@@ -48,7 +49,12 @@ public class TruckFactory implements TransportFactory {
      */
 
     @Override
-    public Transport createTransport(char[][] body) {
-        return new Transport(body);
+    public Transport createTransport(String id, char[][] body) {
+        return new Transport(id, body);
+    }
+
+    @Override
+    public Transport createTransport(TransportJsonStructure transportJsonStructure) {
+        return new Transport(transportJsonStructure);
     }
 }

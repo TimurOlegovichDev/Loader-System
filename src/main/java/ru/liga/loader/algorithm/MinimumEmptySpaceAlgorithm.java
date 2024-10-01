@@ -21,19 +21,19 @@ public class MinimumEmptySpaceAlgorithm implements LoadingCargoAlgorithm {
     private final CargoSorter cargoSorter;
     private final TransportSorter transportSorter;
     private final TransportCrudRepository transportDataRepository;
-    private final List<Cargo> cargos;
+    private final List<Cargo> cargoList;
     private final CargoLoaderService cargoLoaderService;
 
     @Autowired
     public MinimumEmptySpaceAlgorithm(CargoSorter cargoSorter,
                                       @Qualifier("transportSorterByWeightDesc") TransportSorter transportSorter,
                                       TransportCrudRepository transportDataRepository,
-                                      List<Cargo> cargos,
+                                      List<Cargo> cargoList,
                                       CargoLoaderService cargoLoaderService) {
         this.cargoSorter = cargoSorter;
         this.transportSorter = transportSorter;
         this.transportDataRepository = transportDataRepository;
-        this.cargos = cargos;
+        this.cargoList = cargoList;
         this.cargoLoaderService = cargoLoaderService;
     }
 
@@ -51,9 +51,13 @@ public class MinimumEmptySpaceAlgorithm implements LoadingCargoAlgorithm {
     public void execute() {
         log.info("Старт алгоритма плотной погрузки");
         List<Transport> transports = transportSorter.sort(transportDataRepository);
-        for (Cargo cargo : cargoSorter.sort(cargos)) {
+        for (Cargo cargo : cargoSorter.sort(cargoList)) {
             log.info("Погрузка груза: {}", cargo);
-            loadCargo(cargo, transports);
+            try {
+                loadCargo(cargo, transports);
+            } catch (NoPlaceException e) {
+                log.warn(e.getMessage());
+            }
         }
         log.info("Плотная погрузка окончена");
     }

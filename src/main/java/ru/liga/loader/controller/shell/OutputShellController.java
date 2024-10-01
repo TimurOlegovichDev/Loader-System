@@ -17,6 +17,21 @@ public class OutputShellController {
         this.controller = controller;
     }
 
+    @ShellMethod(key = "Смотреть посылки")
+    public String printAllCargos() {
+        return controller.printCargos();
+    }
+
+    @ShellMethod(key = "Смотреть посылку с именем")
+    public String printCargo(String name) {
+        return controller.printCargoByName(name);
+    }
+
+    @ShellMethod(key = "Смотреть посылки в транспорте с идентификатором")
+    public String printCargoByTransportId(String id) {
+        return controller.printCargoByTransportId(id);
+    }
+
     @ShellMethod(key = "Вывести в консоль")
     public String print() {
         return controller.printTransports();

@@ -3,14 +3,14 @@ package ru.liga.loader.service;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import ru.liga.loader.initializers.CargoInitializer;
+import ru.liga.loader.initializers.TruckInitializer;
 import ru.liga.loader.model.entity.Cargo;
 import ru.liga.loader.model.entity.Transport;
 import ru.liga.loader.model.structure.TransportSizeStructure;
 import ru.liga.loader.repository.impl.DefaultCrudCargoRepository;
 import ru.liga.loader.repository.impl.DefaultCrudTransportRepository;
 import ru.liga.loader.util.CargoCounter;
-import ru.liga.loader.util.initializers.CargoInitializer;
-import ru.liga.loader.util.initializers.TruckInitializer;
 
 import java.util.List;
 import java.util.Map;

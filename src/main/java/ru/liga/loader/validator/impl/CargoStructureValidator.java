@@ -1,10 +1,11 @@
-package ru.liga.loader.validator;
+package ru.liga.loader.validator.impl;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import ru.liga.loader.exception.InvalidCargoInput;
 import ru.liga.loader.model.structure.CargoJsonStructure;
+import ru.liga.loader.validator.Validator;
 
 import java.util.Arrays;
 
@@ -28,10 +29,19 @@ public class CargoStructureValidator implements Validator<CargoJsonStructure> {
 
     public void validate(CargoJsonStructure cargo) throws InvalidCargoInput {
         log.debug("Валидация груза: {}", cargo.name());
+        validateType(cargo);
         validateCargoArea(cargo);
         validateCargoForm(cargo);
         characterNeighborhoodValidator.validate(cargo);
         log.debug("Груз валиден: {}", cargo.name());
+    }
+
+    private void validateType(CargoJsonStructure cargo) throws InvalidCargoInput {
+        if (cargo.type() == ' ') {
+            throw new InvalidCargoInput(
+                    "Коробка такого типа не может существовать!", cargo.name()
+            );
+        }
     }
 
     private void validateCargoArea(CargoJsonStructure cargo) throws InvalidCargoInput {

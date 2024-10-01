@@ -54,4 +54,13 @@ public class DefaultCrudCargoRepository implements CargoCrudRepository {
     public Cargo add(Cargo cargo) {
         return cargoData.put(cargo.getName(), cargo);
     }
+
+    @Override
+    public String toString() {
+        StringBuilder builder = new StringBuilder();
+        for (Cargo cargo : cargoData.values()) {
+            builder.append(cargo);
+        }
+        return builder.toString();
+    }
 }

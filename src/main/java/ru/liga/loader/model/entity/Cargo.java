@@ -63,12 +63,14 @@ public class Cargo {
     public String toString() {
         StringBuilder sb = new StringBuilder();
         sb.append(System.lineSeparator())
-                .append(" название: ")
+                .append("Название груза: ")
                 .append(name)
                 .append(System.lineSeparator())
-                .append(" груз: ");
+                .append("Форма: ")
+                .append(System.lineSeparator());
         for (char[] arr : form) {
-            sb.append(Arrays.toString(arr));
+            sb.append(new String(arr));
+            sb.append(System.lineSeparator());
         }
         return sb.toString();
     }

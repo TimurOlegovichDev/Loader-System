@@ -5,8 +5,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import ru.liga.loader.factory.cargo.DefaultCargoFactory;
-import ru.liga.loader.util.initializers.CargoInitializer;
-import ru.liga.loader.validator.CargoStructureValidator;
+import ru.liga.loader.initializers.CargoInitializer;
+import ru.liga.loader.validator.impl.CargoStructureValidator;
 
 @ExtendWith(MockitoExtension.class)
 public class CargoInitializerTest {

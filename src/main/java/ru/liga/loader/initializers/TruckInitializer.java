@@ -1,4 +1,4 @@
-package ru.liga.loader.util.initializers;
+package ru.liga.loader.initializers;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -61,7 +61,7 @@ public class TruckInitializer {
         for (TransportJsonStructure transportJsonStructure : transportJsonStructures) {
             map.put(
                     new TruckFactory().createTransport(
-                            transportJsonStructure.body()
+                            transportJsonStructure
                     ),
                     new ArrayList<>(
                             transportJsonStructure.cargos()

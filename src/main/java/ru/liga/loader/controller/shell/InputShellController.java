@@ -1,11 +1,13 @@
 package ru.liga.loader.controller.shell;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.shell.standard.ShellCommandGroup;
 import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
 import ru.liga.loader.controller.MainController;
 
+@Slf4j
 @ShellComponent
 @ShellCommandGroup("Добавление сущностей")
 public class InputShellController {
@@ -30,5 +32,15 @@ public class InputShellController {
     @ShellMethod(key = "Добавить транспорт с указаным размером")
     public void addTransportFromInputLine(String input) {
         controller.initTransports(input);
+    }
+
+    @ShellMethod(key = "Удалить посылки с именем")
+    public void removeCargosWithName(String input) {
+        controller.deleteCargosByName(input);
+    }
+
+    @ShellMethod(key = "Добавить посылку")
+    public String addCargo(String cargoName, String cargoForm) {
+        return controller.addCargo(cargoName, cargoForm);
     }
 }

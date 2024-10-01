@@ -1,16 +1,16 @@
-package ru.liga.loader.util.parser;
+package ru.liga.loader.parser.impl;
 
-import lombok.NonNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import ru.liga.loader.model.structure.TransportSizeStructure;
-import ru.liga.loader.validator.TransportSizeValidator;
+import ru.liga.loader.parser.StringParser;
+import ru.liga.loader.validator.impl.TransportSizeValidator;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Component
-public class TransportSizeParser {
+public class TransportSizeParser implements StringParser<List<TransportSizeStructure>> {
 
     private final TransportSizeValidator validator;
 
@@ -19,7 +19,8 @@ public class TransportSizeParser {
         this.validator = validator;
     }
 
-    public List<TransportSizeStructure> parse(@NonNull String input) {
+    @Override
+    public List<TransportSizeStructure> parse(String input) {
         validator.validate(input.trim());
         List<TransportSizeStructure> pairs = new ArrayList<>();
         String[] parts = input.split(",");

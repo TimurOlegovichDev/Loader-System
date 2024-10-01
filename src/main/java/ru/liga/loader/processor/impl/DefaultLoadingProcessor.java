@@ -44,11 +44,7 @@ public class DefaultLoadingProcessor implements LoadingProcessor {
 
     @Override
     public void process(LoadingCargoAlgorithm algorithm) {
-        try {
-            algorithm.execute();
-        } catch (Exception e) {
-            log.error("Процесс погрузки прерван: {}", e.getMessage());
-        }
+        algorithm.execute();
     }
 
     private LoadingCargoAlgorithm getAlgorithm(String algorithmName) {

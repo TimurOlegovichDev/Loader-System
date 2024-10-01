@@ -6,10 +6,7 @@ import ru.liga.loader.model.entity.Cargo;
 import ru.liga.loader.model.entity.Transport;
 import ru.liga.loader.repository.TransportCrudRepository;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 @Repository
 public class DefaultCrudTransportRepository implements TransportCrudRepository {
@@ -67,21 +64,51 @@ public class DefaultCrudTransportRepository implements TransportCrudRepository {
     }
 
     @Override
+    public List<Cargo> getAllCargos() {
+        List<Cargo> cargos = new ArrayList<>();
+        for (Transport transport : transportMap.keySet()) {
+            cargos.addAll(getCargos(transport));
+        }
+        return cargos;
+    }
+
+    @Override
     public void addCargoInTransport(Transport transport, Cargo cargo) {
         transportMap.get(transport).add(cargo);
     }
 
     @Override
-    public int getCargoAreaInTransport(Transport transport) {
-        int weight = 0;
+    public int percentageOfOccupancy(Transport transport) {
+        int bodyArea = transport.getBody().length * transport.getBody()[0].length;
+        int cargoArea = 0;
         List<Cargo> cargos = getCargos(transport);
-        if (cargos == null) {
-            return weight;
+        if (cargos == null || bodyArea <= 0) {
+            return cargoArea;
         }
         for (Cargo cargoInTransport : cargos) {
-            weight += cargoInTransport.getArea();
+            cargoArea += cargoInTransport.getArea();
         }
-        return weight;
+        return cargoArea * 100 / bodyArea;
+    }
+
+    @Override
+    public void removeCargo(Transport transport, Cargo cargo) {
+        transportMap.get(transport).remove(cargo);
+    }
+
+    @Override
+    public Optional<Transport> getTransportById(String id) {
+        for (Transport transport : transportMap.keySet()) {
+            if (transport.getId().equals(id)) {
+                return Optional.of(transport);
+            }
+        }
+        return Optional.empty();
+    }
+
+    @Override
+    public void removeAllCargo(Transport transport) {
+        transportMap.get(transport).clear();
     }
 
     @Override

@@ -1,8 +1,8 @@
 package ru.liga.loader.util;
 
 import org.junit.jupiter.api.Test;
-import ru.liga.loader.util.parser.TransportSizeParser;
-import ru.liga.loader.validator.TransportSizeValidator;
+import ru.liga.loader.parser.impl.TransportSizeParser;
+import ru.liga.loader.validator.impl.TransportSizeValidator;
 
 import java.util.Map;
 

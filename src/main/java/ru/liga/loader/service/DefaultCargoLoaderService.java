@@ -36,7 +36,7 @@ public class DefaultCargoLoaderService implements CargoLoaderService {
         for (int i = transport.getBody().length - 1; i >= 0; i--) {
             for (int j = 0; j < transport.getBody()[i].length; j++) {
                 if (isCargoPlacementPossible(i, j, cargo, transport)) {
-                    log.trace("Найдено пустое место для погрузки: {}", cargo);
+                    log.trace("Найдено место для погрузки {}", cargo);
                     placeCargoInTransport(cargo, transport, i, j);
                     return;
                 }
@@ -57,9 +57,10 @@ public class DefaultCargoLoaderService implements CargoLoaderService {
             int width = widthIndex;
             for (Character character : boxLine) {
                 try {
-                    if (cpBody[height][width] == ' ') {
-                        cpBody[height][width] = character;
-                    } else {
+                    if (character == ' ') {
+                        continue;
+                    }
+                    if (cpBody[height][width] != ' ') {
                         return false;
                     }
                 } catch (Exception e) {
@@ -72,19 +73,6 @@ public class DefaultCargoLoaderService implements CargoLoaderService {
         }
         log.trace("Груз может быть загружен");
         return true;
-    }
-
-    private boolean canBeLoaded(Cargo cargo, Transport transport) {
-        return cargo.getWidth() <= transport.getBody().length
-                && cargo.getHeight() <= transport.getBody()[0].length;
-    }
-
-    private char[][] copyBody(char[][] body) {
-        char[][] newBody = new char[body.length][body[0].length];
-        for (int i = 0; i < body.length; i++) {
-            System.arraycopy(body[i], 0, newBody[i], 0, body[i].length);
-        }
-        return newBody;
     }
 
     private void placeCargoInTransport(Cargo cargo, Transport transport, int heightIndex, int widthIndex) {
@@ -100,5 +88,18 @@ public class DefaultCargoLoaderService implements CargoLoaderService {
             i--;
         }
         log.debug("Груз погружен в транспорт");
+    }
+
+    private boolean canBeLoaded(Cargo cargo, Transport transport) {
+        return cargo.getHeight() <= transport.getBody().length + 1
+                && cargo.getWidth() <= transport.getBody()[0].length + 1;
+    }
+
+    private char[][] copyBody(char[][] body) {
+        char[][] newBody = new char[body.length][body[0].length];
+        for (int i = 0; i < body.length; i++) {
+            System.arraycopy(body[i], 0, newBody[i], 0, body[i].length);
+        }
+        return newBody;
     }
 }
