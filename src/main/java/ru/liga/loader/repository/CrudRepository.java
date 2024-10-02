@@ -2,12 +2,11 @@ package ru.liga.loader.repository;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 public interface CrudRepository<K, V> {
     List<V> getAll();
 
-    Set<K> getKeys();
+    List<K> getKeys();
 
     V getBy(K key);
 
@@ -15,5 +14,5 @@ public interface CrudRepository<K, V> {
 
     V update(K key, V value);
 
-    V delete(K id);
+    V delete(K key);
 }

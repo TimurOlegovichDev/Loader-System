@@ -8,7 +8,6 @@ import ru.liga.loader.repository.CargoCrudRepository;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 @Repository
 public class DefaultCrudCargoRepository implements CargoCrudRepository {
@@ -26,8 +25,8 @@ public class DefaultCrudCargoRepository implements CargoCrudRepository {
     }
 
     @Override
-    public Set<String> getKeys() {
-        return cargoData.keySet();
+    public List<String> getKeys() {
+        return cargoData.keySet().stream().toList();
     }
 
     @Override
@@ -51,7 +50,7 @@ public class DefaultCrudCargoRepository implements CargoCrudRepository {
     }
 
     @Override
-    public Cargo add(Cargo cargo) {
+    public Cargo put(Cargo cargo) {
         return cargoData.put(cargo.getName(), cargo);
     }
 

@@ -7,5 +7,8 @@ import java.util.List;
 
 public interface TransportSorter {
 
-    List<Transport> sort(TransportCrudRepository transportDataRepository);
+    List<Transport> sort(
+            TransportCrudRepository transportDataRepository,
+            List<Transport> transports
+    );
 }

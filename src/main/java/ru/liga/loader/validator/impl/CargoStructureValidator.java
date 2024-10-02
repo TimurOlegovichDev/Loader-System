@@ -27,6 +27,7 @@ public class CargoStructureValidator implements Validator<CargoJsonStructure> {
      * @throws InvalidCargoInput если груз невалиден
      */
 
+    @Override
     public void validate(CargoJsonStructure cargo) throws InvalidCargoInput {
         log.debug("Валидация груза: {}", cargo.name());
         validateType(cargo);

@@ -5,9 +5,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.liga.loader.algorithm.LoadingCargoAlgorithm;
 import ru.liga.loader.enums.AlgorithmTypes;
+import ru.liga.loader.model.entity.Cargo;
+import ru.liga.loader.model.entity.Transport;
 import ru.liga.loader.processor.LoadingProcessor;
 import ru.liga.loader.repository.impl.DefaultCrudCargoRepository;
 import ru.liga.loader.repository.impl.DefaultCrudTransportRepository;
+
+import java.util.List;
 
 @Slf4j
 @Service
@@ -32,8 +36,28 @@ public class DefaultLoadingProcessor implements LoadingProcessor {
 
     @Override
     public void process(String algorithmName) {
-        process(getAlgorithm(algorithmName));
+        process(
+                getAlgorithm(
+                        algorithmName,
+                        transportDataRepository.getKeys(),
+                        cargoDataRepository.getAll()
+                )
+        );
     }
+
+    @Override
+    public void process(String algorithmName,
+                        List<Transport> transports,
+                        List<Cargo> cargos) {
+        process(
+                getAlgorithm(
+                        algorithmName,
+                        transports,
+                        cargos
+                )
+        );
+    }
+
 
     /**
      * Загружает грузы в транспортные средства по указанному алгоритму.
@@ -47,24 +71,29 @@ public class DefaultLoadingProcessor implements LoadingProcessor {
         algorithm.execute();
     }
 
-    private LoadingCargoAlgorithm getAlgorithm(String algorithmName) {
+    private LoadingCargoAlgorithm getAlgorithm(String algorithmName,
+                                               List<Transport> transports,
+                                               List<Cargo> cargos) {
         switch (AlgorithmTypes.of(algorithmName)) {
             case EL -> {
                 return AlgorithmTypes.createElAlgorithm(
                         transportDataRepository,
-                        cargoDataRepository.getAll()
+                        transports,
+                        cargos
                 );
             }
             case MES -> {
                 return AlgorithmTypes.createMesAlgorithm(
                         transportDataRepository,
-                        cargoDataRepository.getAll()
+                        transports,
+                        cargos
                 );
             }
         }
         return AlgorithmTypes.createMesAlgorithm(
                 transportDataRepository,
-                cargoDataRepository.getAll()
+                transports,
+                cargos
         );
     }
 }

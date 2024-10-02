@@ -9,8 +9,9 @@ import ru.liga.loader.algorithm.util.impl.DefaultCargoSorter;
 import ru.liga.loader.algorithm.util.impl.TransportSorterByWeightAsc;
 import ru.liga.loader.algorithm.util.impl.TransportSorterByWeightDesc;
 import ru.liga.loader.model.entity.Cargo;
+import ru.liga.loader.model.entity.Transport;
 import ru.liga.loader.repository.TransportCrudRepository;
-import ru.liga.loader.service.DefaultCargoLoaderService;
+import ru.liga.loader.util.DefaultCargoLoader;
 
 import java.util.List;
 
@@ -48,13 +49,15 @@ public enum AlgorithmTypes {
      */
 
     public static LoadingCargoAlgorithm createElAlgorithm(TransportCrudRepository transportDataRepository,
+                                                          List<Transport> transports,
                                                           List<Cargo> cargos) {
         return new EvenLoadingAlgorithm(
                 new DefaultCargoSorter(),
                 new TransportSorterByWeightAsc(),
                 transportDataRepository,
+                transports,
                 cargos,
-                new DefaultCargoLoaderService()
+                new DefaultCargoLoader()
         );
     }
 
@@ -68,13 +71,15 @@ public enum AlgorithmTypes {
      */
 
     public static LoadingCargoAlgorithm createMesAlgorithm(TransportCrudRepository transportDataRepository,
+                                                           List<Transport> transports,
                                                            List<Cargo> cargos) {
         return new MinimumEmptySpaceAlgorithm(
                 new DefaultCargoSorter(),
                 new TransportSorterByWeightDesc(),
                 transportDataRepository,
+                transports,
                 cargos,
-                new DefaultCargoLoaderService()
+                new DefaultCargoLoader()
         );
     }
 }

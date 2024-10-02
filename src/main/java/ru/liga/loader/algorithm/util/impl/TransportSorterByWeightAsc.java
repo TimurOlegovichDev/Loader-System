@@ -6,7 +6,6 @@ import ru.liga.loader.algorithm.util.TransportSorter;
 import ru.liga.loader.model.entity.Transport;
 import ru.liga.loader.repository.TransportCrudRepository;
 
-import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -25,9 +24,9 @@ public class TransportSorterByWeightAsc implements TransportSorter {
      */
 
     @Override
-    public List<Transport> sort(TransportCrudRepository transportDataRepository) {
+    public List<Transport> sort(TransportCrudRepository transportDataRepository, List<Transport> transports) {
         log.debug("Сортировка транспорта по весу груза в порядке возрастания...");
-        return new ArrayList<>(transportDataRepository.getKeys()).stream()
+        return transports.stream()
                 .sorted(Comparator.comparingInt(transportDataRepository::percentageOfOccupancy))
                 .collect(Collectors.toList());
     }

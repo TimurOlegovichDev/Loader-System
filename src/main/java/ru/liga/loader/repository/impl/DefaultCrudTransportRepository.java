@@ -6,7 +6,10 @@ import ru.liga.loader.model.entity.Cargo;
 import ru.liga.loader.model.entity.Transport;
 import ru.liga.loader.repository.TransportCrudRepository;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 @Repository
 public class DefaultCrudTransportRepository implements TransportCrudRepository {
@@ -24,8 +27,8 @@ public class DefaultCrudTransportRepository implements TransportCrudRepository {
     }
 
     @Override
-    public Set<Transport> getKeys() {
-        return transportMap.keySet();
+    public List<Transport> getKeys() {
+        return transportMap.keySet().stream().toList();
     }
 
     @Override
@@ -65,11 +68,11 @@ public class DefaultCrudTransportRepository implements TransportCrudRepository {
 
     @Override
     public List<Cargo> getAllCargos() {
-        List<Cargo> cargos = new ArrayList<>();
-        for (Transport transport : transportMap.keySet()) {
-            cargos.addAll(getCargos(transport));
-        }
-        return cargos;
+        return transportMap.keySet().stream()
+                .flatMap(transport -> transportMap.get(transport)
+                        .stream()
+                )
+                .toList();
     }
 
     @Override
@@ -79,6 +82,9 @@ public class DefaultCrudTransportRepository implements TransportCrudRepository {
 
     @Override
     public int percentageOfOccupancy(Transport transport) {
+        if (!transportMap.containsKey(transport)) {
+            add(transport);
+        }
         int bodyArea = transport.getBody().length * transport.getBody()[0].length;
         int cargoArea = 0;
         List<Cargo> cargos = getCargos(transport);
@@ -92,11 +98,6 @@ public class DefaultCrudTransportRepository implements TransportCrudRepository {
     }
 
     @Override
-    public void removeCargo(Transport transport, Cargo cargo) {
-        transportMap.get(transport).remove(cargo);
-    }
-
-    @Override
     public Optional<Transport> getTransportById(String id) {
         for (Transport transport : transportMap.keySet()) {
             if (transport.getId().equals(id)) {
@@ -107,8 +108,19 @@ public class DefaultCrudTransportRepository implements TransportCrudRepository {
     }
 
     @Override
-    public void removeAllCargo(Transport transport) {
-        transportMap.get(transport).clear();
+    public void updateCargosName(String lastName, String cargoName) {
+        for (Transport transport : transportMap.keySet()) {
+            for (Cargo cargoInTransport : transportMap.get(transport)) {
+                if (cargoInTransport.getName().equals(lastName)) {
+                    cargoInTransport.setName(cargoName);
+                }
+            }
+        }
+    }
+
+    @Override
+    public void unloadAllCargo() {
+        transportMap.values().forEach(List::clear);
     }
 
     @Override

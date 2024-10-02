@@ -34,8 +34,8 @@ public class TruckInitializerTest {
     @Test
     void testInitializeFromJson_withValidJsonFile_returnsMapOfTransportsAndCargos() {
         List<TransportJsonStructure> transportJsonStructures = Arrays.asList(
-                new TransportJsonStructure(new char[][]{{'+', '1', '+'}}, List.of(new Cargo("", new char[][]{{'1'}}))),
-                new TransportJsonStructure(new char[][]{{'+', '1', '+'}}, List.of(new Cargo("", new char[][]{{'1'}})))
+                new TransportJsonStructure("", new char[][]{{'+', '1', '+'}}, List.of(new Cargo("", new char[][]{{'1'}}))),
+                new TransportJsonStructure("1", new char[][]{{'+', '1', '+'}}, List.of(new Cargo("", new char[][]{{'1'}})))
         );
 
         when(jsonService.read(TransportJsonStructure.class, VALID_JSON)).thenReturn(transportJsonStructures);
@@ -49,7 +49,6 @@ public class TruckInitializerTest {
     @Test
     void testInitializeFromJson_withInvalidJsonFile_throwsException() {
         when(jsonService.read(TransportJsonStructure.class, INVALID_JSON)).thenThrow(new RuntimeException("Invalid JSON file"));
-
         assertThrows(
                 RuntimeException.class,
                 () -> truckInitializer.initializeFromJson(INVALID_JSON)

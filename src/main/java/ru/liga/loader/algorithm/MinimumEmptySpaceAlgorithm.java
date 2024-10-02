@@ -10,7 +10,7 @@ import ru.liga.loader.exception.NoPlaceException;
 import ru.liga.loader.model.entity.Cargo;
 import ru.liga.loader.model.entity.Transport;
 import ru.liga.loader.repository.TransportCrudRepository;
-import ru.liga.loader.service.CargoLoaderService;
+import ru.liga.loader.util.CargoLoader;
 
 import java.util.List;
 
@@ -21,20 +21,22 @@ public class MinimumEmptySpaceAlgorithm implements LoadingCargoAlgorithm {
     private final CargoSorter cargoSorter;
     private final TransportSorter transportSorter;
     private final TransportCrudRepository transportDataRepository;
+    private final List<Transport> transports;
     private final List<Cargo> cargoList;
-    private final CargoLoaderService cargoLoaderService;
+    private final CargoLoader cargoLoader;
 
     @Autowired
     public MinimumEmptySpaceAlgorithm(CargoSorter cargoSorter,
                                       @Qualifier("transportSorterByWeightDesc") TransportSorter transportSorter,
-                                      TransportCrudRepository transportDataRepository,
+                                      TransportCrudRepository transportDataRepository, List<Transport> transports,
                                       List<Cargo> cargoList,
-                                      CargoLoaderService cargoLoaderService) {
+                                      CargoLoader cargoLoader) {
         this.cargoSorter = cargoSorter;
         this.transportSorter = transportSorter;
         this.transportDataRepository = transportDataRepository;
+        this.transports = transports;
         this.cargoList = cargoList;
-        this.cargoLoaderService = cargoLoaderService;
+        this.cargoLoader = cargoLoader;
     }
 
     /**
@@ -43,18 +45,18 @@ public class MinimumEmptySpaceAlgorithm implements LoadingCargoAlgorithm {
      * а затем пытается загрузить каждый груз в транспортное средство.
      *
      * @see CargoSorter#sort(List)
-     * @see TransportSorter#sort(TransportCrudRepository)
+     * @see TransportSorter#sort(TransportCrudRepository, List)
      * @see #loadCargo(Cargo, List)
      */
 
     @Override
     public void execute() {
         log.info("Старт алгоритма плотной погрузки");
-        List<Transport> transports = transportSorter.sort(transportDataRepository);
+        List<Transport> transportsSorted = transportSorter.sort(transportDataRepository, transports);
         for (Cargo cargo : cargoSorter.sort(cargoList)) {
             log.info("Погрузка груза: {}", cargo);
             try {
-                loadCargo(cargo, transports);
+                loadCargo(cargo, transportsSorted);
             } catch (NoPlaceException e) {
                 log.warn(e.getMessage());
             }
@@ -65,7 +67,7 @@ public class MinimumEmptySpaceAlgorithm implements LoadingCargoAlgorithm {
     private void loadCargo(Cargo cargo, List<Transport> transports) {
         for (Transport transport : transports) {
             try {
-                cargoLoaderService.load(cargo, transport);
+                cargoLoader.load(cargo, transport);
                 transportDataRepository.addCargoInTransport(transport, cargo);
                 log.info("Груз успешно загружен: {}", cargo);
                 return;

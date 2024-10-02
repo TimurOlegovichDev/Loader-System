@@ -3,6 +3,7 @@ package ru.liga.loader.model.entity;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import lombok.Getter;
 import lombok.NonNull;
+import lombok.Setter;
 import ru.liga.loader.model.structure.CargoJsonStructure;
 
 import java.util.Arrays;
@@ -14,8 +15,9 @@ public class Cargo {
     private final int height;
     private final int width;
     private final int area;
-    private final String name;
     private final char type;
+    @Setter
+    private String name;
 
     public Cargo(
             @NonNull String name,

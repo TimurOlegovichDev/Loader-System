@@ -20,9 +20,9 @@ public interface TransportCrudRepository extends CrudRepository<Transport, List<
 
     int percentageOfOccupancy(Transport transport);
 
-    void removeCargo(Transport transport, Cargo cargo);
-
     Optional<Transport> getTransportById(String id);
 
-    void removeAllCargo(Transport transport);
+    void updateCargosName(String lastName, String cargoName);
+
+    void unloadAllCargo();
 }

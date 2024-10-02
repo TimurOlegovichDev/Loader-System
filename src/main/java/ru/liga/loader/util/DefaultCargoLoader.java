@@ -1,4 +1,4 @@
-package ru.liga.loader.service;
+package ru.liga.loader.util;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -9,7 +9,7 @@ import ru.liga.loader.model.entity.Transport;
 
 @Slf4j
 @Service
-public class DefaultCargoLoaderService implements CargoLoaderService {
+public class DefaultCargoLoader implements CargoLoader {
 
     private static char[][] mirrorVertically(char[][] array) {
         char[][] mirroredArray = new char[array.length][];

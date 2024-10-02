@@ -11,7 +11,7 @@ import ru.liga.loader.exception.NoPlaceException;
 import ru.liga.loader.model.entity.Cargo;
 import ru.liga.loader.model.entity.Transport;
 import ru.liga.loader.repository.TransportCrudRepository;
-import ru.liga.loader.service.CargoLoaderService;
+import ru.liga.loader.util.CargoLoader;
 
 import java.util.List;
 import java.util.Optional;
@@ -23,20 +23,22 @@ public class EvenLoadingAlgorithm implements LoadingCargoAlgorithm {
     private final CargoSorter cargoSorter;
     private final TransportSorter transportSorter;
     private final TransportCrudRepository transportDataRepository;
+    private final List<Transport> transports;
     private final List<Cargo> cargos;
-    private final CargoLoaderService cargoLoaderService;
+    private final CargoLoader cargoLoader;
 
     @Autowired
     public EvenLoadingAlgorithm(CargoSorter cargoSorter,
                                 @Qualifier("transportSorterByWeightAsc") TransportSorter transportSorter,
-                                TransportCrudRepository transportDataRepository,
+                                TransportCrudRepository transportDataRepository, List<Transport> transports,
                                 List<Cargo> cargos,
-                                CargoLoaderService cargoLoaderService) {
+                                CargoLoader cargoLoader) {
         this.cargoSorter = cargoSorter;
         this.transportSorter = transportSorter;
         this.transportDataRepository = transportDataRepository;
+        this.transports = transports;
         this.cargos = cargos;
-        this.cargoLoaderService = cargoLoaderService;
+        this.cargoLoader = cargoLoader;
     }
 
     /**
@@ -68,7 +70,7 @@ public class EvenLoadingAlgorithm implements LoadingCargoAlgorithm {
         Optional<Transport> optional = findMostFreeTransport();
         optional.ifPresentOrElse(
                 transport -> {
-                    cargoLoaderService.load(cargo, transport);
+                    cargoLoader.load(cargo, transport);
                     transportDataRepository.addCargoInTransport(transport, cargo);
                 },
                 () -> {
@@ -79,7 +81,7 @@ public class EvenLoadingAlgorithm implements LoadingCargoAlgorithm {
 
     private Optional<Transport> findMostFreeTransport() {
         log.debug("Поиск максимально незагруженного транспорта");
-        return getFirstTransport(transportSorter.sort(transportDataRepository));
+        return getFirstTransport(transportSorter.sort(transportDataRepository, transports));
     }
 
     private Optional<Transport> getFirstTransport(List<Transport> transports) {

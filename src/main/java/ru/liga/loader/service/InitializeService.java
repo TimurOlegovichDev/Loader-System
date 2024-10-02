@@ -65,7 +65,7 @@ public class InitializeService {
         transportDataRepository.addAll(transportMap);
         for (Transport transport : transportMap.keySet()) {
             for (Cargo cargo : transportMap.get(transport)) {
-                cargoDataRepository.add(cargo);
+                cargoDataRepository.put(cargo);
             }
         }
         log.debug("Добавлено транспорта из файла: {}", transportMap.size());
