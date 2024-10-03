@@ -33,6 +33,10 @@ public class Transport {
         this.body = body;
     }
 
+    /**
+     * Возвращает графическое представление транспорта в изначальное состояние
+     */
+
     public void unloadAll() {
         Arrays.stream(body).forEach(row -> Arrays.fill(row, ' '));
     }

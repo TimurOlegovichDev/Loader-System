@@ -5,7 +5,6 @@ import org.springframework.stereotype.Service;
 import ru.liga.loader.model.entity.Cargo;
 import ru.liga.loader.model.entity.Transport;
 import ru.liga.loader.model.structure.TransportJsonStructure;
-import ru.liga.loader.repository.CargoCrudRepository;
 import ru.liga.loader.repository.TransportCrudRepository;
 import ru.liga.loader.util.CargoCounter;
 
@@ -16,21 +15,26 @@ import java.util.List;
 public class TransportService {
 
     private final TransportCrudRepository transportRepository;
-    private final CargoCrudRepository cargoRepository;
+    private final TransportRepositoryService transportRepositoryService;
     private final JsonService jsonService;
-    private final LoadingService loadingService;
     private final CargoCounter cargoCounter;
 
     @Autowired
     public TransportService(TransportCrudRepository transportRepository,
-                            CargoCrudRepository cargoRepository,
-                            JsonService jsonService, LoadingService loadingService, CargoCounter cargoCounter) {
+                            TransportRepositoryService transportRepositoryService,
+                            JsonService jsonService,
+                            CargoCounter cargoCounter) {
         this.transportRepository = transportRepository;
-        this.cargoRepository = cargoRepository;
+        this.transportRepositoryService = transportRepositoryService;
         this.jsonService = jsonService;
-        this.loadingService = loadingService;
         this.cargoCounter = cargoCounter;
     }
+
+    /**
+     * Сохраняет транспортные средства в JSON-файл по указанному пути.
+     *
+     * @param filePath путь к JSON-файлу
+     */
 
     public void saveToJson(String filePath) {
         List<TransportJsonStructure> structures = new ArrayList<>();
@@ -46,6 +50,12 @@ public class TransportService {
         jsonService.writeObject(structures, filePath);
     }
 
+    /**
+     * Возвращает информацию о всех транспортных средствах.
+     *
+     * @return информация о всех транспортных средствах
+     */
+
     public String getTransportsInfo() {
         StringBuilder stringBuilder = new StringBuilder("Отображение транспорта:");
         if (!transportRepository.getKeys().isEmpty()) {
@@ -55,9 +65,16 @@ public class TransportService {
         return stringBuilder.toString();
     }
 
+    /**
+     * Возвращает информацию о транспортном средстве с указанным идентификатором.
+     *
+     * @param id идентификатор транспортного средства
+     * @return информация о транспортном средстве, если найдено, иначе сообщение о том, что транспортное средство не найдено
+     */
+
     public String getTransportInfoById(String id) {
         List<Cargo> list = new ArrayList<>();
-        transportRepository.getTransportById(id).ifPresent(
+        transportRepositoryService.getTransportById(id).ifPresent(
                 transport -> list.addAll(transportRepository.getCargos(transport)));
         StringBuilder stringBuilder = new StringBuilder("Информация о транспорте").append(System.lineSeparator());
         if (list.isEmpty()) {
@@ -74,8 +91,15 @@ public class TransportService {
         return stringBuilder.toString();
     }
 
+    /**
+     * Удаляет транспортное средство с указанным идентификатором.
+     *
+     * @param id идентификатор транспортного средства
+     * @return сообщение о результате удаления транспортного средства
+     */
+
     public String delete(String id) {
-        return transportRepository.getTransportById(id)
+        return transportRepositoryService.getTransportById(id)
                 .map(transport -> {
                     transportRepository.delete(transport);
                     return "Транспорт с идентификатором " + id + " удален успешно!";

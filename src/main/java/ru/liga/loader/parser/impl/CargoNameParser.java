@@ -21,6 +21,13 @@ public class CargoNameParser implements StringParser<List<Cargo>> {
         this.repository = repository;
     }
 
+    /**
+     * Разбирает строку на коллекцию объектов Cargo.
+     *
+     * @param input строка, содержащая имена грузов, разделенные запятыми
+     * @return коллекция объектов Cargo, соответствующих грузам из входной строки
+     */
+
     @Override
     public List<Cargo> parse(String input) {
         List<Cargo> cargos = new ArrayList<>();

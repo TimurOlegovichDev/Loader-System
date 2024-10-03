@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.shell.standard.ShellCommandGroup;
 import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
-import ru.liga.loader.service.CargoService;
+import ru.liga.loader.service.CargoRepositoryService;
 import ru.liga.loader.service.TransportService;
 
 @ShellComponent
@@ -12,12 +12,12 @@ import ru.liga.loader.service.TransportService;
 public class OutputShellController {
 
     private final TransportService transportService;
-    private final CargoService cargoService;
+    private final CargoRepositoryService cargoRepositoryService;
 
     @Autowired
-    public OutputShellController(TransportService transportService, CargoService cargoService) {
+    public OutputShellController(TransportService transportService, CargoRepositoryService cargoRepositoryService) {
         this.transportService = transportService;
-        this.cargoService = cargoService;
+        this.cargoRepositoryService = cargoRepositoryService;
     }
 
     @ShellMethod(key = "Информация о транспорте")
@@ -27,7 +27,7 @@ public class OutputShellController {
 
     @ShellMethod(key = "Информация о грузах")
     public String getCargoInfo() {
-        return cargoService.getCargosInfo();
+        return cargoRepositoryService.getCargosInfo();
     }
 
     @ShellMethod(key = "Информация о транспорте с идентификатором")
@@ -37,7 +37,7 @@ public class OutputShellController {
 
     @ShellMethod(key = "Информация о грузе с названием")
     public String getCurrentCargoInfo(String name) {
-        return cargoService.getCargoInfoByName(name);
+        return cargoRepositoryService.getCargoInfoByName(name);
     }
 
     @ShellMethod(key = "Сохранить данные в файл")

@@ -9,7 +9,6 @@ import ru.liga.loader.repository.TransportCrudRepository;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 @Repository
 public class DefaultCrudTransportRepository implements TransportCrudRepository {
@@ -21,50 +20,115 @@ public class DefaultCrudTransportRepository implements TransportCrudRepository {
         this.transportMap = transportMap;
     }
 
+    /**
+     * Возвращает список всех грузов для всех транспортных средств.
+     *
+     * @return список грузов для всех транспортных средств
+     */
+
     @Override
     public List<List<Cargo>> getAll() {
         return transportMap.values().stream().toList();
     }
+
+    /**
+     * Возвращает список всех транспортных средств.
+     *
+     * @return список транспортных средств
+     */
 
     @Override
     public List<Transport> getKeys() {
         return transportMap.keySet().stream().toList();
     }
 
+    /**
+     * Возвращает грузы для указанного транспортного средства.
+     *
+     * @param key транспортное средство
+     * @return грузы для указанного транспортного средства
+     */
+
     @Override
     public List<Cargo> getBy(Transport key) {
         return transportMap.get(key);
     }
+
+    /**
+     * Добавляет несколько транспортных средств с их грузами в репозиторий.
+     *
+     * @param entities карта, содержащая транспортные средства с их грузами
+     */
 
     @Override
     public void addAll(Map<Transport, List<Cargo>> entities) {
         transportMap.putAll(entities);
     }
 
+    /**
+     * Обновляет грузы для указанного транспортного средства.
+     *
+     * @param key   транспортное средство
+     * @param value новые грузы
+     * @return обновленные грузы
+     */
+
     @Override
     public List<Cargo> update(Transport key, List<Cargo> value) {
         return transportMap.put(key, value);
     }
+
+    /**
+     * Добавляет транспортное средство в репозиторий.
+     *
+     * @param entity транспортное средство
+     */
 
     @Override
     public void add(Transport entity) {
         transportMap.put(entity, new ArrayList<>());
     }
 
+    /**
+     * Добавляет несколько транспортных средств в репозиторий.
+     *
+     * @param entities список транспортных средств
+     */
+
     @Override
     public void add(List<Transport> entities) {
         entities.forEach(this::add);
     }
+
+    /**
+     * Удаляет транспортное средство из репозитория.
+     *
+     * @param id транспортное средство
+     * @return удаленные грузы
+     */
 
     @Override
     public List<Cargo> delete(Transport id) {
         return transportMap.remove(id);
     }
 
+    /**
+     * Возвращает грузы для указанного транспортного средства.
+     *
+     * @param transport транспортное средство
+     * @return грузы для указанного транспортного средства
+     */
+
     @Override
     public List<Cargo> getCargos(Transport transport) {
         return transportMap.get(transport);
     }
+
+    /**
+     * Возвращает все грузы для всех транспортных средств.
+     *
+     * @return все грузы для всех транспортных средств
+     */
 
     @Override
     public List<Cargo> getAllCargos() {
@@ -75,53 +139,32 @@ public class DefaultCrudTransportRepository implements TransportCrudRepository {
                 .toList();
     }
 
+    /**
+     * Добавляет груз в транспортное средство.
+     *
+     * @param transport транспортное средство
+     * @param cargo     груз
+     */
+
     @Override
     public void addCargoInTransport(Transport transport, Cargo cargo) {
         transportMap.get(transport).add(cargo);
     }
 
-    @Override
-    public int percentageOfOccupancy(Transport transport) {
-        if (!transportMap.containsKey(transport)) {
-            add(transport);
-        }
-        int bodyArea = transport.getBody().length * transport.getBody()[0].length;
-        int cargoArea = 0;
-        List<Cargo> cargos = getCargos(transport);
-        if (cargos == null || bodyArea <= 0) {
-            return cargoArea;
-        }
-        for (Cargo cargoInTransport : cargos) {
-            cargoArea += cargoInTransport.getArea();
-        }
-        return cargoArea * 100 / bodyArea;
-    }
-
-    @Override
-    public Optional<Transport> getTransportById(String id) {
-        for (Transport transport : transportMap.keySet()) {
-            if (transport.getId().equals(id)) {
-                return Optional.of(transport);
-            }
-        }
-        return Optional.empty();
-    }
-
-    @Override
-    public void updateCargosName(String lastName, String cargoName) {
-        for (Transport transport : transportMap.keySet()) {
-            for (Cargo cargoInTransport : transportMap.get(transport)) {
-                if (cargoInTransport.getName().equals(lastName)) {
-                    cargoInTransport.setName(cargoName);
-                }
-            }
-        }
-    }
+    /**
+     * Выгружает все грузы из транспортных средств.
+     */
 
     @Override
     public void unloadAllCargo() {
         transportMap.values().forEach(List::clear);
     }
+
+    /**
+     * Возвращает строковое представление репозитория.
+     *
+     * @return строковое представление репозитория
+     */
 
     @Override
     public String toString() {

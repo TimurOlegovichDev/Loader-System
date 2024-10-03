@@ -7,7 +7,7 @@ import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
 import ru.liga.loader.model.structure.TransportSizeStructure;
 import ru.liga.loader.parser.StringParser;
-import ru.liga.loader.service.CargoService;
+import ru.liga.loader.service.CargoRepositoryService;
 import ru.liga.loader.service.InitializeService;
 
 import java.util.List;
@@ -19,13 +19,13 @@ public class InputShellController {
 
     private final InitializeService initializeService;
     private final StringParser<List<TransportSizeStructure>> stringParser;
-    private final CargoService cargoService;
+    private final CargoRepositoryService cargoRepositoryService;
 
     @Autowired
-    public InputShellController(InitializeService initializeService, StringParser<List<TransportSizeStructure>> stringParser, CargoService cargoService) {
+    public InputShellController(InitializeService initializeService, StringParser<List<TransportSizeStructure>> stringParser, CargoRepositoryService cargoRepositoryService) {
         this.initializeService = initializeService;
         this.stringParser = stringParser;
-        this.cargoService = cargoService;
+        this.cargoRepositoryService = cargoRepositoryService;
     }
 
     @ShellMethod(key = "Импортировать груз из файла")
@@ -47,6 +47,6 @@ public class InputShellController {
 
     @ShellMethod(key = "Добавить посылку")
     public String addCargo(String cargoName, String cargoForm) {
-        return cargoService.create(cargoName, cargoForm);
+        return cargoRepositoryService.create(cargoName, cargoForm);
     }
 }

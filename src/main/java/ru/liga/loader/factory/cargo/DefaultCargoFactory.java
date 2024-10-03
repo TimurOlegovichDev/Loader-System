@@ -20,6 +20,13 @@ public class DefaultCargoFactory implements CargoFactory {
         return new Cargo(name, form);
     }
 
+    /**
+     * Создает груз по заданной форме, полученной из json файла
+     *
+     * @param cargoJsonStructure структура, полученная из файла
+     * @return созданный груз
+     */
+
     @Override
     public Cargo createCargo(CargoJsonStructure cargoJsonStructure) {
         return new Cargo(cargoJsonStructure);

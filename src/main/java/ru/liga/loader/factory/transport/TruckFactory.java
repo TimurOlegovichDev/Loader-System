@@ -13,7 +13,7 @@ public class TruckFactory implements TransportFactory {
     private final int DEFAULT_TRANSPORT_HEIGHT = 6;
 
     /**
-     * Создает грузовой автомобиль по умолчанию.
+     * Создает грузовой автомобиль с размерами по умолчанию.
      *
      * @return созданный грузовой автомобиль
      */
@@ -42,7 +42,7 @@ public class TruckFactory implements TransportFactory {
     }
 
     /**
-     * Создает грузовой автомобиль по заданной форме кузова.
+     * Создает грузовой автомобиль по заданной форме кузова с указаным идентификатором.
      *
      * @param body форма кузова грузового автомобиля
      * @return созданный грузовой автомобиль
@@ -52,6 +52,13 @@ public class TruckFactory implements TransportFactory {
     public Transport createTransport(String id, char[][] body) {
         return new Transport(id, body);
     }
+
+    /**
+     * Создает грузовой автомобиль по структуре, полученной из json файла
+     *
+     * @param transportJsonStructure структура, хранящая в себе необходимые данные
+     * @return созданный грузовой автомобиль
+     */
 
     @Override
     public Transport createTransport(TransportJsonStructure transportJsonStructure) {

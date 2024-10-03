@@ -25,9 +25,23 @@ public class LoadingService {
         this.cargoRepository = cargoRepository;
     }
 
+    /**
+     * Загружает грузы в транспортные средства с использованием алгоритма с указанным именем.
+     *
+     * @param algoName имя алгоритма
+     */
+
     public void load(String algoName) {
         defaultLoadingProcessor.process(algoName);
     }
+
+    /**
+     * Загружает определенный список грузов в определенные транспортные средства с использованием алгоритма с указанным именем.
+     *
+     * @param algoName   имя алгоритма
+     * @param transports список транспортных средств
+     * @param cargos     список грузов
+     */
 
     public void selectiveLoad(String algoName,
                               List<Transport> transports,
@@ -38,6 +52,12 @@ public class LoadingService {
                 cargos
         );
     }
+
+    /**
+     * Перезагружает грузы в транспортные средства с использованием алгоритма с указанным именем.
+     *
+     * @param algoName имя алгоритма
+     */
 
     public void reload(String algoName) {
         for (Transport transport : transportRepository.getKeys()) {

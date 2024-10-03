@@ -6,6 +6,13 @@ import ru.liga.loader.parser.StringParser;
 @Component
 public class CargoFormParser implements StringParser<char[][]> {
 
+    /**
+     * Разбирает строку на двумерный массив символов.
+     *
+     * @param input строка, содержащая символы, разделенные пробелами
+     * @return двумерный массив символов, где каждый подмассив соответствует строке из входной строки
+     */
+
     @Override
     public char[][] parse(String input) {
         String[] formLines = input.split(" ");

@@ -1,10 +1,12 @@
 package ru.liga.loader.algorithm.util.impl;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import ru.liga.loader.algorithm.util.TransportSorter;
 import ru.liga.loader.model.entity.Transport;
 import ru.liga.loader.repository.TransportCrudRepository;
+import ru.liga.loader.service.TransportRepositoryService;
 
 import java.util.Collections;
 import java.util.Comparator;
@@ -14,6 +16,13 @@ import java.util.stream.Collectors;
 @Slf4j
 @Component
 public class TransportSorterByWeightDesc implements TransportSorter {
+
+    private final TransportRepositoryService transportRepositoryService;
+
+    @Autowired
+    public TransportSorterByWeightDesc(TransportRepositoryService transportRepositoryService) {
+        this.transportRepositoryService = transportRepositoryService;
+    }
 
     /**
      * Сортирует список транспортных средств по весу груза в порядке убывания.
@@ -28,7 +37,7 @@ public class TransportSorterByWeightDesc implements TransportSorter {
     public List<Transport> sort(TransportCrudRepository transportDataRepository, List<Transport> transports) {
         log.debug("Сортировка транспорта по весу груза в порядке убывания...");
         List<Transport> sorted = transports.stream()
-                .sorted(Comparator.comparingInt(transportDataRepository::percentageOfOccupancy))
+                .sorted(Comparator.comparingInt(transportRepositoryService::percentageOfOccupancy))
                 .collect(Collectors.toList());
         Collections.reverse(sorted);
         return sorted;

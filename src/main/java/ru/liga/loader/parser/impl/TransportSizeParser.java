@@ -19,6 +19,14 @@ public class TransportSizeParser implements StringParser<List<TransportSizeStruc
         this.validator = validator;
     }
 
+    /**
+     * Разбирает строку на коллекцию объектов TransportSizeStructure.
+     *
+     * @param input строка, содержащая размеры транспорта в формате "NxM"
+     * @return коллекция объектов TransportSizeStructure
+     * @throws IllegalArgumentException если входная строка не проходит валидацию
+     */
+
     @Override
     public List<TransportSizeStructure> parse(String input) {
         validator.validate(input.trim());

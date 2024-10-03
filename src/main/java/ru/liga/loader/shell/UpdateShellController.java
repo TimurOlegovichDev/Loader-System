@@ -5,22 +5,22 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.shell.standard.ShellCommandGroup;
 import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
-import ru.liga.loader.service.CargoService;
+import ru.liga.loader.service.CargoRepositoryService;
 
 @ShellComponent
 @ShellCommandGroup("Изменение данных")
 public class UpdateShellController {
 
-    private final CargoService cargoService;
+    private final CargoRepositoryService cargoRepositoryService;
 
     @Autowired
-    public UpdateShellController(CargoService cargoService) {
-        this.cargoService = cargoService;
+    public UpdateShellController(CargoRepositoryService cargoRepositoryService) {
+        this.cargoRepositoryService = cargoRepositoryService;
     }
 
     @ShellMethod(key = "Изменить форму посылки")
     public String setCargoForm(String name, String form) {
-        return cargoService.setForm(
+        return cargoRepositoryService.setForm(
                 name,
                 form
         );
@@ -28,7 +28,7 @@ public class UpdateShellController {
 
     @ShellMethod(key = "Изменить тип посылки")
     public String setCargoType(String name, char type) {
-        return cargoService.setType(
+        return cargoRepositoryService.setType(
                 name,
                 type
         );
@@ -36,7 +36,7 @@ public class UpdateShellController {
 
     @ShellMethod(key = "Изменить имя посылки")
     public String setCargoName(String name, String newName) {
-        return cargoService.setName(
+        return cargoRepositoryService.setName(
                 name,
                 newName
         );

@@ -4,7 +4,6 @@ import ru.liga.loader.model.entity.Cargo;
 import ru.liga.loader.model.entity.Transport;
 
 import java.util.List;
-import java.util.Optional;
 
 public interface TransportCrudRepository extends CrudRepository<Transport, List<Cargo>> {
 
@@ -17,12 +16,6 @@ public interface TransportCrudRepository extends CrudRepository<Transport, List<
     void addCargoInTransport(Transport transport, Cargo cargo);
 
     void add(Transport transport);
-
-    int percentageOfOccupancy(Transport transport);
-
-    Optional<Transport> getTransportById(String id);
-
-    void updateCargosName(String lastName, String cargoName);
 
     void unloadAllCargo();
 }
