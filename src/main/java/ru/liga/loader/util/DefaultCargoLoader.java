@@ -47,7 +47,7 @@ public class DefaultCargoLoader implements CargoLoader {
 
     private boolean isCargoPlacementPossible(int heightIndex, int widthIndex, Cargo cargo, Transport transport) {
         log.trace("Проверка на возможность погрузки груза по координатам ({}, {})", heightIndex, widthIndex);
-        if (!canBeLoaded(cargo, transport)) {
+        if (!transport.canBeLoaded(cargo)) {
             throw new InvalidCargoSize("Этот груз слишком велик: " + cargo);
         }
         char[][] cpBody = copyBody(transport.getBody());
@@ -88,11 +88,6 @@ public class DefaultCargoLoader implements CargoLoader {
             i--;
         }
         log.debug("Груз погружен в транспорт");
-    }
-
-    private boolean canBeLoaded(Cargo cargo, Transport transport) {
-        return cargo.getHeight() <= transport.getBody().length + 1
-                && cargo.getWidth() <= transport.getBody()[0].length + 1;
     }
 
     private char[][] copyBody(char[][] body) {

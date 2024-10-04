@@ -28,13 +28,13 @@ public class InputShellController {
         this.cargoRepositoryService = cargoRepositoryService;
     }
 
-    @ShellMethod(key = "Импортировать груз из файла")
-    public void importCargosFromFile(String filePath) {
+    @ShellMethod(key = "Инициализировать груз из файла")
+    public void initCargosFromFile(String filePath) {
         initializeService.initializeCargos(filePath);
     }
 
-    @ShellMethod(key = "Импортировать транспорт из файла")
-    public void importTransportFromFile(String filePath) {
+    @ShellMethod(key = "Инициализировать транспорт из файла")
+    public void initTransportFromFile(String filePath) {
         initializeService.initializeTransport(filePath);
     }
 

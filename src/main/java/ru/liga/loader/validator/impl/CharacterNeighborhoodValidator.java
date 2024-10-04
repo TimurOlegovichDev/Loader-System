@@ -8,6 +8,13 @@ import ru.liga.loader.validator.Validator;
 @Component
 public class CharacterNeighborhoodValidator implements Validator<CargoJsonStructure> {
 
+    /**
+     * Выполняет проверку груза на наличие символов, которые не имеют прямой связи с другими символами.
+     * Иными словами, проверка на диагональные символы
+     *
+     * @param cargo - груз для проверки
+     */
+
     @Override
     public void validate(CargoJsonStructure cargo) {
         char[][] form = cargo.form();

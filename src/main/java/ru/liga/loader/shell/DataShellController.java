@@ -22,8 +22,8 @@ public class DataShellController {
     }
 
     @ShellMethod(key = "Удалить груз из системы")
-    public String deleteCargoFormSystem(String name) {
-        return cargoRepositoryService.delete(name);
+    public String deleteCargoFormSystem(String name, String algoName) {
+        return cargoRepositoryService.delete(name, algoName);
     }
 
     @ShellMethod(key = "Удалить транспорт из системы")

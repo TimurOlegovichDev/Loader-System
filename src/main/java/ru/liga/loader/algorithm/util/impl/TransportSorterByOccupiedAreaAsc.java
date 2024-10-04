@@ -14,12 +14,12 @@ import java.util.stream.Collectors;
 
 @Slf4j
 @Component
-public class TransportSorterByWeightAsc implements TransportSorter {
+public class TransportSorterByOccupiedAreaAsc implements TransportSorter {
 
     private final TransportRepositoryService transportRepositoryService;
 
     @Autowired
-    public TransportSorterByWeightAsc(TransportRepositoryService transportRepositoryService) {
+    public TransportSorterByOccupiedAreaAsc(TransportRepositoryService transportRepositoryService) {
         this.transportRepositoryService = transportRepositoryService;
     }
 
@@ -34,7 +34,7 @@ public class TransportSorterByWeightAsc implements TransportSorter {
 
     @Override
     public List<Transport> sort(TransportCrudRepository transportDataRepository, List<Transport> transports) {
-        log.debug("Сортировка транспорта по весу груза в порядке возрастания...");
+        log.debug("Сортировка транспорта по заполненности в порядке возрастания...");
         return transports.stream()
                 .sorted(Comparator.comparingInt(transportRepositoryService::percentageOfOccupancy))
                 .collect(Collectors.toList());

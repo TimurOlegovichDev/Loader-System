@@ -1,8 +1,7 @@
-package ru.liga.loader.validator;
+package ru.liga.loader.validator.impl;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import ru.liga.loader.validator.impl.TransportSizeValidator;
 
 import java.util.List;
 

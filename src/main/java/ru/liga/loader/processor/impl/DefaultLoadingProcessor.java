@@ -79,9 +79,9 @@ public class DefaultLoadingProcessor implements LoadingProcessor {
         algorithm.execute();
     }
 
-    private LoadingCargoAlgorithm getAlgorithm(String algorithmName,
-                                               List<Transport> transports,
-                                               List<Cargo> cargos) {
+    LoadingCargoAlgorithm getAlgorithm(String algorithmName,
+                                       List<Transport> transports,
+                                       List<Cargo> cargos) {
         switch (AlgorithmTypes.of(algorithmName)) {
             case EL -> {
                 return AlgorithmTypes.createElAlgorithm(

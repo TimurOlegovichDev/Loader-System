@@ -67,6 +67,11 @@ public class Transport {
         return sb.toString();
     }
 
+    public boolean canBeLoaded(Cargo cargo) {
+        return cargo.getHeight() <= body.length + 1
+                && cargo.getWidth() <= body.length + 1;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

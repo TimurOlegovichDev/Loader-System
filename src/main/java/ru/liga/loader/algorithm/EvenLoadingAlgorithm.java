@@ -29,7 +29,7 @@ public class EvenLoadingAlgorithm implements LoadingCargoAlgorithm {
 
     @Autowired
     public EvenLoadingAlgorithm(CargoSorter cargoSorter,
-                                @Qualifier("transportSorterByWeightAsc") TransportSorter transportSorter,
+                                @Qualifier("transportSorterByOccupiedAreaAsc") TransportSorter transportSorter,
                                 TransportCrudRepository transportDataRepository, List<Transport> transports,
                                 List<Cargo> cargos,
                                 CargoLoader cargoLoader) {
@@ -66,7 +66,7 @@ public class EvenLoadingAlgorithm implements LoadingCargoAlgorithm {
     }
 
     private void loadCargo(Cargo cargo) throws NoPlaceException {
-        Optional<Transport> optional = findMostFreeTransport();
+        Optional<Transport> optional = findMostFreeTransport(cargo);
         optional.ifPresentOrElse(
                 transport -> {
                     cargoLoader.load(cargo, transport);
@@ -78,15 +78,20 @@ public class EvenLoadingAlgorithm implements LoadingCargoAlgorithm {
         );
     }
 
-    private Optional<Transport> findMostFreeTransport() {
+    private Optional<Transport> findMostFreeTransport(Cargo cargo) {
         log.debug("Поиск максимально незагруженного транспорта");
-        return getFirstTransport(transportSorter.sort(transportDataRepository, transports));
+        return getFirstCanToLoadTransport(
+                transportSorter.sort(transportDataRepository, transports),
+                cargo
+        );
     }
 
-    private Optional<Transport> getFirstTransport(List<Transport> transports) {
-        if (transports.isEmpty()) {
-            return Optional.empty();
+    private Optional<Transport> getFirstCanToLoadTransport(List<Transport> transports, Cargo cargo) {
+        for (Transport transport : transports) {
+            if (transport.canBeLoaded(cargo)) {
+                return Optional.of(transport);
+            }
         }
-        return Optional.ofNullable(transports.get(0));
+        return Optional.empty();
     }
 }

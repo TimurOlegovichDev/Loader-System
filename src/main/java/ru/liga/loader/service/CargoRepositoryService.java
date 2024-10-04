@@ -13,6 +13,7 @@ import java.util.Optional;
 @Slf4j
 public class CargoRepositoryService {
 
+
     private final CargoCrudRepository cargoRepository;
     private final CargoFactory cargoFactory;
     private final LoadingService loadingService;
@@ -123,16 +124,17 @@ public class CargoRepositoryService {
     /**
      * Удаляет груз с указанным именем.
      *
-     * @param name имя груза
+     * @param name     имя груза
+     * @param algoname имя алгоритма, по которому будут перезагружены грузовики
      * @return сообщение о результате удаления груза
      */
 
-    public String delete(String name) {
+    public String delete(String name, String algoname) {
         if (!existsInDatabase(name)) {
             return "Груза с таким именем нет в системе!";
         }
         cargoRepository.delete(name);
-        loadingService.reload("MES");
+        loadingService.reload(algoname);
         return "Груз удален успешно!";
     }
 

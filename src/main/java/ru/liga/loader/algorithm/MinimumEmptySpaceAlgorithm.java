@@ -27,7 +27,7 @@ public class MinimumEmptySpaceAlgorithm implements LoadingCargoAlgorithm {
 
     @Autowired
     public MinimumEmptySpaceAlgorithm(CargoSorter cargoSorter,
-                                      @Qualifier("transportSorterByWeightDesc") TransportSorter transportSorter,
+                                      @Qualifier("transportSorterByOccupiedAreaDesc") TransportSorter transportSorter,
                                       TransportCrudRepository transportDataRepository, List<Transport> transports,
                                       List<Cargo> cargoList,
                                       CargoLoader cargoLoader) {

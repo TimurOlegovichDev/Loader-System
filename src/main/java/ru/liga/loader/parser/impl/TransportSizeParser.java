@@ -31,6 +31,9 @@ public class TransportSizeParser implements StringParser<List<TransportSizeStruc
     public List<TransportSizeStructure> parse(String input) {
         validator.validate(input.trim());
         List<TransportSizeStructure> pairs = new ArrayList<>();
+        if (input.isEmpty()) {
+            return pairs;
+        }
         String[] parts = input.split(",");
         for (String part : parts) {
             String[] numbers = part.split("x");

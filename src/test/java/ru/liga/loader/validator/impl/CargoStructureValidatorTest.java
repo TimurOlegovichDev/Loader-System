@@ -1,10 +1,8 @@
-package ru.liga.loader.validator;
+package ru.liga.loader.validator.impl;
 
 import org.junit.jupiter.api.Test;
 import ru.liga.loader.exception.InvalidCargoInput;
 import ru.liga.loader.model.structure.CargoJsonStructure;
-import ru.liga.loader.validator.impl.CargoStructureValidator;
-import ru.liga.loader.validator.impl.CharacterNeighborhoodValidator;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertThrows;

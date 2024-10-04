@@ -15,6 +15,9 @@ public class CargoFormParser implements StringParser<char[][]> {
 
     @Override
     public char[][] parse(String input) {
+        if (input.isEmpty()) {
+            return new char[0][0];
+        }
         String[] formLines = input.split(" ");
         char[][] form = new char[formLines.length][];
         for (int i = 0; i < formLines.length; i++) {

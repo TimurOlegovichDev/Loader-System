@@ -1,5 +1,6 @@
 package ru.liga.loader.service;
 
+import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import ru.liga.loader.exception.InvalidCargoInput;
@@ -35,7 +36,7 @@ public class CargoService {
      * @return новый двумерный массив с замененными символами
      */
 
-    public char[][] replaceNonEmptyCharsWith(char[][] originalArray, char replacementChar) {
+    public char[][] replaceNonEmptyCharsWith(@NonNull char[][] originalArray, char replacementChar) {
         char[][] newArray = new char[originalArray.length][];
         for (int i = 0; i < originalArray.length; i++) {
             newArray[i] = new char[originalArray[i].length];
