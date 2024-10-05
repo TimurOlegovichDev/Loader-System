@@ -67,6 +67,13 @@ public class Transport {
         return sb.toString();
     }
 
+    /**
+     * Проверка на то, что груз может поместится в грузовик
+     *
+     * @param cargo - груз для проверки
+     * @return true, если погрузка возможна, false в ином случае
+     */
+
     public boolean canBeLoaded(Cargo cargo) {
         return cargo.getHeight() <= body.length + 1
                 && cargo.getWidth() <= body.length + 1;
