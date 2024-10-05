@@ -8,6 +8,12 @@ public class TransportSizeValidator implements Validator<String> {
 
     private final String NUMBER_PATTERN = "\\d+x\\d+";
 
+    /**
+     * Проверяет входную строку на формат NxM, при этом числа должны быть неотрицательными
+     *
+     * @param input - строка для проверки
+     */
+
     public void validate(String input) {
         String[] parts = input.split(",");
         for (String part : parts) {

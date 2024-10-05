@@ -7,6 +7,12 @@ import ru.liga.loader.validator.Validator;
 @Component
 public class CargoFormValidator implements Validator<char[][]> {
 
+    /**
+     * Проверяет форму груза, ориентируясь на первый введенный символ.
+     *
+     * @param input - форма груза для проверки
+     */
+
     @Override
     public void validate(char[][] input) {
         if (input.length == 0 || input[0].length == 0) {
