@@ -2,34 +2,30 @@ package ru.liga.loader.service;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
-import ru.liga.loader.factory.cargo.CargoFactory;
 import ru.liga.loader.model.entity.Cargo;
-import ru.liga.loader.repository.CargoCrudRepository;
+import ru.liga.loader.repository.DefaultCrudCargoRepository;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 @Slf4j
 public class CargoRepositoryService {
 
 
-    private final CargoCrudRepository cargoRepository;
-    private final CargoFactory cargoFactory;
+    private final DefaultCrudCargoRepository cargoRepository;
     private final LoadingService loadingService;
-    private final TransportRepositoryService transportRepositoryService;
     private final CargoService cargoService;
 
     @Autowired
-    public CargoRepositoryService(@Qualifier("cargoCrudRepository") CargoCrudRepository cargoRepository,
-                                  CargoFactory cargoFactory,
+    public CargoRepositoryService(DefaultCrudCargoRepository cargoRepository,
                                   LoadingService loadingService,
-                                  TransportRepositoryService transportRepositoryService, CargoService cargoService) {
+                                  CargoService cargoService) {
         this.cargoRepository = cargoRepository;
-        this.cargoFactory = cargoFactory;
         this.loadingService = loadingService;
-        this.transportRepositoryService = transportRepositoryService;
         this.cargoService = cargoService;
     }
 
@@ -63,7 +59,7 @@ public class CargoRepositoryService {
             log.debug("Груз с именем {} не найден в системе", name);
             return "Груза с таким именем нет в системе";
         }
-        cargoService.putCargoWithValidation(name, form);
+        cargoRepository.updateFormForName(name, form);
         loadingService.reload("MES");
         return "Форма успешно изменена";
     }
@@ -80,11 +76,7 @@ public class CargoRepositoryService {
         if (!existsInDatabase(lastName)) {
             return "Груза с таким именем нет в системе";
         }
-        Cargo cargo = cargoRepository.findByName(newName);
-        cargo.setName(newName);
-        cargoRepository.delete(cargo);
-        cargoRepository.save(cargo);
-        loadingService.reload("MES");
+        cargoRepository.updateNameForName(lastName, newName);
         return "Название успешно изменено";
     }
 
@@ -96,28 +88,16 @@ public class CargoRepositoryService {
      * @return сообщение о результате изменения типа груза
      */
 
-    public String setType(String name, char newType) {
+    public String setType(String name, Character newType) {
         if (newType == ' ') {
             log.debug("Тип груза не может быть пустым");
             return "Тип груза не может быть пустым";
         }
-        if (existsInDatabase(name)) {
+        if (!existsInDatabase(name)) {
             log.debug("Груз с именем {} не найден в системе", name);
             return "Груза с таким именем нет в системе";
         }
-        char[][] newForm = cargoService.replaceNonEmptyCharsWith(
-                cargoRepository.findByName(name).getCharForm(),
-                newType
-        );
-        cargoRepository.delete(
-                cargoRepository.findByName(name)
-        );
-        cargoRepository.save(
-                cargoFactory.createCargo(
-                        name,
-                        newForm
-                )
-        );
+        cargoRepository.updateTypeForName(name, newType.toString());
         loadingService.reload("MES");
         return "Тип груза успешно изменен";
     }
@@ -134,9 +114,13 @@ public class CargoRepositoryService {
         if (!existsInDatabase(name)) {
             return "Груза с таким именем нет в системе!";
         }
-        cargoRepository.deleteById(
-                cargoRepository.findByName(name).getId()
-        );
+        List<UUID> cargosUuid = new ArrayList<>();
+        for (Cargo cargo : cargoRepository.findAll()) {
+            if (cargo.getName().equals(name)) {
+                cargosUuid.add(cargo.getId());
+            }
+        }
+        cargoRepository.deleteAllById(cargosUuid);
         loadingService.reload(algoname);
         return "Груз удален успешно!";
     }

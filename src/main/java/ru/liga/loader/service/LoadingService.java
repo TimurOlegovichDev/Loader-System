@@ -62,14 +62,16 @@ public class LoadingService {
      */
 
     public void reload(String algoName) {
+        List<Cargo> cargoToLoad = (List<Cargo>) cargoRepository.findAllLoaded();
         for (Transport transport : transportRepository.findAll()) {
             transport.unloadAll();
             transportRepository.save(transport);
+            cargoRepository.deleteAllByTransportId(transport.getId());
         }
         selectiveLoad(
                 algoName,
                 (List<Transport>) transportRepository.findAll(),
-                (List<Cargo>) cargoRepository.findAll()
+                cargoToLoad
         );
     }
 }

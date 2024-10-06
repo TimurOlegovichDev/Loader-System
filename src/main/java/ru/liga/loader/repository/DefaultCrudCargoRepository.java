@@ -4,12 +4,9 @@ import org.springframework.stereotype.Repository;
 import ru.liga.loader.model.entity.Cargo;
 
 import javax.persistence.EntityManager;
-import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 @Repository
 public class DefaultCrudCargoRepository implements CargoCrudRepository {
@@ -17,16 +14,59 @@ public class DefaultCrudCargoRepository implements CargoCrudRepository {
     @PersistenceContext
     private EntityManager entityManager;
 
+    @Override
+    @Transactional
+    public void updateFormForName(String name, String newForm) {
+        List<Cargo> cargosToUpdate = entityManager.createQuery(
+                "SELECT c FROM Cargo c WHERE c.name = :name",
+                Cargo.class
+        ).setParameter("name", name).getResultList();
+        for (Cargo cargo : cargosToUpdate) {
+            cargo.setForm(newForm);
+        }
+        entityManager.flush();
+    }
+
+    @Override
+    @Transactional
+    public void updateNameForName(String name, String newName) {
+        List<Cargo> cargosToUpdate = entityManager.createQuery(
+                "SELECT c FROM Cargo c WHERE c.name = :name",
+                Cargo.class
+        ).setParameter("name", name).getResultList();
+        for (Cargo cargo : cargosToUpdate) {
+            cargo.setName(newName);
+        }
+        entityManager.flush();
+    }
+
+    @Transactional
+    public void updateTypeForName(String name, String newType) {
+        List<Cargo> cargosToUpdate = entityManager.createQuery(
+                "SELECT c FROM Cargo c WHERE c.name = :name",
+                Cargo.class
+        ).setParameter("name", name).getResultList();
+        for (Cargo cargo : cargosToUpdate) {
+            String newForm = cargo.getForm().replaceAll("[^;]", newType);
+            cargo.setForm(newForm);
+        }
+        entityManager.flush();
+    }
 
     @Override
     @Transactional
     public Cargo findByName(String name) {
         try {
-            return entityManager.createQuery(
-                    "SELECT DISTINCT c FROM Cargo c WHERE c.name = :name",
+            List<Cargo> results = entityManager.createQuery(
+                    "SELECT c FROM Cargo c WHERE c.name = :name",
                     Cargo.class
-            ).setParameter("name", name).getSingleResult();
-        } catch (NoResultException e) {
+            ).setParameter("name", name).getResultList();
+            if (!results.isEmpty()) {
+                return results.get(0);
+            } else {
+                return null;
+            }
+        } catch (Exception e) {
             return null;
         }
     }
@@ -69,13 +109,31 @@ public class DefaultCrudCargoRepository implements CargoCrudRepository {
     @Override
     @Transactional
     public Iterable<Cargo> findAll() {
-        return entityManager.createQuery("select c from Cargo c", Cargo.class).getResultList();
+        return entityManager.createQuery(
+                "SELECT c FROM Cargo c",
+                Cargo.class).getResultList();
     }
 
     @Override
     @Transactional
-    public Iterable<Cargo> findAllUnique() {
-        return entityManager.createQuery("select distinct c from Cargo c", Cargo.class).getResultList();
+    public Iterable<Cargo> findAllLoaded() {
+        return entityManager.createQuery(
+                "SELECT c FROM Cargo c WHERE c.transportId IS NOT NULL",
+                Cargo.class).getResultList();
+    }
+
+    @Override
+    @Transactional
+    public List<Cargo> findAllUnique() {
+        List<Cargo> results = entityManager.createQuery(
+                "SELECT c FROM Cargo c",
+                Cargo.class
+        ).getResultList();
+        Map<String, Cargo> uniqueCargos = new HashMap<>();
+        for (Cargo cargo : results) {
+            uniqueCargos.putIfAbsent(cargo.getName(), cargo);
+        }
+        return uniqueCargos.values().stream().toList();
     }
 
     @Override
@@ -109,6 +167,14 @@ public class DefaultCrudCargoRepository implements CargoCrudRepository {
     @Transactional
     public void deleteAllById(Iterable<? extends UUID> uuids) {
         entityManager.createQuery("DELETE FROM Cargo c WHERE c.id IN :ids");
+    }
+
+    @Override
+    @Transactional
+    public void deleteAllByTransportId(UUID uuid) {
+        entityManager.createQuery("DELETE FROM Cargo c WHERE c.transportId = :id")
+                .setParameter("id", uuid)
+                .executeUpdate();
     }
 
     @Override

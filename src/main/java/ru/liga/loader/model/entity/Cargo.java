@@ -18,14 +18,13 @@ import java.util.UUID;
 @Table(schema = "cargo", name = "cargo")
 public class Cargo {
 
-    private final String form;
-    private final int height;
-    private final int width;
-    private final int area;
-    private final char type;
-
     @Id
     private final UUID id = UUID.randomUUID();
+    private String form;
+    private int height;
+    private int width;
+    private int area;
+    private char type;
     @Setter
     private String name;
 
@@ -59,6 +58,14 @@ public class Cargo {
         width = 0;
         area = 0;
         type = 0;
+    }
+
+    public void setForm(String form) {
+        this.form = form;
+        this.type = form.charAt(0);
+        this.height = countLines(form);
+        this.width = countMaxWidth(form);
+        this.area = height * width;
     }
 
     @Override

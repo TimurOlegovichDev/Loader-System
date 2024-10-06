@@ -71,14 +71,9 @@ public class MinimumEmptySpaceAlgorithm implements LoadingCargoAlgorithm {
         for (Transport transport : transports) {
             try {
                 cargoLoader.load(cargo, transport);
-                if (cargo.getId() == null) {
-                    cargo.setTransportId(transport.getId());
-                    cargoCrudRepository.save(cargo);
-                } else {
-                    Cargo copy = new Cargo(cargo.getName(), cargo.getForm());
-                    copy.setTransportId(transport.getId());
-                    cargoCrudRepository.save(copy);
-                }
+                Cargo copy = new Cargo(cargo.getName(), cargo.getForm());
+                copy.setTransportId(transport.getId());
+                cargoCrudRepository.save(copy);
                 transportDataRepository.save(transport);
                 log.info("Груз успешно загружен: {}", cargo);
                 return;

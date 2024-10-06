@@ -106,6 +106,7 @@ public class TransportService {
     public String delete(UUID id) {
         return transportRepositoryService.getTransportById(id)
                 .map(transport -> {
+                    cargoCrudRepository.deleteAllByTransportId(id);
                     transportRepository.delete(transport);
                     return "Транспорт с идентификатором " + id + " удален успешно!";
                 })

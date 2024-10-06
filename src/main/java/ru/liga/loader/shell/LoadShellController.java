@@ -5,9 +5,8 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.shell.standard.ShellCommandGroup;
 import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
-import ru.liga.loader.model.entity.Cargo;
 import ru.liga.loader.model.entity.Transport;
-import ru.liga.loader.parser.StringParser;
+import ru.liga.loader.repository.DefaultCrudCargoRepository;
 import ru.liga.loader.repository.TransportCrudRepository;
 import ru.liga.loader.service.LoadingService;
 
@@ -20,15 +19,15 @@ public class LoadShellController {
 
     private final LoadingService loadingService;
     private final TransportCrudRepository transportRepository;
-    private final StringParser<List<Cargo>> stringParser;
+    private final DefaultCrudCargoRepository defaultCrudCargoRepository;
 
     @Autowired
     public LoadShellController(LoadingService loadingService,
                                @Qualifier("transportCrudRepository") TransportCrudRepository transportRepository,
-                               StringParser<List<Cargo>> stringParser) {
+                               DefaultCrudCargoRepository defaultCrudCargoRepository) {
         this.loadingService = loadingService;
         this.transportRepository = transportRepository;
-        this.stringParser = stringParser;
+        this.defaultCrudCargoRepository = defaultCrudCargoRepository;
     }
 
     @ShellMethod(key = "Выполнить автоматическую погрузку")
@@ -41,7 +40,7 @@ public class LoadShellController {
         loadingService.selectiveLoad(
                 algoName,
                 (List<Transport>) transportRepository.findAll(),
-                stringParser.parse(cargos)
+                defaultCrudCargoRepository.findAllUnique()
         );
     }
 }

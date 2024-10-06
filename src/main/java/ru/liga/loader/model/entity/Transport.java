@@ -63,14 +63,7 @@ public class Transport {
      */
 
     public void unloadAll() {
-        StringBuilder sb = new StringBuilder();
-        for (String line : body.split(System.lineSeparator())) {
-            for (int i = 0; i < line.length(); i++) {
-                sb.append(' ');
-            }
-            sb.append(";");
-        }
-        body = sb.toString();
+        body = body.replaceAll("[^;]", " ");
     }
 
     /**

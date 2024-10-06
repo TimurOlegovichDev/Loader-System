@@ -44,7 +44,10 @@ public class DefaultCrudTransportRepository implements TransportCrudRepository {
     @Override
     @Transactional
     public Iterable<Transport> findAll() {
-        return entityManager.createQuery("SELECT t FROM Transport t", Transport.class).getResultList();
+        return entityManager.createQuery(
+                        "SELECT t FROM Transport t",
+                        Transport.class)
+                .getResultList();
     }
 
     @Override
