@@ -10,7 +10,6 @@ import ru.liga.loader.model.entity.Transport;
 import ru.liga.loader.model.structure.TransportSizeStructure;
 import ru.liga.loader.repository.impl.DefaultCrudCargoRepository;
 import ru.liga.loader.repository.impl.DefaultCrudTransportRepository;
-import ru.liga.loader.util.CargoCounter;
 
 import java.util.List;
 import java.util.Map;
@@ -23,15 +22,16 @@ public class InitializeService {
     private final CargoInitializer cargoInitializer;
     private final DefaultCrudTransportRepository transportDataRepository;
     private final DefaultCrudCargoRepository cargoDataRepository;
-    private final CargoCounter cargoCounter;
 
     @Autowired
-    public InitializeService(TruckInitializer truckInitializer, CargoInitializer cargoInitializer, DefaultCrudTransportRepository transportDataRepository, DefaultCrudCargoRepository cargoDataRepository, CargoCounter cargoCounter) {
+    public InitializeService(TruckInitializer truckInitializer,
+                             CargoInitializer cargoInitializer,
+                             DefaultCrudTransportRepository transportDataRepository,
+                             DefaultCrudCargoRepository cargoDataRepository) {
         this.truckInitializer = truckInitializer;
         this.cargoInitializer = cargoInitializer;
         this.transportDataRepository = transportDataRepository;
         this.cargoDataRepository = cargoDataRepository;
-        this.cargoCounter = cargoCounter;
     }
 
     /**
@@ -61,7 +61,6 @@ public class InitializeService {
     public void initializeTransport(String filePath) {
         Map<Transport, List<Cargo>> transportMap =
                 truckInitializer.initializeFromJson(filePath);
-        countCargos(transportMap);
         transportDataRepository.addAll(transportMap);
         for (Transport transport : transportMap.keySet()) {
             for (Cargo cargo : transportMap.get(transport)) {
@@ -82,17 +81,5 @@ public class InitializeService {
                 truckInitializer.initialize(list);
         transportDataRepository.add(transports);
         log.debug("Добавлено транспорта из полученных размеров: {}", transports.size());
-    }
-
-    private void countCargos(Map<Transport, List<Cargo>> map) {
-        log.info("Информация о транспорте");
-        for (Transport transport : map.keySet()) {
-            List<Cargo> cargos = map.get(transport);
-            cargoCounter.count(cargos)
-                    .forEach((name, count) ->
-                            log.info("Название груза: {}, количество: {}", name, count)
-                    );
-            log.info("{}{}", System.lineSeparator(), transport.toString());
-        }
     }
 }

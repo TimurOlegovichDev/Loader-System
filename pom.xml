@@ -17,19 +17,15 @@
         <maven.compiler.target>17</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <lombok.version>1.18.34</lombok.version>
-        <log4j-api.version>2.23.1</log4j-api.version>
-        <log4j-core.version>2.23.1</log4j-core.version>
-        <log4j-slf4j-impl.version>2.23.1</log4j-slf4j-impl.version>
-        <slf4j-api.version>2.0.16</slf4j-api.version>
         <jackson-databind.version>2.17.2</jackson-databind.version>
         <junit-jupiter.version>RELEASE</junit-jupiter.version>
-        <junit.version>4.13.2</junit.version>
         <mockito-core.version>5.12.0</mockito-core.version>
         <mockito-junit-jupiter.version>5.13.0</mockito-junit-jupiter.version>
         <assertj-core.version>3.25.3</assertj-core.version>
         <spring-boot-starter.version>3.3.4</spring-boot-starter.version>
         <spring-shell.version>2.1.6</spring-shell.version>
         <spring-aop.version>5.3.26</spring-aop.version>
+        <spring-boot-test.version>3.3.2</spring-boot-test.version>
     </properties>
     <dependencies>
         <dependency>
@@ -41,6 +37,12 @@
             <groupId>org.springframework.shell</groupId>
             <artifactId>spring-shell-starter</artifactId>
             <version>${spring-shell.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <version>${spring-boot-test.version}</version>
+            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.springframework</groupId>
@@ -94,7 +96,6 @@
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
-            <version>4.13.2</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
