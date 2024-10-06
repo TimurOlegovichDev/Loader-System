@@ -13,6 +13,7 @@ import ru.liga.loader.validator.impl.CargoStructureValidator;
 
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -43,9 +44,9 @@ public class CargoInitializerTest {
 
     @Test
     void testInitializeFromJson_ReturnsCargoMap() {
-        CargoJsonStructure cargoJsonStructure = new CargoJsonStructure("cargo1", new char[][]{{'A'}}, 1, 1, 1, 'A');
+        CargoJsonStructure cargoJsonStructure = new CargoJsonStructure(UUID.randomUUID(), UUID.randomUUID(), "cargo1", "A", 1, 1, 1, 'A');
         when(jsonService.read(CargoJsonStructure.class, "filepath")).thenReturn(List.of(cargoJsonStructure));
-        Cargo cargo = new Cargo("cargo1", new char[][]{{'A'}});
+        Cargo cargo = new Cargo("cargo1", "A");
         when(defaultCargoFactory.createCargo(cargoJsonStructure)).thenReturn(cargo);
         Map<String, Cargo> cargos = cargoInitializer.initializeFromJson("filepath");
         assertNotNull(cargos);
@@ -56,11 +57,11 @@ public class CargoInitializerTest {
 
     @Test
     void testInitializeFromJson_MultipleCargos_ReturnsCargoMap() {
-        CargoJsonStructure cargoJsonStructure1 = new CargoJsonStructure("cargo1", new char[][]{{'A'}}, 1, 1, 1, 'A');
-        CargoJsonStructure cargoJsonStructure2 = new CargoJsonStructure("cargo2", new char[][]{{'B'}}, 1, 1, 1, 'B');
+        CargoJsonStructure cargoJsonStructure1 = new CargoJsonStructure(UUID.randomUUID(), UUID.randomUUID(), "cargo1", "A", 1, 1, 1, 'A');
+        CargoJsonStructure cargoJsonStructure2 = new CargoJsonStructure(UUID.randomUUID(), UUID.randomUUID(), "cargo2", "B", 1, 1, 1, 'B');
         when(jsonService.read(CargoJsonStructure.class, "filepath")).thenReturn(List.of(cargoJsonStructure1, cargoJsonStructure2));
-        Cargo cargo1 = new Cargo("cargo1", new char[][]{{'A'}});
-        Cargo cargo2 = new Cargo("cargo2", new char[][]{{'B'}});
+        Cargo cargo1 = new Cargo("cargo1", "A");
+        Cargo cargo2 = new Cargo("cargo2", "B");
         when(defaultCargoFactory.createCargo(cargoJsonStructure1)).thenReturn(cargo1);
         when(defaultCargoFactory.createCargo(cargoJsonStructure2)).thenReturn(cargo2);
         Map<String, Cargo> cargos = cargoInitializer.initializeFromJson("filepath");

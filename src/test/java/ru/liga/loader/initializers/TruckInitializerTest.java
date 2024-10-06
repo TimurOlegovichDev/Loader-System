@@ -15,6 +15,7 @@ import ru.liga.loader.service.JsonService;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
@@ -61,9 +62,9 @@ public class TruckInitializerTest {
     @Test
     void testInitializeFromJson_ValidJson_ReturnsTransportMap() {
         TransportJsonStructure transportJsonStructure = new TransportJsonStructure(
-                "someId",
-                new char[][]{{'+'}},
-                List.of(new Cargo("cargo1", new char[][]{{'A'}}))
+                UUID.randomUUID(),
+                "A",
+                List.of(new Cargo("cargo1", "A"))
         );
         when(jsonService.read(TransportJsonStructure.class, "filepath")).thenReturn(List.of(transportJsonStructure));
         Map<Transport, List<Cargo>> map = truckInitializer.initializeFromJson("filepath");

@@ -23,7 +23,7 @@ public class DefaultCargoSorterTest {
 
     @Test
     void testSort_SingleElementList_ReturnsSameList() {
-        Cargo cargo = new Cargo("cargo1", new char[][]{{'A'}});
+        Cargo cargo = new Cargo("cargo1", "A");
         List<Cargo> cargos = List.of(cargo);
         List<Cargo> sortedCargos = sorter.sort(cargos);
         assertNotNull(sortedCargos);
@@ -33,9 +33,9 @@ public class DefaultCargoSorterTest {
 
     @Test
     void testSort_MultipleElementsList_SortedByAreaDescending() {
-        Cargo cargo1 = new Cargo("cargo1", new char[][]{{'A', 'A'}, {'A', 'A'}}); // area = 4
-        Cargo cargo2 = new Cargo("cargo2", new char[][]{{'B'}}); // area = 1
-        Cargo cargo3 = new Cargo("cargo3", new char[][]{{'C', 'C', 'C'}, {'C', 'C', 'C'}}); // area = 9
+        Cargo cargo1 = new Cargo("cargo1", "AA;AA"); // area = 4
+        Cargo cargo2 = new Cargo("cargo2", "B"); // area = 1
+        Cargo cargo3 = new Cargo("cargo3", "CC;CC"); // area = 9
         List<Cargo> cargos = List.of(cargo1, cargo2, cargo3);
         List<Cargo> sortedCargos = sorter.sort(cargos);
         assertNotNull(sortedCargos);
@@ -47,9 +47,9 @@ public class DefaultCargoSorterTest {
 
     @Test
     void testSort_MultipleElementsListWithEqualAreas_SortedByAreaDescending() {
-        Cargo cargo1 = new Cargo("cargo1", new char[][]{{'A', 'A'}, {'A', 'A'}}); // area = 4
-        Cargo cargo2 = new Cargo("cargo2", new char[][]{{'B', 'B'}, {'B', 'B'}}); // area = 4
-        Cargo cargo3 = new Cargo("cargo3", new char[][]{{'C'}}); // area = 1
+        Cargo cargo1 = new Cargo("cargo1", "AA;AA"); // area = 4
+        Cargo cargo2 = new Cargo("cargo2", "BB;BB"); // area = 4
+        Cargo cargo3 = new Cargo("cargo3", "C"); // area = 1
         List<Cargo> cargos = List.of(cargo1, cargo2, cargo3);
         List<Cargo> sortedCargos = sorter.sort(cargos);
         assertNotNull(sortedCargos);

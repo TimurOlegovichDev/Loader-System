@@ -19,7 +19,7 @@ import java.util.UUID;
 public class Cargo {
 
     @Id
-    private final UUID id = UUID.randomUUID();
+    private final UUID id;
     private String form;
     private int height;
     private int width;
@@ -33,6 +33,7 @@ public class Cargo {
     private UUID transportId;
 
     public Cargo(@NonNull String name, String form) {
+        this.id = UUID.randomUUID();
         this.name = name;
         this.form = form;
         this.type = form.charAt(0);
@@ -44,6 +45,7 @@ public class Cargo {
     @JsonCreator
     public Cargo(CargoJsonStructure cargoJsonStructure) {
         this.name = cargoJsonStructure.name();
+        this.id = cargoJsonStructure.id();
         this.form = cargoJsonStructure.form();
         this.height = cargoJsonStructure.height();
         this.width = cargoJsonStructure.width();
@@ -58,6 +60,7 @@ public class Cargo {
         width = 0;
         area = 0;
         type = 0;
+        this.id = UUID.randomUUID();
     }
 
     public void setForm(String form) {

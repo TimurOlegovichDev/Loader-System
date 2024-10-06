@@ -14,6 +14,7 @@ import ru.liga.loader.repository.TransportCrudRepository;
 import ru.liga.loader.util.CargoLoader;
 
 import java.util.List;
+import java.util.Optional;
 
 @Slf4j
 @Component
@@ -58,7 +59,7 @@ public class EvenLoadingAlgorithm implements LoadingCargoAlgorithm {
         for (Cargo cargo : cargoSorter.sort(cargos)) {
             log.info("Погрузка груза: {}", cargo);
             try {
-                loadCargo(cargo, transportSorter.sort(transportDataRepository, transports));
+                loadCargo(cargo);
                 log.debug("Груз успешно погружен: {}", cargo);
             } catch (NoPlaceException e) {
                 log.warn(e.getMessage());
@@ -67,20 +68,37 @@ public class EvenLoadingAlgorithm implements LoadingCargoAlgorithm {
         log.info("Равномерная погрузка окончена");
     }
 
-    private void loadCargo(Cargo cargo, List<Transport> sortedList) throws NoPlaceException {
-        for (Transport transport : sortedList) {
-            try {
-                cargoLoader.load(cargo, transport);
-                Cargo copy = new Cargo(cargo.getName(), cargo.getForm());
-                copy.setTransportId(transport.getId());
-                cargoCrudRepository.save(copy);
-                transportDataRepository.save(transport);
-                log.info("Груз успешно загружен: {}", cargo);
-                return;
-            } catch (NoPlaceException e) {
-                log.debug(e.getMessage());
+    private void loadCargo(Cargo cargo) throws NoPlaceException {
+        Optional<Transport> optional = findMostFreeTransport(cargo);
+        optional.ifPresentOrElse(
+                transport -> {
+                    cargoLoader.load(cargo, transport);
+                    Cargo copy = new Cargo(cargo.getName(), cargo.getForm());
+                    copy.setTransportId(transport.getId());
+                    cargoCrudRepository.save(copy);
+                    transportDataRepository.save(transport);
+                    log.info("Груз успешно загружен: {}", cargo);
+                },
+                () -> {
+                    throw new NoPlaceException("Нет грузовика для погрузки груза: " + cargo);
+                }
+        );
+    }
+
+    private Optional<Transport> findMostFreeTransport(Cargo cargo) {
+        log.debug("Поиск максимально незагруженного транспорта");
+        return getFirstCanToLoadTransport(
+                transportSorter.sort(transportDataRepository, transports),
+                cargo
+        );
+    }
+
+    private Optional<Transport> getFirstCanToLoadTransport(List<Transport> transports, Cargo cargo) {
+        for (Transport transport : transports) {
+            if (transport.canBeLoaded(cargo)) {
+                return Optional.of(transport);
             }
         }
-        throw new NoPlaceException("Нет транспорта для загрузки данного груза: " + cargo);
+        return Optional.empty();
     }
 }

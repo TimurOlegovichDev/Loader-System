@@ -42,6 +42,10 @@ public class TransportService {
      */
 
     public void saveToJson(String filePath) {
+        jsonService.writeObject(getStructures(), filePath);
+    }
+
+    public List<TransportJsonStructure> getStructures() {
         List<TransportJsonStructure> structures = new ArrayList<>();
         for (Transport transport : transportRepository.findAll()) {
             structures.add(
@@ -52,7 +56,7 @@ public class TransportService {
                     )
             );
         }
-        jsonService.writeObject(structures, filePath);
+        return structures;
     }
 
     /**
