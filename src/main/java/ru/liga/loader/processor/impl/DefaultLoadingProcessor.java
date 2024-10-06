@@ -8,8 +8,8 @@ import ru.liga.loader.enums.AlgorithmTypes;
 import ru.liga.loader.model.entity.Cargo;
 import ru.liga.loader.model.entity.Transport;
 import ru.liga.loader.processor.LoadingProcessor;
-import ru.liga.loader.repository.impl.DefaultCrudCargoRepository;
-import ru.liga.loader.repository.impl.DefaultCrudTransportRepository;
+import ru.liga.loader.repository.DefaultCrudCargoRepository;
+import ru.liga.loader.repository.DefaultCrudTransportRepository;
 
 import java.util.List;
 
@@ -39,8 +39,8 @@ public class DefaultLoadingProcessor implements LoadingProcessor {
         process(
                 getAlgorithm(
                         algorithmName,
-                        transportDataRepository.getKeys(),
-                        cargoDataRepository.getAll()
+                        (List<Transport>) transportDataRepository.findAll(),
+                        (List<Cargo>) cargoDataRepository.findAllUnique()
                 )
         );
     }
@@ -86,6 +86,7 @@ public class DefaultLoadingProcessor implements LoadingProcessor {
             case EL -> {
                 return AlgorithmTypes.createElAlgorithm(
                         transportDataRepository,
+                        cargoDataRepository,
                         transports,
                         cargos
                 );
@@ -93,6 +94,7 @@ public class DefaultLoadingProcessor implements LoadingProcessor {
             case MES -> {
                 return AlgorithmTypes.createMesAlgorithm(
                         transportDataRepository,
+                        cargoDataRepository,
                         transports,
                         cargos
                 );
@@ -100,6 +102,7 @@ public class DefaultLoadingProcessor implements LoadingProcessor {
         }
         return AlgorithmTypes.createMesAlgorithm(
                 transportDataRepository,
+                cargoDataRepository,
                 transports,
                 cargos
         );

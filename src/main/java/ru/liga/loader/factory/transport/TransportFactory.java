@@ -9,7 +9,7 @@ public interface TransportFactory {
 
     Transport createTransport(int width, int height);
 
-    Transport createTransport(String id, char[][] body);
+    Transport createTransport(String id, String body);
 
     Transport createTransport(TransportJsonStructure transportJsonStructure);
 }

@@ -7,6 +7,8 @@ import org.springframework.shell.standard.ShellMethod;
 import ru.liga.loader.service.CargoRepositoryService;
 import ru.liga.loader.service.TransportService;
 
+import java.util.UUID;
+
 @ShellComponent
 @ShellCommandGroup("Управление хранилищем")
 public class DataShellController {
@@ -28,6 +30,6 @@ public class DataShellController {
 
     @ShellMethod(key = "Удалить транспорт из системы")
     public String deleteTransportFormSystem(String id) {
-        return transportService.delete(id);
+        return transportService.delete(UUID.fromString(id));
     }
 }

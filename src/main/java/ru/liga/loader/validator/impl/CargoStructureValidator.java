@@ -46,9 +46,9 @@ public class CargoStructureValidator implements Validator<CargoJsonStructure> {
     }
 
     private void validateCargoArea(CargoJsonStructure cargo) throws InvalidCargoInput {
-        int actualHeight = cargo.form().length;
-        int actualWidth = Arrays.stream(cargo.form())
-                .mapToInt(arr -> arr.length)
+        int actualHeight = cargo.form().split(";").length;
+        int actualWidth = Arrays.stream(cargo.form().split(";"))
+                .mapToInt(String::length)
                 .max()
                 .orElse(0);
         int expectedArea = cargo.area();
@@ -64,8 +64,8 @@ public class CargoStructureValidator implements Validator<CargoJsonStructure> {
 
     private void validateCargoForm(CargoJsonStructure cargo) {
         char allowedChar = cargo.type();
-        for (char[] chars : cargo.form()) {
-            for (char c : chars) {
+        for (String chars : cargo.form().split(";")) {
+            for (char c : chars.toCharArray()) {
                 if (c != ' ' && c != allowedChar) {
                     throw new InvalidCargoInput(
                             "Груз поврежден, имеется символ другого типа: " + c + System.lineSeparator() +

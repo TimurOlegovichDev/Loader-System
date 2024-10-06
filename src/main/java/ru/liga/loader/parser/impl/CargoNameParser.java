@@ -2,6 +2,7 @@ package ru.liga.loader.parser.impl;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 import ru.liga.loader.model.entity.Cargo;
 import ru.liga.loader.parser.StringParser;
@@ -17,7 +18,7 @@ public class CargoNameParser implements StringParser<List<Cargo>> {
     private final CargoCrudRepository repository;
 
     @Autowired
-    public CargoNameParser(CargoCrudRepository repository) {
+    public CargoNameParser(@Qualifier("cargoCrudRepository") CargoCrudRepository repository) {
         this.repository = repository;
     }
 
@@ -32,8 +33,8 @@ public class CargoNameParser implements StringParser<List<Cargo>> {
     public List<Cargo> parse(String input) {
         List<Cargo> cargos = new ArrayList<>();
         for (String name : input.split(",")) {
-            if (repository.getKeys().contains(name)) {
-                cargos.add(repository.getBy(name));
+            if (repository.findByName(name) != null) {
+                cargos.add(repository.findByName(name));
             } else {
                 log.warn("Такое название не найдено: {}", name);
             }

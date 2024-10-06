@@ -2,24 +2,36 @@ package ru.liga.loader.model.entity;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import lombok.Getter;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import ru.liga.loader.model.structure.TransportJsonStructure;
 
-import java.util.Arrays;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
 import java.util.Objects;
 import java.util.UUID;
 
 @Getter
 @Slf4j
+@Entity
+@Table(schema = "transport", name = "transport")
 public class Transport {
 
-    private final char[][] body;
-    private final String id;
+    @Id
+    private UUID id = UUID.randomUUID();
+
+    @Setter
+    private String body;
 
     public Transport(int bodyWidth, int bodyHeight) {
-        body = new char[bodyHeight][bodyWidth];
-        id = UUID.randomUUID().toString();
-        unloadAll();
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < bodyHeight; i++) {
+            sb.append(" ".repeat(Math.max(0, bodyWidth)));
+            sb.append(";");
+        }
+        body = sb.toString();
+        id = UUID.randomUUID();
     }
 
     @JsonCreator
@@ -28,9 +40,22 @@ public class Transport {
         this.body = structure.body();
     }
 
-    public Transport(String id, char[][] body) {
+    public Transport(UUID id, String body) {
         this.id = id;
         this.body = body;
+    }
+
+    public Transport() {
+        body = "Nobody";
+    }
+
+    public char[][] getCharBody() {
+        char[][] result = new char[body.split(";").length][];
+        int i = 0;
+        for (String lines : body.split(";")) {
+            result[i++] = lines.toCharArray();
+        }
+        return result;
     }
 
     /**
@@ -38,7 +63,14 @@ public class Transport {
      */
 
     public void unloadAll() {
-        Arrays.stream(body).forEach(row -> Arrays.fill(row, ' '));
+        StringBuilder sb = new StringBuilder();
+        for (String line : body.split(System.lineSeparator())) {
+            for (int i = 0; i < line.length(); i++) {
+                sb.append(' ');
+            }
+            sb.append(";");
+        }
+        body = sb.toString();
     }
 
     /**
@@ -54,15 +86,13 @@ public class Transport {
         sb.append("ID транспорта: ")
                 .append(id)
                 .append(System.lineSeparator());
-        for (char[] arr : body) {
+        for (String line : body.split(";")) {
             sb.append("+");
-            for (char c : arr) {
-                sb.append(c);
-            }
+            sb.append(line);
             sb.append("+")
                     .append(System.lineSeparator());
         }
-        sb.append("+".repeat(body[0].length + 2))
+        sb.append("+".repeat(body.split(";")[0].length() + 2))
                 .append(System.lineSeparator());
         return sb.toString();
     }
@@ -75,8 +105,10 @@ public class Transport {
      */
 
     public boolean canBeLoaded(Cargo cargo) {
-        return cargo.getHeight() <= body.length + 1
-                && cargo.getWidth() <= body.length + 1;
+        int bodyHeight = body.split(";").length;
+        int bodyWidth = body.split(";")[0].length();
+        return cargo.getHeight() <= bodyHeight + 1
+                && cargo.getWidth() <= bodyWidth + 1;
     }
 
     @Override

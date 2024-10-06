@@ -7,6 +7,8 @@ import org.springframework.shell.standard.ShellMethod;
 import ru.liga.loader.service.CargoRepositoryService;
 import ru.liga.loader.service.TransportService;
 
+import java.util.UUID;
+
 @ShellComponent
 @ShellCommandGroup("Вывод данных")
 public class OutputShellController {
@@ -32,7 +34,7 @@ public class OutputShellController {
 
     @ShellMethod(key = "Информация о транспорте с идентификатором")
     public String getCurrentTransportInfo(String id) {
-        return transportService.getTransportInfoById(id);
+        return transportService.getTransportInfoById(UUID.fromString(id));
     }
 
     @ShellMethod(key = "Информация о грузе с названием")

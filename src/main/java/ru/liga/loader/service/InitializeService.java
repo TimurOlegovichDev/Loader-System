@@ -8,8 +8,8 @@ import ru.liga.loader.initializers.TruckInitializer;
 import ru.liga.loader.model.entity.Cargo;
 import ru.liga.loader.model.entity.Transport;
 import ru.liga.loader.model.structure.TransportSizeStructure;
-import ru.liga.loader.repository.impl.DefaultCrudCargoRepository;
-import ru.liga.loader.repository.impl.DefaultCrudTransportRepository;
+import ru.liga.loader.repository.DefaultCrudCargoRepository;
+import ru.liga.loader.repository.DefaultCrudTransportRepository;
 import ru.liga.loader.util.CargoCounter;
 
 import java.util.List;
@@ -44,7 +44,7 @@ public class InitializeService {
     public void initializeCargos(String filePath) {
         Map<String, Cargo> cargoMap =
                 cargoInitializer.initializeFromJson(filePath);
-        cargoDataRepository.addAll(cargoMap);
+        cargoDataRepository.saveAll(cargoMap.values());
         log.debug("Добавлено груза: {}", cargoMap.size());
     }
 
@@ -62,12 +62,8 @@ public class InitializeService {
         Map<Transport, List<Cargo>> transportMap =
                 truckInitializer.initializeFromJson(filePath);
         countCargos(transportMap);
-        transportDataRepository.addAll(transportMap);
-        for (Transport transport : transportMap.keySet()) {
-            for (Cargo cargo : transportMap.get(transport)) {
-                cargoDataRepository.put(cargo);
-            }
-        }
+        transportMap.values().forEach(cargoDataRepository::saveAll);
+        transportDataRepository.saveAll(transportMap.keySet());
         log.debug("Добавлено транспорта из файла: {}", transportMap.size());
     }
 
@@ -80,7 +76,7 @@ public class InitializeService {
     public void initializeTransport(List<TransportSizeStructure> list) {
         List<Transport> transports =
                 truckInitializer.initialize(list);
-        transportDataRepository.add(transports);
+        transportDataRepository.saveAll(transports);
         log.debug("Добавлено транспорта из полученных размеров: {}", transports.size());
     }
 

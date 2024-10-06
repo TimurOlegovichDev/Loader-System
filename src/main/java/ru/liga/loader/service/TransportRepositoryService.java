@@ -1,22 +1,27 @@
 package ru.liga.loader.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import ru.liga.loader.model.entity.Cargo;
 import ru.liga.loader.model.entity.Transport;
+import ru.liga.loader.repository.CargoCrudRepository;
 import ru.liga.loader.repository.TransportCrudRepository;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 public class TransportRepositoryService {
 
     private final TransportCrudRepository transportRepository;
+    private final CargoCrudRepository cargoCrudRepository;
 
     @Autowired
-    public TransportRepositoryService(TransportCrudRepository transportRepository) {
+    public TransportRepositoryService(@Qualifier("transportCrudRepository") TransportCrudRepository transportRepository, @Qualifier("cargoCrudRepository") CargoCrudRepository cargoCrudRepository) {
         this.transportRepository = transportRepository;
+        this.cargoCrudRepository = cargoCrudRepository;
     }
 
     /**
@@ -26,12 +31,9 @@ public class TransportRepositoryService {
      * @return процент занятости транспортного средства
      */
     public int percentageOfOccupancy(Transport transport) {
-        if (!transportRepository.getKeys().contains(transport)) {
-            transportRepository.add(transport);
-        }
-        int bodyArea = transport.getBody().length * transport.getBody()[0].length;
+        int bodyArea = transport.getCharBody().length * transport.getCharBody()[0].length;
         int cargoArea = 0;
-        List<Cargo> cargos = transportRepository.getCargos(transport);
+        List<Cargo> cargos = cargoCrudRepository.findAllByTransportId(transport.getId());
         if (cargos == null || bodyArea <= 0) {
             return cargoArea;
         }
@@ -51,28 +53,7 @@ public class TransportRepositoryService {
      * @param id идентификатор транспортного средства
      * @return транспортное средство, если найдено, иначе Optional.empty()
      */
-    public Optional<Transport> getTransportById(String id) {
-        for (Transport transport : transportRepository.getKeys()) {
-            if (transport.getId().equals(id)) {
-                return Optional.of(transport);
-            }
-        }
-        return Optional.empty();
-    }
-
-    /**
-     * Обновляет имена грузов в репозитории.
-     *
-     * @param lastName  старое имя груза
-     * @param cargoName новое имя груза
-     */
-    public void updateCargosName(String lastName, String cargoName) {
-        for (Transport transport : transportRepository.getKeys()) {
-            for (Cargo cargoInTransport : transportRepository.getCargos(transport)) {
-                if (cargoInTransport.getName().equals(lastName)) {
-                    cargoInTransport.setName(cargoName);
-                }
-            }
-        }
+    public Optional<Transport> getTransportById(UUID id) {
+        return transportRepository.findById(id);
     }
 }

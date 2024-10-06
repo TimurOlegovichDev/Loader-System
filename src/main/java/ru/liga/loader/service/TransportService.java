@@ -1,15 +1,18 @@
 package ru.liga.loader.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import ru.liga.loader.model.entity.Cargo;
 import ru.liga.loader.model.entity.Transport;
 import ru.liga.loader.model.structure.TransportJsonStructure;
+import ru.liga.loader.repository.CargoCrudRepository;
 import ru.liga.loader.repository.TransportCrudRepository;
 import ru.liga.loader.util.CargoCounter;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 public class TransportService {
@@ -18,16 +21,18 @@ public class TransportService {
     private final TransportRepositoryService transportRepositoryService;
     private final JsonService jsonService;
     private final CargoCounter cargoCounter;
+    private final CargoCrudRepository cargoCrudRepository;
 
     @Autowired
-    public TransportService(TransportCrudRepository transportRepository,
+    public TransportService(@Qualifier("transportCrudRepository") TransportCrudRepository transportRepository,
                             TransportRepositoryService transportRepositoryService,
                             JsonService jsonService,
-                            CargoCounter cargoCounter) {
+                            CargoCounter cargoCounter, @Qualifier("cargoCrudRepository") CargoCrudRepository cargoCrudRepository) {
         this.transportRepository = transportRepository;
         this.transportRepositoryService = transportRepositoryService;
         this.jsonService = jsonService;
         this.cargoCounter = cargoCounter;
+        this.cargoCrudRepository = cargoCrudRepository;
     }
 
     /**
@@ -38,12 +43,12 @@ public class TransportService {
 
     public void saveToJson(String filePath) {
         List<TransportJsonStructure> structures = new ArrayList<>();
-        for (Transport transport : transportRepository.getKeys()) {
+        for (Transport transport : transportRepository.findAll()) {
             structures.add(
                     new TransportJsonStructure(
                             transport.getId(),
                             transport.getBody(),
-                            transportRepository.getCargos(transport)
+                            cargoCrudRepository.findAllByTransportId(transport.getId())
                     )
             );
         }
@@ -58,10 +63,10 @@ public class TransportService {
 
     public String getTransportsInfo() {
         StringBuilder stringBuilder = new StringBuilder("Отображение транспорта:");
-        if (!transportRepository.getKeys().isEmpty()) {
-            stringBuilder.append(System.lineSeparator())
-                    .append(transportRepository);
-        }
+        transportRepository.findAll().forEach(
+                transport -> stringBuilder.append(System.lineSeparator())
+                        .append(transport.toString())
+        );
         return stringBuilder.toString();
     }
 
@@ -72,10 +77,10 @@ public class TransportService {
      * @return информация о транспортном средстве, если найдено, иначе сообщение о том, что транспортное средство не найдено
      */
 
-    public String getTransportInfoById(String id) {
+    public String getTransportInfoById(UUID id) {
         List<Cargo> list = new ArrayList<>();
         transportRepositoryService.getTransportById(id).ifPresent(
-                transport -> list.addAll(transportRepository.getCargos(transport)));
+                transport -> list.addAll(cargoCrudRepository.findAllByTransportId(transport.getId())));
         StringBuilder stringBuilder = new StringBuilder("Информация о транспорте").append(System.lineSeparator());
         if (list.isEmpty()) {
             return stringBuilder.append("Транспорт пустой").toString();
@@ -98,7 +103,7 @@ public class TransportService {
      * @return сообщение о результате удаления транспортного средства
      */
 
-    public String delete(String id) {
+    public String delete(UUID id) {
         return transportRepositoryService.getTransportById(id)
                 .map(transport -> {
                     transportRepository.delete(transport);

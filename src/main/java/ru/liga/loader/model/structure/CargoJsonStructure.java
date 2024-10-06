@@ -2,7 +2,7 @@ package ru.liga.loader.model.structure;
 
 public record CargoJsonStructure(
         String name,
-        char[][] form,
+        String form,
         int height,
         int width,
         int area,

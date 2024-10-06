@@ -33,8 +33,8 @@ public class DefaultCargoLoader implements CargoLoader {
     @Override
     public void load(Cargo cargo, Transport transport) {
         log.trace("Попытка найти пустое места для погрузки груза: {}", cargo);
-        for (int i = transport.getBody().length - 1; i >= 0; i--) {
-            for (int j = 0; j < transport.getBody()[i].length; j++) {
+        for (int i = transport.getCharBody().length - 1; i >= 0; i--) {
+            for (int j = 0; j < transport.getCharBody()[i].length; j++) {
                 if (isCargoPlacementPossible(i, j, cargo, transport)) {
                     log.trace("Найдено место для погрузки {}", cargo);
                     placeCargoInTransport(cargo, transport, i, j);
@@ -50,10 +50,10 @@ public class DefaultCargoLoader implements CargoLoader {
         if (!transport.canBeLoaded(cargo)) {
             throw new InvalidCargoSize("Этот груз слишком велик: " + cargo);
         }
-        char[][] cpBody = copyBody(transport.getBody());
+        char[][] cpBody = transport.getCharBody();
         int height = heightIndex;
         log.debug(cargo.toString());
-        for (char[] boxLine : mirrorVertically(cargo.getForm())) {
+        for (char[] boxLine : mirrorVertically(cargo.getCharForm())) {
             int width = widthIndex;
             for (Character character : boxLine) {
                 try {
@@ -78,8 +78,9 @@ public class DefaultCargoLoader implements CargoLoader {
     private void placeCargoInTransport(Cargo cargo, Transport transport, int heightIndex, int widthIndex) {
         log.debug("Выполняется погрузка груза: {} по координатам {},{}", cargo, heightIndex, widthIndex);
         int i = heightIndex;
-        char[][] body = transport.getBody();
-        for (char[] boxLine : mirrorVertically(cargo.getForm())) {
+        char[][] body = transport.getCharBody();
+        StringBuilder stringBuilder = new StringBuilder();
+        for (char[] boxLine : mirrorVertically(cargo.getCharForm())) {
             int j = widthIndex;
             for (Character character : boxLine) {
                 body[i][j] = character;
@@ -87,14 +88,11 @@ public class DefaultCargoLoader implements CargoLoader {
             }
             i--;
         }
-        log.debug("Груз погружен в транспорт");
-    }
-
-    private char[][] copyBody(char[][] body) {
-        char[][] newBody = new char[body.length][body[0].length];
-        for (int i = 0; i < body.length; i++) {
-            System.arraycopy(body[i], 0, newBody[i], 0, body[i].length);
+        for (char[] boxLine : body) {
+            stringBuilder.append(boxLine)
+                    .append(";");
         }
-        return newBody;
+        transport.setBody(stringBuilder.toString());
+        log.debug("Груз погружен в транспорт");
     }
 }

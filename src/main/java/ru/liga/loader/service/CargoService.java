@@ -2,6 +2,7 @@ package ru.liga.loader.service;
 
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import ru.liga.loader.exception.InvalidCargoInput;
 import ru.liga.loader.factory.cargo.DefaultCargoFactory;
@@ -20,7 +21,7 @@ public class CargoService {
 
     public CargoService(CargoFormParser cargoFormParser,
                         CargoFormValidator cargoFormValidator,
-                        CargoCrudRepository cargoRepository,
+                        @Qualifier("defaultCrudCargoRepository") CargoCrudRepository cargoRepository,
                         DefaultCargoFactory defaultCargoFactory) {
         this.cargoFormParser = cargoFormParser;
         this.cargoFormValidator = cargoFormValidator;
@@ -66,7 +67,7 @@ public class CargoService {
             log.error(e.getMessage());
             return;
         }
-        cargoRepository.put(
+        cargoRepository.save(
                 defaultCargoFactory.createCargo(
                         name,
                         formArray

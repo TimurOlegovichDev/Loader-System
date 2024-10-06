@@ -1,4 +1,4 @@
-package ru.liga.loader.repository.impl;
+package ru.liga.loader.repository;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

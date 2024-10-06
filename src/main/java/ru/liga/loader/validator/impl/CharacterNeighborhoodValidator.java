@@ -2,6 +2,7 @@ package ru.liga.loader.validator.impl;
 
 import org.springframework.stereotype.Component;
 import ru.liga.loader.exception.InvalidCargoInput;
+import ru.liga.loader.model.entity.Cargo;
 import ru.liga.loader.model.structure.CargoJsonStructure;
 import ru.liga.loader.validator.Validator;
 
@@ -17,7 +18,7 @@ public class CharacterNeighborhoodValidator implements Validator<CargoJsonStruct
 
     @Override
     public void validate(CargoJsonStructure cargo) {
-        char[][] form = cargo.form();
+        char[][] form = new Cargo(cargo).getCharForm();
         for (int i = 0; i < form.length; i++) {
             for (int j = 0; j < form[i].length; j++) {
                 if (form[i][j] != ' ' && !hasNeighbor(i, j, form)) {

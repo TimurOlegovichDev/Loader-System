@@ -10,6 +10,7 @@ import ru.liga.loader.algorithm.util.impl.TransportSorterByOccupiedAreaAsc;
 import ru.liga.loader.algorithm.util.impl.TransportSorterByOccupiedAreaDesc;
 import ru.liga.loader.model.entity.Cargo;
 import ru.liga.loader.model.entity.Transport;
+import ru.liga.loader.repository.CargoCrudRepository;
 import ru.liga.loader.repository.TransportCrudRepository;
 import ru.liga.loader.service.TransportRepositoryService;
 import ru.liga.loader.util.DefaultCargoLoader;
@@ -50,17 +51,22 @@ public enum AlgorithmTypes {
      */
 
     public static LoadingCargoAlgorithm createElAlgorithm(TransportCrudRepository transportDataRepository,
+                                                          CargoCrudRepository cargoDataRepository,
                                                           List<Transport> transports,
                                                           List<Cargo> cargos) {
         return new EvenLoadingAlgorithm(
                 new DefaultCargoSorter(),
                 new TransportSorterByOccupiedAreaAsc(
-                        new TransportRepositoryService(transportDataRepository)
+                        new TransportRepositoryService(
+                                transportDataRepository,
+                                cargoDataRepository
+                        )
                 ),
                 transportDataRepository,
                 transports,
                 cargos,
-                new DefaultCargoLoader()
+                new DefaultCargoLoader(),
+                cargoDataRepository
         );
     }
 
@@ -74,17 +80,22 @@ public enum AlgorithmTypes {
      */
 
     public static LoadingCargoAlgorithm createMesAlgorithm(TransportCrudRepository transportDataRepository,
+                                                           CargoCrudRepository cargoDataRepository,
                                                            List<Transport> transports,
                                                            List<Cargo> cargos) {
         return new MinimumEmptySpaceAlgorithm(
                 new DefaultCargoSorter(),
                 new TransportSorterByOccupiedAreaDesc(
-                        new TransportRepositoryService(transportDataRepository)
+                        new TransportRepositoryService(
+                                transportDataRepository,
+                                cargoDataRepository
+                        )
                 ),
                 transportDataRepository,
                 transports,
                 cargos,
-                new DefaultCargoLoader()
+                new DefaultCargoLoader(),
+                cargoDataRepository
         );
     }
 }

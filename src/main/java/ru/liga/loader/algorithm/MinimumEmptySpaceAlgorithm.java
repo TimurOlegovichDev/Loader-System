@@ -9,6 +9,7 @@ import ru.liga.loader.algorithm.util.TransportSorter;
 import ru.liga.loader.exception.NoPlaceException;
 import ru.liga.loader.model.entity.Cargo;
 import ru.liga.loader.model.entity.Transport;
+import ru.liga.loader.repository.CargoCrudRepository;
 import ru.liga.loader.repository.TransportCrudRepository;
 import ru.liga.loader.util.CargoLoader;
 
@@ -24,19 +25,21 @@ public class MinimumEmptySpaceAlgorithm implements LoadingCargoAlgorithm {
     private final List<Transport> transports;
     private final List<Cargo> cargoList;
     private final CargoLoader cargoLoader;
+    private final CargoCrudRepository cargoCrudRepository;
 
     @Autowired
     public MinimumEmptySpaceAlgorithm(CargoSorter cargoSorter,
                                       @Qualifier("transportSorterByOccupiedAreaDesc") TransportSorter transportSorter,
-                                      TransportCrudRepository transportDataRepository, List<Transport> transports,
+                                      @Qualifier("transportCrudRepository") TransportCrudRepository transportDataRepository, List<Transport> transports,
                                       List<Cargo> cargoList,
-                                      CargoLoader cargoLoader) {
+                                      CargoLoader cargoLoader, @Qualifier("cargoCrudRepository") CargoCrudRepository cargoCrudRepository) {
         this.cargoSorter = cargoSorter;
         this.transportSorter = transportSorter;
         this.transportDataRepository = transportDataRepository;
         this.transports = transports;
         this.cargoList = cargoList;
         this.cargoLoader = cargoLoader;
+        this.cargoCrudRepository = cargoCrudRepository;
     }
 
     /**
@@ -68,10 +71,18 @@ public class MinimumEmptySpaceAlgorithm implements LoadingCargoAlgorithm {
         for (Transport transport : transports) {
             try {
                 cargoLoader.load(cargo, transport);
-                transportDataRepository.addCargoInTransport(transport, cargo);
+                if (cargo.getId() == null) {
+                    cargo.setTransportId(transport.getId());
+                    cargoCrudRepository.save(cargo);
+                } else {
+                    Cargo copy = new Cargo(cargo.getName(), cargo.getForm());
+                    copy.setTransportId(transport.getId());
+                    cargoCrudRepository.save(copy);
+                }
+                transportDataRepository.save(transport);
                 log.info("Груз успешно загружен: {}", cargo);
                 return;
-            } catch (Exception e) {
+            } catch (NoPlaceException e) {
                 log.debug(e.getMessage());
             }
         }

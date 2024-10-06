@@ -47,7 +47,7 @@ public class TruckInitializerTest {
         List<Transport> transports = truckInitializer.initialize(sizeStructures);
         assertNotNull(transports);
         assertEquals(1, transports.size());
-        assertArrayEquals(transport.getBody(), transports.get(0).getBody());
+        assertArrayEquals(transport.getCharBody(), transports.get(0).getCharBody());
     }
 
     @Test

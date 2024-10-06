@@ -4,6 +4,8 @@ import org.springframework.stereotype.Component;
 import ru.liga.loader.model.entity.Cargo;
 import ru.liga.loader.model.structure.CargoJsonStructure;
 
+import java.util.Arrays;
+
 @Component
 public class DefaultCargoFactory implements CargoFactory {
 
@@ -16,8 +18,15 @@ public class DefaultCargoFactory implements CargoFactory {
      */
 
     @Override
-    public Cargo createCargo(String name, char[][] form) {
+    public Cargo createCargo(String name, String form) {
         return new Cargo(name, form);
+    }
+
+    @Override
+    public Cargo createCargo(String name, char[][] form) {
+        StringBuilder stringBuilder = new StringBuilder();
+        Arrays.stream(form).forEach((chars) -> stringBuilder.append(new String(chars)).append(";"));
+        return new Cargo(name, stringBuilder.toString());
     }
 
     /**

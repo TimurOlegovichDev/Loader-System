@@ -10,6 +10,7 @@ import ru.liga.loader.exception.InvalidCargoSize;
 import ru.liga.loader.exception.NoPlaceException;
 import ru.liga.loader.model.entity.Cargo;
 import ru.liga.loader.model.entity.Transport;
+import ru.liga.loader.repository.CargoCrudRepository;
 import ru.liga.loader.repository.TransportCrudRepository;
 import ru.liga.loader.util.CargoLoader;
 
@@ -26,19 +27,23 @@ public class EvenLoadingAlgorithm implements LoadingCargoAlgorithm {
     private final List<Transport> transports;
     private final List<Cargo> cargos;
     private final CargoLoader cargoLoader;
+    private final CargoCrudRepository cargoCrudRepository;
 
     @Autowired
     public EvenLoadingAlgorithm(CargoSorter cargoSorter,
                                 @Qualifier("transportSorterByOccupiedAreaAsc") TransportSorter transportSorter,
-                                TransportCrudRepository transportDataRepository, List<Transport> transports,
+                                @Qualifier("transportCrudRepository") TransportCrudRepository transportDataRepository,
+                                List<Transport> transports,
                                 List<Cargo> cargos,
-                                CargoLoader cargoLoader) {
+                                CargoLoader cargoLoader,
+                                @Qualifier("cargoCrudRepository") CargoCrudRepository cargoCrudRepository) {
         this.cargoSorter = cargoSorter;
         this.transportSorter = transportSorter;
         this.transportDataRepository = transportDataRepository;
         this.transports = transports;
         this.cargos = cargos;
         this.cargoLoader = cargoLoader;
+        this.cargoCrudRepository = cargoCrudRepository;
     }
 
     /**
@@ -70,7 +75,10 @@ public class EvenLoadingAlgorithm implements LoadingCargoAlgorithm {
         optional.ifPresentOrElse(
                 transport -> {
                     cargoLoader.load(cargo, transport);
-                    transportDataRepository.addCargoInTransport(transport, cargo);
+                    cargo.setTransportId(transport.getId());
+                    cargoCrudRepository.save(cargo);
+                    transportDataRepository.save(transport);
+                    log.info("Груз успешно загружен: {}", cargo);
                 },
                 () -> {
                     throw new NoPlaceException("Нет грузовика для погрузки груза: " + cargo);

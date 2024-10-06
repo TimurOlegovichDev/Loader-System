@@ -4,33 +4,42 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
+import org.springframework.lang.Nullable;
 import ru.liga.loader.model.structure.CargoJsonStructure;
 
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
 import java.util.Arrays;
+import java.util.UUID;
 
 @Getter
+@Entity
+@Table(schema = "cargo", name = "cargo")
 public class Cargo {
 
-    private final char[][] form;
+    private final String form;
     private final int height;
     private final int width;
     private final int area;
     private final char type;
+
+    @Id
+    private final UUID id = UUID.randomUUID();
     @Setter
     private String name;
 
-    public Cargo(
-            @NonNull String name,
-            @NonNull char[][] form) {
+    @Nullable
+    @Setter
+    private UUID transportId;
+
+    public Cargo(@NonNull String name, String form) {
         this.name = name;
         this.form = form;
-        this.type = form[0][0];
-        height = form.length;
-        width = Arrays.stream(form)
-                .mapToInt(arr -> arr.length)
-                .max()
-                .orElse(0);
-        area = height * width;
+        this.type = form.charAt(0);
+        this.height = countLines(form);
+        this.width = countMaxWidth(form);
+        this.area = height * width;
     }
 
     @JsonCreator
@@ -43,37 +52,47 @@ public class Cargo {
         this.type = cargoJsonStructure.type();
     }
 
-    /**
-     * Возвращает копию формы груза.
-     * Этот метод возвращает копию формы груза, чтобы избежать изменения исходной формы.
-     *
-     * @return копия формы груза
-     */
-
-    public char[][] getForm() {
-        return Arrays.copyOf(form, form.length);
+    public Cargo() {
+        name = "Noname";
+        form = "Noform";
+        height = 0;
+        width = 0;
+        area = 0;
+        type = 0;
     }
-
-    /**
-     * Возвращает строковое представление груза.
-     * Этот метод возвращает строковое представление груза, которое представляет собой строку, содержащую форму груза.
-     *
-     * @return строковое представление груза
-     */
 
     @Override
     public String toString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append(System.lineSeparator())
-                .append("Название груза: ")
-                .append(name)
-                .append(System.lineSeparator())
-                .append("Форма: ")
-                .append(System.lineSeparator());
-        for (char[] arr : form) {
-            sb.append(new String(arr));
-            sb.append(System.lineSeparator());
+        StringBuilder builder = new StringBuilder();
+        for (String lines : form.split(";")) {
+            builder.append(lines).append(System.lineSeparator());
         }
-        return sb.toString();
+        return System.lineSeparator() +
+                "Название груза: " +
+                name +
+                System.lineSeparator() +
+                "Форма: " +
+                System.lineSeparator() +
+                builder;
+    }
+
+    public char[][] getCharForm() {
+        char[][] result = new char[height][];
+        int i = 0;
+        for (String lines : form.split(";")) {
+            result[i++] = lines.toCharArray();
+        }
+        return result;
+    }
+
+    private int countLines(String form) {
+        return form.split(";").length;
+    }
+
+    private int countMaxWidth(String form) {
+        return Arrays.stream(form.split(";"))
+                .mapToInt(String::length)
+                .max()
+                .orElse(0);
     }
 }

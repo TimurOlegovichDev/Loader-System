@@ -5,6 +5,8 @@ import org.springframework.stereotype.Component;
 import ru.liga.loader.model.entity.Transport;
 import ru.liga.loader.model.structure.TransportJsonStructure;
 
+import java.util.UUID;
+
 @Component
 @Slf4j
 public class TruckFactory implements TransportFactory {
@@ -49,8 +51,8 @@ public class TruckFactory implements TransportFactory {
      */
 
     @Override
-    public Transport createTransport(String id, char[][] body) {
-        return new Transport(id, body);
+    public Transport createTransport(String id, String body) {
+        return new Transport(UUID.fromString(id), body);
     }
 
     /**

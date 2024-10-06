@@ -2,6 +2,7 @@ package ru.liga.loader.service;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import ru.liga.loader.factory.cargo.CargoFactory;
 import ru.liga.loader.model.entity.Cargo;
@@ -21,7 +22,7 @@ public class CargoRepositoryService {
     private final CargoService cargoService;
 
     @Autowired
-    public CargoRepositoryService(CargoCrudRepository cargoRepository,
+    public CargoRepositoryService(@Qualifier("cargoCrudRepository") CargoCrudRepository cargoRepository,
                                   CargoFactory cargoFactory,
                                   LoadingService loadingService,
                                   TransportRepositoryService transportRepositoryService, CargoService cargoService) {
@@ -79,13 +80,10 @@ public class CargoRepositoryService {
         if (!existsInDatabase(lastName)) {
             return "Груза с таким именем нет в системе";
         }
-        cargoRepository.put(
-                cargoFactory.createCargo(
-                        newName,
-                        cargoRepository.delete(lastName).getForm()
-                )
-        );
-        transportRepositoryService.updateCargosName(lastName, newName);
+        Cargo cargo = cargoRepository.findByName(newName);
+        cargo.setName(newName);
+        cargoRepository.delete(cargo);
+        cargoRepository.save(cargo);
         loadingService.reload("MES");
         return "Название успешно изменено";
     }
@@ -103,15 +101,18 @@ public class CargoRepositoryService {
             log.debug("Тип груза не может быть пустым");
             return "Тип груза не может быть пустым";
         }
-        if (!existsInDatabase(name)) {
+        if (existsInDatabase(name)) {
             log.debug("Груз с именем {} не найден в системе", name);
             return "Груза с таким именем нет в системе";
         }
         char[][] newForm = cargoService.replaceNonEmptyCharsWith(
-                cargoRepository.getBy(name).getForm(),
+                cargoRepository.findByName(name).getCharForm(),
                 newType
         );
-        cargoRepository.put(
+        cargoRepository.delete(
+                cargoRepository.findByName(name)
+        );
+        cargoRepository.save(
                 cargoFactory.createCargo(
                         name,
                         newForm
@@ -133,7 +134,9 @@ public class CargoRepositoryService {
         if (!existsInDatabase(name)) {
             return "Груза с таким именем нет в системе!";
         }
-        cargoRepository.delete(name);
+        cargoRepository.deleteById(
+                cargoRepository.findByName(name).getId()
+        );
         loadingService.reload(algoname);
         return "Груз удален успешно!";
     }
@@ -146,10 +149,10 @@ public class CargoRepositoryService {
 
     public String getCargosInfo() {
         StringBuilder stringBuilder = new StringBuilder("Отображение грузов:");
-        if (!cargoRepository.getKeys().isEmpty()) {
-            stringBuilder.append(System.lineSeparator())
-                    .append(cargoRepository);
-        }
+        cargoRepository.findAllUnique().forEach(
+                cargo -> stringBuilder.append(cargo.toString())
+                        .append(System.lineSeparator())
+        );
         return stringBuilder.toString();
     }
 
@@ -161,12 +164,12 @@ public class CargoRepositoryService {
      */
 
     public String getCargoInfoByName(String name) {
-        return Optional.ofNullable(cargoRepository.getBy(name))
+        return Optional.of(cargoRepository.findByName(name))
                 .map(Cargo::toString)
                 .orElse("Груза с таким именем нет в системе!");
     }
 
     private boolean existsInDatabase(String name) {
-        return cargoRepository.getBy(name) != null;
+        return cargoRepository.findByName(name) != null;
     }
 }
