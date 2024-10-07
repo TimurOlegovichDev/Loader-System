@@ -26,12 +26,75 @@ public class TelegramBot extends TelegramLongPollingBot {
 
     @Autowired
     public TelegramBot(BotConfig config, Shell shell, InitializeService initializeService) {
+        super(config.getToken());
         this.config = config;
         this.shell = shell;
         this.initializeService = initializeService;
     }
 
-    private static GetFile getGetFile(Message message) {
+    @Override
+    public void onUpdateReceived(Update update) {
+        if (update.hasMessage()) {
+            handleUpdateMessage(update.getMessage());
+        } else {
+            sendMessage(update.getMessage().getChatId(), "Сообщение не обработано, отсутсвует какая-либо информация");
+        }
+    }
+
+    private void handleUpdateMessage(Message message) {
+        if (message.hasDocument()) {
+            handleFileMessage(message);
+        } else {
+            sendResultOperation(message);
+        }
+    }
+
+    private void handleFileMessage(Message message) {
+        try {
+            handleFile(message);
+            sendMessage(message.getChatId(), "Файл успешно загружен");
+        } catch (TelegramApiException e) {
+            sendMessage(message.getChatId(), e.getMessage());
+        }
+    }
+
+    private void handleFile(Message message) throws TelegramApiException {
+        GetFile getFile = getGetFile(message);
+        org.telegram.telegrambots.meta.api.objects.File file = execute(getFile);
+        tryInitEntitiesFromFile(downloadFileAsStream(file));
+    }
+
+    private void sendResultOperation(Message message) {
+        String result = shell.evaluate(message::getText).toString();
+        sendMessage(message.getChatId(), result);
+    }
+
+    private void tryInitEntitiesFromFile(InputStream inputStream) {
+        try {
+            initializeService.initializeTransport(inputStream);
+        } catch (Exception e) {
+            try {
+                initializeService.initializeCargos(inputStream);
+            } catch (Exception ex) {
+                sendMessage(inputStream.hashCode(),
+                        "Ошибка при инициализации сущностей: " + ex.getMessage());
+            }
+        }
+    }
+
+    private void sendMessage(long chatID, String answerText) {
+        SendMessage message = new SendMessage();
+        message.setChatId(String.valueOf(chatID));
+        message.setText(answerText);
+        message.enableMarkdown(true);
+        try {
+            execute(message);
+        } catch (TelegramApiException error) {
+            log.error(error.getMessage());
+        }
+    }
+
+    private GetFile getGetFile(Message message) {
         String doc_mine = message.getDocument().getMimeType();
         String doc_name = message.getDocument().getFileName();
         long doc_size = message.getDocument().getFileSize();
@@ -50,63 +113,5 @@ public class TelegramBot extends TelegramLongPollingBot {
     @Override
     public String getBotUsername() {
         return config.getBotName();
-    }
-
-    @Override
-    public String getBotToken() {
-        return config.getToken();
-    }
-
-    public void onUpdateReceived(Update update) {
-        if (update.hasMessage()) {
-            if (update.getMessage().hasDocument()) {
-                sendMessage(update.getMessage().getChatId(), "Получен файл");
-                handleDocument(update.getMessage());
-                return;
-            }
-            sendResultOperation(update);
-        } else {
-            sendMessage(update.getMessage().getChatId(), "Сообщение пустое");
-        }
-    }
-
-    private void sendResultOperation(Update update) {
-        sendMessage(
-                update.getMessage().getChatId(),
-                shell.evaluate(() ->
-                        update.getMessage()
-                                .getText()
-                ).toString()
-        );
-    }
-
-    private void sendMessage(long chatID, String answerText) {
-        SendMessage message = new SendMessage();
-        message.setChatId(String.valueOf(chatID));
-        message.setText(answerText);
-        message.enableMarkdown(true);
-        try {
-            execute(message);
-        } catch (TelegramApiException error) {
-            log.error(error.getMessage());
-        }
-    }
-
-    private void handleDocument(Message message) {
-        GetFile getFile = getGetFile(message);
-        try {
-            org.telegram.telegrambots.meta.api.objects.File file = execute(getFile);
-            tryInitEntitiesFromFile(downloadFileAsStream(file));
-        } catch (TelegramApiException e) {
-            log.error(e.getMessage());
-        }
-    }
-
-    private void tryInitEntitiesFromFile(InputStream inputStream) {
-        try {
-            initializeService.initializeTransport(inputStream);
-        } catch (Exception e) {
-            initializeService.initializeCargos(inputStream);
-        }
     }
 }
