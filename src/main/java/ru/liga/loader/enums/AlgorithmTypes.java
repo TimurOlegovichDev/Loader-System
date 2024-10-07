@@ -12,7 +12,7 @@ import ru.liga.loader.model.entity.Cargo;
 import ru.liga.loader.model.entity.Transport;
 import ru.liga.loader.repository.CargoCrudRepository;
 import ru.liga.loader.repository.TransportCrudRepository;
-import ru.liga.loader.service.TransportRepositoryService;
+import ru.liga.loader.service.TransportService;
 import ru.liga.loader.util.DefaultCargoLoader;
 
 import java.util.List;
@@ -57,7 +57,7 @@ public enum AlgorithmTypes {
         return new EvenLoadingAlgorithm(
                 new DefaultCargoSorter(),
                 new TransportSorterByOccupiedAreaAsc(
-                        new TransportRepositoryService(
+                        new TransportService(
                                 transportDataRepository,
                                 cargoDataRepository
                         )
@@ -86,7 +86,7 @@ public enum AlgorithmTypes {
         return new MinimumEmptySpaceAlgorithm(
                 new DefaultCargoSorter(),
                 new TransportSorterByOccupiedAreaDesc(
-                        new TransportRepositoryService(
+                        new TransportService(
                                 transportDataRepository,
                                 cargoDataRepository
                         )

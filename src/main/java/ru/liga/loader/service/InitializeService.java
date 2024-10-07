@@ -3,6 +3,7 @@ package ru.liga.loader.service;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import ru.liga.loader.factory.cargo.DefaultCargoFactory;
 import ru.liga.loader.initializers.CargoInitializer;
 import ru.liga.loader.initializers.TruckInitializer;
 import ru.liga.loader.model.entity.Cargo;
@@ -12,6 +13,7 @@ import ru.liga.loader.repository.DefaultCrudCargoRepository;
 import ru.liga.loader.repository.DefaultCrudTransportRepository;
 import ru.liga.loader.util.CargoCounter;
 
+import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
 
@@ -24,28 +26,30 @@ public class InitializeService {
     private final DefaultCrudTransportRepository transportDataRepository;
     private final DefaultCrudCargoRepository cargoDataRepository;
     private final CargoCounter cargoCounter;
+    private final DefaultCargoFactory defaultCargoFactory;
 
     @Autowired
-    public InitializeService(TruckInitializer truckInitializer, CargoInitializer cargoInitializer, DefaultCrudTransportRepository transportDataRepository, DefaultCrudCargoRepository cargoDataRepository, CargoCounter cargoCounter) {
+    public InitializeService(TruckInitializer truckInitializer, CargoInitializer cargoInitializer, DefaultCrudTransportRepository transportDataRepository, DefaultCrudCargoRepository cargoDataRepository, CargoCounter cargoCounter, DefaultCargoFactory defaultCargoFactory) {
         this.truckInitializer = truckInitializer;
         this.cargoInitializer = cargoInitializer;
         this.transportDataRepository = transportDataRepository;
         this.cargoDataRepository = cargoDataRepository;
         this.cargoCounter = cargoCounter;
+        this.defaultCargoFactory = defaultCargoFactory;
     }
 
     /**
      * Инициализирует грузы из json файла.
      * Этот метод инициализирует грузы по заданным формам и добавляет их в главный репозиторий.
      *
-     * @param filePath путь к файлу
+     * @param stream файл
      */
 
-    public void initializeCargos(String filePath) {
-        Map<String, Cargo> cargoMap =
-                cargoInitializer.initializeFromJson(filePath);
-        cargoDataRepository.saveAll(cargoMap.values());
-        log.debug("Добавлено груза: {}", cargoMap.size());
+    public void initializeCargos(InputStream stream) {
+        List<Cargo> list = cargoInitializer.initializeFromJson(stream);
+        initUniqueCargo(list);
+        cargoDataRepository.saveAll(list);
+        log.debug("Добавлено груза: {}", list.size());
     }
 
     /**
@@ -55,15 +59,19 @@ public class InitializeService {
      * Также подсчитывает количество грузов в каждом транспортном средстве из файла
      * и заносит данные в журнал
      *
-     * @param filePath путь к файлу JSON
+     * @param stream файл JSON
      */
 
-    public void initializeTransport(String filePath) {
+    public void initializeTransport(InputStream stream) {
         Map<Transport, List<Cargo>> transportMap =
-                truckInitializer.initializeFromJson(filePath);
+                truckInitializer.initializeFromJson(stream);
         countCargos(transportMap);
-        transportMap.values().forEach(cargoDataRepository::saveAll);
         transportDataRepository.saveAll(transportMap.keySet());
+        transportMap.values().forEach(list -> {
+                    initUniqueCargo(list);
+                    cargoDataRepository.saveAll(list);
+                }
+        );
         log.debug("Добавлено транспорта из файла: {}", transportMap.size());
     }
 
@@ -89,6 +97,19 @@ public class InitializeService {
                             log.info("Название груза: {}, количество: {}", name, count)
                     );
             log.info("{}{}", System.lineSeparator(), transport.toString());
+        }
+    }
+
+    private void initUniqueCargo(List<Cargo> list) {
+        for (Cargo cargo : list) {
+            if (cargoDataRepository.findByName(cargo.getName()) == null) {
+                cargoDataRepository.save(
+                        defaultCargoFactory.createCargo(
+                                cargo.getName(),
+                                cargo.getForm()
+                        )
+                );
+            }
         }
     }
 }

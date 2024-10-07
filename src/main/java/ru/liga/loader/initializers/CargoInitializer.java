@@ -9,9 +9,9 @@ import ru.liga.loader.model.structure.CargoJsonStructure;
 import ru.liga.loader.service.JsonService;
 import ru.liga.loader.validator.impl.CargoStructureValidator;
 
-import java.util.HashMap;
+import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 @Slf4j
 @Component
@@ -31,25 +31,23 @@ public class CargoInitializer {
     /**
      * Считывает грузы и инициализирует их в памяти из json файла.
      *
-     * @param filepath путь к файлу
+     * @param stream файл
      * @return список грузов
      */
 
-    public Map<String, Cargo> initializeFromJson(String filepath) {
+    public List<Cargo> initializeFromJson(InputStream stream) {
         List<CargoJsonStructure> cargoJsonStructures =
-                jsonService.read(CargoJsonStructure.class, filepath);
-        Map<String, Cargo> map = new HashMap<>();
+                jsonService.read(CargoJsonStructure.class, stream);
+        List<Cargo> list = new ArrayList<>();
         for (CargoJsonStructure cargoJsonStructure : cargoJsonStructures) {
             try {
                 validator.validate(cargoJsonStructure);
-                map.put(
-                        cargoJsonStructure.name(),
-                        defaultCargoFactory.createCargo(cargoJsonStructure)
-                );
+                list.add(defaultCargoFactory.createCargo(cargoJsonStructure));
+
             } catch (Exception e) {
                 log.error("{} {}", e.getMessage(), cargoJsonStructure.name());
             }
         }
-        return map;
+        return list;
     }
 }

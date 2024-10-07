@@ -5,7 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.io.File;
+import java.io.InputStream;
 import java.util.List;
 
 @Slf4j
@@ -19,11 +19,10 @@ public class JsonReader {
         this.mapper = mapper;
     }
 
-    public <T> List<T> readObject(Class<T> clazz, String fileName) throws Exception {
-        log.debug("Чтение json файла {}", fileName);
-        File file = new File(fileName);
+    public <T> List<T> readObject(Class<T> clazz, InputStream stream) throws Exception {
+        log.debug("Чтение json файла");
         List<T> list = mapper.readValue(
-                file,
+                stream,
                 mapper.getTypeFactory().constructCollectionType(List.class, clazz)
         );
         log.debug("Чтение успешно завершено!");

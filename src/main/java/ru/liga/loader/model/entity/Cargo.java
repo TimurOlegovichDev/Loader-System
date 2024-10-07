@@ -1,6 +1,7 @@
 package ru.liga.loader.model.entity;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
@@ -51,6 +52,7 @@ public class Cargo {
         this.width = cargoJsonStructure.width();
         this.area = cargoJsonStructure.area();
         this.type = cargoJsonStructure.type();
+        this.transportId = cargoJsonStructure.transportId();
     }
 
     public Cargo() {
@@ -86,6 +88,7 @@ public class Cargo {
                 builder;
     }
 
+    @JsonIgnore
     public char[][] getCharForm() {
         char[][] result = new char[height][];
         int i = 0;

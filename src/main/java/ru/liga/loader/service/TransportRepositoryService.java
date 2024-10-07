@@ -5,55 +5,115 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import ru.liga.loader.model.entity.Cargo;
 import ru.liga.loader.model.entity.Transport;
+import ru.liga.loader.model.structure.TransportJsonStructure;
 import ru.liga.loader.repository.CargoCrudRepository;
 import ru.liga.loader.repository.TransportCrudRepository;
+import ru.liga.loader.util.CargoCounter;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 @Service
 public class TransportRepositoryService {
 
     private final TransportCrudRepository transportRepository;
+    private final TransportService transportServiceq11;
+    private final JsonService jsonService;
+    private final CargoCounter cargoCounter;
     private final CargoCrudRepository cargoCrudRepository;
 
     @Autowired
-    public TransportRepositoryService(@Qualifier("transportCrudRepository") TransportCrudRepository transportRepository, @Qualifier("cargoCrudRepository") CargoCrudRepository cargoCrudRepository) {
+    public TransportRepositoryService(@Qualifier("transportCrudRepository") TransportCrudRepository transportRepository,
+                                      TransportService transportServiceq11,
+                                      JsonService jsonService,
+                                      CargoCounter cargoCounter, @Qualifier("cargoCrudRepository") CargoCrudRepository cargoCrudRepository) {
         this.transportRepository = transportRepository;
+        this.transportServiceq11 = transportServiceq11;
+        this.jsonService = jsonService;
+        this.cargoCounter = cargoCounter;
         this.cargoCrudRepository = cargoCrudRepository;
     }
 
     /**
-     * Возвращает процент занятости транспортного средства.
+     * Сохраняет транспортные средства в JSON-файл по указанному пути.
      *
-     * @param transport транспортное средство
-     * @return процент занятости транспортного средства
+     * @param filePath путь к JSON-файлу
      */
-    public int percentageOfOccupancy(Transport transport) {
-        int bodyArea = transport.getCharBody().length * transport.getCharBody()[0].length;
-        int cargoArea = 0;
-        List<Cargo> cargos = cargoCrudRepository.findAllByTransportId(transport.getId());
-        if (cargos == null || bodyArea <= 0) {
-            return cargoArea;
-        }
-        for (Cargo cargoInTransport : cargos) {
-            cargoArea += cargoInTransport.getArea();
-        }
-        return getPercent(cargoArea, bodyArea);
+
+    public void saveToJson(String filePath) {
+        jsonService.writeObject(getStructures(), filePath);
     }
 
-    private int getPercent(int cargoArea, int bodyArea) {
-        return cargoArea * 100 / bodyArea;
+    public List<TransportJsonStructure> getStructures() {
+        List<TransportJsonStructure> structures = new ArrayList<>();
+        for (Transport transport : transportRepository.findAll()) {
+            structures.add(
+                    new TransportJsonStructure(
+                            transport.getId(),
+                            transport.getBody(),
+                            cargoCrudRepository.findAllByTransportId(transport.getId())
+                    )
+            );
+        }
+        return structures;
     }
 
     /**
-     * Возвращает транспортное средство по его идентификатору.
+     * Возвращает информацию о всех транспортных средствах.
+     *
+     * @return информация о всех транспортных средствах
+     */
+
+    public String getTransportsInfo() {
+        StringBuilder stringBuilder = new StringBuilder("Отображение транспорта:");
+        transportRepository.findAll().forEach(
+                transport -> stringBuilder.append(System.lineSeparator())
+                        .append(transport.toString())
+        );
+        return stringBuilder.toString();
+    }
+
+    /**
+     * Возвращает информацию о транспортном средстве с указанным идентификатором.
      *
      * @param id идентификатор транспортного средства
-     * @return транспортное средство, если найдено, иначе Optional.empty()
+     * @return информация о транспортном средстве, если найдено, иначе сообщение о том, что транспортное средство не найдено
      */
-    public Optional<Transport> getTransportById(UUID id) {
-        return transportRepository.findById(id);
+
+    public String getTransportInfoById(UUID id) {
+        List<Cargo> list = new ArrayList<>();
+        transportServiceq11.getTransportById(id).ifPresent(
+                transport -> list.addAll(cargoCrudRepository.findAllByTransportId(transport.getId())));
+        StringBuilder stringBuilder = new StringBuilder("Информация о транспорте").append(System.lineSeparator());
+        if (list.isEmpty()) {
+            return stringBuilder.append("Транспорт пустой").toString();
+        }
+        cargoCounter.count(list)
+                .forEach((name, count) ->
+                        stringBuilder.append("Название груза: ")
+                                .append(name)
+                                .append(", количество: ")
+                                .append(count)
+                                .append(System.lineSeparator())
+                );
+        return stringBuilder.toString();
+    }
+
+    /**
+     * Удаляет транспортное средство с указанным идентификатором.
+     *
+     * @param id идентификатор транспортного средства
+     * @return сообщение о результате удаления транспортного средства
+     */
+
+    public String delete(UUID id) {
+        return transportServiceq11.getTransportById(id)
+                .map(transport -> {
+                    cargoCrudRepository.deleteAllByTransportId(id);
+                    transportRepository.delete(transport);
+                    return "Транспорт с идентификатором " + id + " удален успешно!";
+                })
+                .orElse("Транспорт с идентификатором " + id + " не найден!");
     }
 }

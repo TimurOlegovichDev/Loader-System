@@ -10,6 +10,8 @@ import ru.liga.loader.parser.StringParser;
 import ru.liga.loader.service.CargoRepositoryService;
 import ru.liga.loader.service.InitializeService;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.util.List;
 
 @Slf4j
@@ -29,13 +31,13 @@ public class InputShellController {
     }
 
     @ShellMethod(key = "Инициализировать груз из файла")
-    public void initCargosFromFile(String filePath) {
-        initializeService.initializeCargos(filePath);
+    public void initCargosFromFile(String filePath) throws FileNotFoundException {
+        initializeService.initializeCargos(new FileInputStream(filePath));
     }
 
     @ShellMethod(key = "Инициализировать транспорт из файла")
-    public void initTransportFromFile(String filePath) {
-        initializeService.initializeTransport(filePath);
+    public void initTransportFromFile(String filePath) throws FileNotFoundException {
+        initializeService.initializeTransport(new FileInputStream(filePath));
     }
 
     @ShellMethod(key = "Добавить транспорт с указанным размером")

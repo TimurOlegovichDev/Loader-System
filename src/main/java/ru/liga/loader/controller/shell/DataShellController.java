@@ -5,7 +5,7 @@ import org.springframework.shell.standard.ShellCommandGroup;
 import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
 import ru.liga.loader.service.CargoRepositoryService;
-import ru.liga.loader.service.TransportService;
+import ru.liga.loader.service.TransportRepositoryService;
 
 import java.util.UUID;
 
@@ -13,13 +13,13 @@ import java.util.UUID;
 @ShellCommandGroup("Управление хранилищем")
 public class DataShellController {
 
-    private final TransportService transportService;
+    private final TransportRepositoryService transportRepositoryService;
     private final CargoRepositoryService cargoRepositoryService;
 
     @Autowired
-    public DataShellController(TransportService transportService,
+    public DataShellController(TransportRepositoryService transportRepositoryService,
                                CargoRepositoryService cargoRepositoryService) {
-        this.transportService = transportService;
+        this.transportRepositoryService = transportRepositoryService;
         this.cargoRepositoryService = cargoRepositoryService;
     }
 
@@ -30,6 +30,6 @@ public class DataShellController {
 
     @ShellMethod(key = "Удалить транспорт из системы")
     public String deleteTransportFormSystem(String id) {
-        return transportService.delete(UUID.fromString(id));
+        return transportRepositoryService.delete(UUID.fromString(id));
     }
 }

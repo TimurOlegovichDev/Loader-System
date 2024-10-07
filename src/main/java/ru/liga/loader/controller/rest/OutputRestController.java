@@ -1,8 +1,6 @@
 package ru.liga.loader.controller.rest;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -11,7 +9,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import ru.liga.loader.service.CargoRepositoryService;
-import ru.liga.loader.service.TransportService;
+import ru.liga.loader.service.TransportRepositoryService;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
@@ -20,30 +18,27 @@ import java.nio.file.Files;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/loader-system/info")
+@RequestMapping("/loader-system")
 public class OutputRestController {
 
-    private final TransportService transportService;
+    private final TransportRepositoryService transportRepositoryService;
     private final CargoRepositoryService cargoRepositoryService;
-    private final ObjectMapper objectMapper;
 
     @Autowired
-    public OutputRestController(TransportService transportService,
-                                CargoRepositoryService cargoRepositoryService,
-                                @Qualifier("objectMapper") ObjectMapper objectMapper) {
-        this.transportService = transportService;
+    public OutputRestController(TransportRepositoryService transportRepositoryService,
+                                CargoRepositoryService cargoRepositoryService) {
+        this.transportRepositoryService = transportRepositoryService;
         this.cargoRepositoryService = cargoRepositoryService;
-        this.objectMapper = objectMapper;
     }
 
     @GetMapping("/transports")
     public ResponseEntity<String> getAllTransports() {
-        return ResponseEntity.ok(transportService.getTransportsInfo());
+        return ResponseEntity.ok(transportRepositoryService.getTransportsInfo());
     }
 
     @GetMapping("/transports/{id}")
     public ResponseEntity<String> getTransportById(@PathVariable UUID id) {
-        return ResponseEntity.ok(transportService.getTransportInfoById(id));
+        return ResponseEntity.ok(transportRepositoryService.getTransportInfoById(id));
     }
 
     @GetMapping("/cargos")
@@ -58,7 +53,7 @@ public class OutputRestController {
 
     @GetMapping("/download")
     public ResponseEntity<Void> downloadFile(HttpServletResponse response) throws IOException {
-        transportService.saveToJson("D:\\WorkSpaces\\Java\\LoaderSystem\\some.json");
+        transportRepositoryService.saveToJson("D:\\WorkSpaces\\Java\\LoaderSystem\\some.json");
         File file = new File("D:\\WorkSpaces\\Java\\LoaderSystem\\some.json");
         response.setContentType(MediaType.APPLICATION_OCTET_STREAM.toString());
         response.setHeader(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=myfile.json");

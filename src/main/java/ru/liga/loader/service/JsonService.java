@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import ru.liga.loader.util.json.JsonReader;
 import ru.liga.loader.util.json.JsonWriter;
 
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -38,14 +39,14 @@ public class JsonService {
      * Читает данные из JSON-файла.
      * Этот метод читает данные из JSON-файла по указанному имени файла и возвращает список объектов.
      *
-     * @param clazz    класс объектов для чтения
-     * @param fileName имя файла для чтения
+     * @param clazz  класс объектов для чтения
+     * @param stream файл для чтения
      * @return список объектов
      */
 
-    public <T> List<T> read(Class<T> clazz, String fileName) {
+    public <T> List<T> read(Class<T> clazz, InputStream stream) {
         try {
-            return jsonReader.readObject(clazz, fileName);
+            return jsonReader.readObject(clazz, stream);
         } catch (Throwable e) {
             log.error("При чтении произошла ошибка {}", e.getMessage());
         }

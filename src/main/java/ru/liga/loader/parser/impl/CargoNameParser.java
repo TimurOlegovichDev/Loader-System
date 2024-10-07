@@ -2,11 +2,10 @@ package ru.liga.loader.parser.impl;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 import ru.liga.loader.model.entity.Cargo;
 import ru.liga.loader.parser.StringParser;
-import ru.liga.loader.repository.CargoCrudRepository;
+import ru.liga.loader.repository.DefaultCrudCargoRepository;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,10 +14,10 @@ import java.util.List;
 @Component
 public class CargoNameParser implements StringParser<List<Cargo>> {
 
-    private final CargoCrudRepository repository;
+    private final DefaultCrudCargoRepository repository;
 
     @Autowired
-    public CargoNameParser(@Qualifier("cargoCrudRepository") CargoCrudRepository repository) {
+    public CargoNameParser(DefaultCrudCargoRepository repository) {
         this.repository = repository;
     }
 

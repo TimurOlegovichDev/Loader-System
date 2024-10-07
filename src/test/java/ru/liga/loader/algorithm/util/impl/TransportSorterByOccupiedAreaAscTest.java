@@ -7,7 +7,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import ru.liga.loader.model.entity.Transport;
 import ru.liga.loader.repository.TransportCrudRepository;
-import ru.liga.loader.service.TransportRepositoryService;
+import ru.liga.loader.service.TransportService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,7 +19,7 @@ import static org.mockito.Mockito.when;
 public class TransportSorterByOccupiedAreaAscTest {
 
     @Mock
-    private TransportRepositoryService transportRepositoryService;
+    private TransportService transportServiceq11;
 
     @Mock
     private TransportCrudRepository transportCrudRepository;
@@ -49,9 +49,9 @@ public class TransportSorterByOccupiedAreaAscTest {
         Transport transport2 = new Transport(2, 2);
         Transport transport3 = new Transport(3, 3);
         List<Transport> transports = List.of(transport1, transport2, transport3);
-        when(transportRepositoryService.percentageOfOccupancy(transport1)).thenReturn(50);
-        when(transportRepositoryService.percentageOfOccupancy(transport2)).thenReturn(75);
-        when(transportRepositoryService.percentageOfOccupancy(transport3)).thenReturn(25);
+        when(transportServiceq11.percentageOfOccupancy(transport1)).thenReturn(50);
+        when(transportServiceq11.percentageOfOccupancy(transport2)).thenReturn(75);
+        when(transportServiceq11.percentageOfOccupancy(transport3)).thenReturn(25);
         List<Transport> sortedTransports = transportSorterByOccupiedAreaAsc.sort(transportCrudRepository, transports);
         assertEquals(3, sortedTransports.size());
         assertEquals(transport3, sortedTransports.get(0));
@@ -65,9 +65,9 @@ public class TransportSorterByOccupiedAreaAscTest {
         Transport transport2 = new Transport(2, 2);
         Transport transport3 = new Transport(3, 3);
         List<Transport> transports = List.of(transport1, transport2, transport3);
-        when(transportRepositoryService.percentageOfOccupancy(transport1)).thenReturn(50);
-        when(transportRepositoryService.percentageOfOccupancy(transport2)).thenReturn(50);
-        when(transportRepositoryService.percentageOfOccupancy(transport3)).thenReturn(50);
+        when(transportServiceq11.percentageOfOccupancy(transport1)).thenReturn(50);
+        when(transportServiceq11.percentageOfOccupancy(transport2)).thenReturn(50);
+        when(transportServiceq11.percentageOfOccupancy(transport3)).thenReturn(50);
         List<Transport> sortedTransports = transportSorterByOccupiedAreaAsc.sort(transportCrudRepository, transports);
         assertEquals(3, sortedTransports.size());
     }

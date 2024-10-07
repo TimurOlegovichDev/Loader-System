@@ -10,6 +10,7 @@ import ru.liga.loader.model.structure.TransportJsonStructure;
 import ru.liga.loader.model.structure.TransportSizeStructure;
 import ru.liga.loader.service.JsonService;
 
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -50,13 +51,13 @@ public class TruckInitializer {
      * Инициализирует грузовые автомобили из файла JSON.
      * Этот метод инициализирует грузовые автомобили из файла JSON и возвращает мапу грузовых автомобилей и грузов.
      *
-     * @param filepath путь к файлу JSON
+     * @param stream файл JSON
      * @return карта грузовых автомобилей и грузов
      */
 
-    public Map<Transport, List<Cargo>> initializeFromJson(String filepath) {
+    public Map<Transport, List<Cargo>> initializeFromJson(InputStream stream) {
         List<TransportJsonStructure> transportJsonStructures =
-                jsonService.read(TransportJsonStructure.class, filepath);
+                jsonService.read(TransportJsonStructure.class, stream);
         Map<Transport, List<Cargo>> map = new HashMap<>();
         for (TransportJsonStructure transportJsonStructure : transportJsonStructures) {
             map.put(
