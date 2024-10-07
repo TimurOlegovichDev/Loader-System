@@ -1,7 +1,10 @@
 package ru.liga.loader.factory.cargo;
 
+import org.springframework.stereotype.Component;
 import ru.liga.loader.model.entity.Cargo;
+import ru.liga.loader.model.structure.CargoJsonStructure;
 
+@Component
 public class DefaultCargoFactory implements CargoFactory {
 
     /**
@@ -13,7 +16,19 @@ public class DefaultCargoFactory implements CargoFactory {
      */
 
     @Override
-    public Cargo createCargo(char[][] form) {
-        return new Cargo(form);
+    public Cargo createCargo(String name, char[][] form) {
+        return new Cargo(name, form);
+    }
+
+    /**
+     * Создает груз по заданной форме, полученной из json файла
+     *
+     * @param cargoJsonStructure структура, полученная из файла
+     * @return созданный груз
+     */
+
+    @Override
+    public Cargo createCargo(CargoJsonStructure cargoJsonStructure) {
+        return new Cargo(cargoJsonStructure);
     }
 }

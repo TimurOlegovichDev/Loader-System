@@ -1,26 +1,44 @@
 package ru.liga.loader.model.entity;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
+import ru.liga.loader.model.structure.TransportJsonStructure;
 
 import java.util.Arrays;
+import java.util.Objects;
+import java.util.UUID;
 
+@Getter
 @Slf4j
 public class Transport {
 
-    private final int DEFAULT_BODY_WIDTH = 6;
-    private final int DEFAULT_BODY_HEIGHT = 6;
-
-    @Getter
     private final char[][] body;
+    private final String id;
 
-    public Transport() {
-        body = new char[DEFAULT_BODY_HEIGHT][DEFAULT_BODY_WIDTH];
-        Arrays.stream(body).forEach(row -> Arrays.fill(row, ' '));
+    public Transport(int bodyWidth, int bodyHeight) {
+        body = new char[bodyHeight][bodyWidth];
+        id = UUID.randomUUID().toString();
+        unloadAll();
     }
 
-    public Transport(char[][] body) {
+    @JsonCreator
+    public Transport(TransportJsonStructure structure) {
+        this.id = structure.id();
+        this.body = structure.body();
+    }
+
+    public Transport(String id, char[][] body) {
+        this.id = id;
         this.body = body;
+    }
+
+    /**
+     * Возвращает графическое представление транспорта в изначальное состояние
+     */
+
+    public void unloadAll() {
+        Arrays.stream(body).forEach(row -> Arrays.fill(row, ' '));
     }
 
     /**
@@ -33,6 +51,9 @@ public class Transport {
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
+        sb.append("ID транспорта: ")
+                .append(id)
+                .append(System.lineSeparator());
         for (char[] arr : body) {
             sb.append("+");
             for (char c : arr) {
@@ -44,5 +65,30 @@ public class Transport {
         sb.append("+".repeat(body[0].length + 2))
                 .append(System.lineSeparator());
         return sb.toString();
+    }
+
+    /**
+     * Проверка на то, что груз может поместится в грузовик
+     *
+     * @param cargo - груз для проверки
+     * @return true, если погрузка возможна, false в ином случае
+     */
+
+    public boolean canBeLoaded(Cargo cargo) {
+        return cargo.getHeight() <= body.length + 1
+                && cargo.getWidth() <= body.length + 1;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Transport transport = (Transport) o;
+        return Objects.equals(id, transport.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(id);
     }
 }

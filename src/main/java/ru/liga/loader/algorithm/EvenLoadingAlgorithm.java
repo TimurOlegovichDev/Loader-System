@@ -1,35 +1,50 @@
 package ru.liga.loader.algorithm;
 
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import ru.liga.loader.algorithm.util.CargoLoader;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Component;
 import ru.liga.loader.algorithm.util.CargoSorter;
 import ru.liga.loader.algorithm.util.TransportSorter;
-import ru.liga.loader.db.CargoDataManager;
-import ru.liga.loader.db.TransportDataManager;
 import ru.liga.loader.exception.InvalidCargoSize;
 import ru.liga.loader.exception.NoPlaceException;
 import ru.liga.loader.model.entity.Cargo;
 import ru.liga.loader.model.entity.Transport;
+import ru.liga.loader.repository.TransportCrudRepository;
+import ru.liga.loader.util.CargoLoader;
 
 import java.util.List;
 import java.util.Optional;
 
 @Slf4j
-@RequiredArgsConstructor
+@Component
 public class EvenLoadingAlgorithm implements LoadingCargoAlgorithm {
 
     private final CargoSorter cargoSorter;
     private final TransportSorter transportSorter;
-    private final TransportDataManager transportDataManager;
-    private final CargoDataManager cargoDataManager;
+    private final TransportCrudRepository transportDataRepository;
+    private final List<Transport> transports;
+    private final List<Cargo> cargos;
     private final CargoLoader cargoLoader;
+
+    @Autowired
+    public EvenLoadingAlgorithm(CargoSorter cargoSorter,
+                                @Qualifier("transportSorterByOccupiedAreaAsc") TransportSorter transportSorter,
+                                TransportCrudRepository transportDataRepository, List<Transport> transports,
+                                List<Cargo> cargos,
+                                CargoLoader cargoLoader) {
+        this.cargoSorter = cargoSorter;
+        this.transportSorter = transportSorter;
+        this.transportDataRepository = transportDataRepository;
+        this.transports = transports;
+        this.cargos = cargos;
+        this.cargoLoader = cargoLoader;
+    }
 
     /**
      * Выполняет алгоритм равномерной погрузки грузов.
-     * Этот метод сортирует список грузов по весу, а затем пытается загрузить каждый груз
-     * в транспортное средство. Если загрузка груза не удается из-за его размера,
-     * то соответствующее предупреждение регистрируется в журнале.
+     * Данный алгоритм находит транспорт с наименьшим процентом заполненности,
+     * чтобы в конечном результате грузовики были равномерно загружены относительно своего размера
      *
      * @see CargoSorter#sort(List)
      * @see #loadCargo(Cargo)
@@ -38,8 +53,7 @@ public class EvenLoadingAlgorithm implements LoadingCargoAlgorithm {
     @Override
     public void execute() {
         log.info("Старт алгоритма равномерной погрузки");
-        List<Cargo> cargos = cargoSorter.sort(cargoDataManager.getData());
-        for (Cargo cargo : cargos) {
+        for (Cargo cargo : cargoSorter.sort(cargos)) {
             log.info("Погрузка груза: {}", cargo);
             try {
                 loadCargo(cargo);
@@ -52,11 +66,11 @@ public class EvenLoadingAlgorithm implements LoadingCargoAlgorithm {
     }
 
     private void loadCargo(Cargo cargo) throws NoPlaceException {
-        Optional<Transport> optional = findMostFreeTransport();
+        Optional<Transport> optional = findMostFreeTransport(cargo);
         optional.ifPresentOrElse(
                 transport -> {
                     cargoLoader.load(cargo, transport);
-                    transportDataManager.addCargoInTransport(transport, cargo);
+                    transportDataRepository.addCargoInTransport(transport, cargo);
                 },
                 () -> {
                     throw new NoPlaceException("Нет грузовика для погрузки груза: " + cargo);
@@ -64,12 +78,20 @@ public class EvenLoadingAlgorithm implements LoadingCargoAlgorithm {
         );
     }
 
-    private Optional<Transport> findMostFreeTransport() {
+    private Optional<Transport> findMostFreeTransport(Cargo cargo) {
         log.debug("Поиск максимально незагруженного транспорта");
-        return getFirstTransport(transportSorter.sort(transportDataManager));
+        return getFirstCanToLoadTransport(
+                transportSorter.sort(transportDataRepository, transports),
+                cargo
+        );
     }
 
-    private Optional<Transport> getFirstTransport(List<Transport> transports) {
-        return Optional.ofNullable(transports.get(0));
+    private Optional<Transport> getFirstCanToLoadTransport(List<Transport> transports, Cargo cargo) {
+        for (Transport transport : transports) {
+            if (transport.canBeLoaded(cargo)) {
+                return Optional.of(transport);
+            }
+        }
+        return Optional.empty();
     }
 }

@@ -1,11 +1,13 @@
 package ru.liga.loader.util;
 
+import org.springframework.stereotype.Component;
 import ru.liga.loader.model.entity.Cargo;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+@Component
 public class CargoCounter {
 
     private final int INCREMENT_VALUE = 1;
@@ -17,19 +19,18 @@ public class CargoCounter {
      * @return мапа с количеством грузов для каждого типа
      */
 
-    public Map<Character, Integer> countCargos(List<Cargo> cargos) {
-        Map<Character, Integer> cargosCount = new HashMap<>();
+    public Map<String, Integer> count(List<Cargo> cargos) {
+        Map<String, Integer> cargosCount = new HashMap<>();
         for (Cargo cargo : cargos) {
-            char symbol = cargo.getType();
-            incrementCount(cargosCount, symbol);
+            incrementCount(cargosCount, cargo.getName());
         }
         return cargosCount;
     }
 
-    private void incrementCount(Map<Character, Integer> countMap, char symbol) {
+    private void incrementCount(Map<String, Integer> countMap, String name) {
         countMap.put(
-                symbol,
-                countMap.getOrDefault(symbol, 0) + INCREMENT_VALUE
+                name,
+                countMap.getOrDefault(name, 0) + INCREMENT_VALUE
         );
     }
 }
