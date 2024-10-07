@@ -20,3 +20,6 @@ CREATE TABLE IF NOT EXISTS cargo.cargo
     transport_id UUID,
     FOREIGN KEY (transport_id) REFERENCES transport.transport (id)
 );
+
+CREATE UNIQUE INDEX idx_unique_name_null_transport_id ON cargo.cargo (name)
+    WHERE transport_id IS NULL;
