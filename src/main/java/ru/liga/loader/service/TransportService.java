@@ -4,106 +4,75 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.liga.loader.model.entity.Cargo;
 import ru.liga.loader.model.entity.Transport;
-import ru.liga.loader.model.structure.TransportJsonStructure;
 import ru.liga.loader.repository.TransportCrudRepository;
-import ru.liga.loader.util.CargoCounter;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class TransportService {
 
     private final TransportCrudRepository transportRepository;
-    private final TransportRepositoryService transportRepositoryService;
-    private final JsonService jsonService;
-    private final CargoCounter cargoCounter;
 
     @Autowired
-    public TransportService(TransportCrudRepository transportRepository,
-                            TransportRepositoryService transportRepositoryService,
-                            JsonService jsonService,
-                            CargoCounter cargoCounter) {
+    public TransportService(TransportCrudRepository transportRepository) {
         this.transportRepository = transportRepository;
-        this.transportRepositoryService = transportRepositoryService;
-        this.jsonService = jsonService;
-        this.cargoCounter = cargoCounter;
     }
 
     /**
-     * Сохраняет транспортные средства в JSON-файл по указанному пути.
+     * Возвращает процент занятости транспортного средства.
      *
-     * @param filePath путь к JSON-файлу
+     * @param transport транспортное средство
+     * @return процент занятости транспортного средства
      */
+    public int percentageOfOccupancy(Transport transport) {
+        if (!transportRepository.getKeys().contains(transport)) {
+            transportRepository.add(transport);
+        }
+        int bodyArea = transport.getBody().length * transport.getBody()[0].length;
+        int cargoArea = 0;
+        List<Cargo> cargos = transportRepository.getCargos(transport);
+        if (cargos == null || bodyArea <= 0) {
+            return cargoArea;
+        }
+        for (Cargo cargoInTransport : cargos) {
+            cargoArea += cargoInTransport.getArea();
+        }
+        return getPercent(cargoArea, bodyArea);
+    }
 
-    public void saveToJson(String filePath) {
-        List<TransportJsonStructure> structures = new ArrayList<>();
+    private int getPercent(int cargoArea, int bodyArea) {
+        return cargoArea * 100 / bodyArea;
+    }
+
+    /**
+     * Возвращает транспортное средство по его идентификатору.
+     *
+     * @param id идентификатор транспортного средства
+     * @return транспортное средство, если найдено, иначе Optional.empty()
+     */
+    public Optional<Transport> getTransportById(String id) {
         for (Transport transport : transportRepository.getKeys()) {
-            structures.add(
-                    new TransportJsonStructure(
-                            transport.getId(),
-                            transport.getBody(),
-                            transportRepository.getCargos(transport)
-                    )
-            );
+            if (transport.getId().equals(id)) {
+                return Optional.of(transport);
+            }
         }
-        jsonService.writeObject(structures, filePath);
+        return Optional.empty();
     }
 
     /**
-     * Возвращает информацию о всех транспортных средствах.
+     * Обновляет имена грузов в репозитории.
      *
-     * @return информация о всех транспортных средствах
+     * @param lastName  старое имя груза
+     * @param cargoName новое имя груза
      */
-
-    public String getTransportsInfo() {
-        StringBuilder stringBuilder = new StringBuilder("Отображение транспорта:");
-        if (!transportRepository.getKeys().isEmpty()) {
-            stringBuilder.append(System.lineSeparator())
-                    .append(transportRepository);
+    public void updateCargosName(String lastName, String cargoName) {
+        for (Transport transport : transportRepository.getKeys()) {
+            for (Cargo cargoInTransport : transportRepository.getCargos(transport)) {
+                if (cargoInTransport.getName().equals(lastName)) {
+                    cargoInTransport.setName(cargoName);
+                }
+            }
         }
-        return stringBuilder.toString();
-    }
-
-    /**
-     * Возвращает информацию о транспортном средстве с указанным идентификатором.
-     *
-     * @param id идентификатор транспортного средства
-     * @return информация о транспортном средстве, если найдено, иначе сообщение о том, что транспортное средство не найдено
-     */
-
-    public String getTransportInfoById(String id) {
-        List<Cargo> list = new ArrayList<>();
-        transportRepositoryService.getTransportById(id).ifPresent(
-                transport -> list.addAll(transportRepository.getCargos(transport)));
-        StringBuilder stringBuilder = new StringBuilder("Информация о транспорте").append(System.lineSeparator());
-        if (list.isEmpty()) {
-            return stringBuilder.append("Транспорт пустой").toString();
-        }
-        cargoCounter.count(list)
-                .forEach((name, count) ->
-                        stringBuilder.append("Название груза: ")
-                                .append(name)
-                                .append(", количество: ")
-                                .append(count)
-                                .append(System.lineSeparator())
-                );
-        return stringBuilder.toString();
-    }
-
-    /**
-     * Удаляет транспортное средство с указанным идентификатором.
-     *
-     * @param id идентификатор транспортного средства
-     * @return сообщение о результате удаления транспортного средства
-     */
-
-    public String delete(String id) {
-        return transportRepositoryService.getTransportById(id)
-                .map(transport -> {
-                    transportRepository.delete(transport);
-                    return "Транспорт с идентификатором " + id + " удален успешно!";
-                })
-                .orElse("Транспорт с идентификатором " + id + " не найден!");
     }
 }

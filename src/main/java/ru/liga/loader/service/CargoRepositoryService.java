@@ -17,18 +17,18 @@ public class CargoRepositoryService {
     private final CargoCrudRepository cargoRepository;
     private final CargoFactory cargoFactory;
     private final LoadingService loadingService;
-    private final TransportRepositoryService transportRepositoryService;
+    private final TransportService transportService;
     private final CargoService cargoService;
 
     @Autowired
     public CargoRepositoryService(CargoCrudRepository cargoRepository,
                                   CargoFactory cargoFactory,
                                   LoadingService loadingService,
-                                  TransportRepositoryService transportRepositoryService, CargoService cargoService) {
+                                  TransportService transportService, CargoService cargoService) {
         this.cargoRepository = cargoRepository;
         this.cargoFactory = cargoFactory;
         this.loadingService = loadingService;
-        this.transportRepositoryService = transportRepositoryService;
+        this.transportService = transportService;
         this.cargoService = cargoService;
     }
 
@@ -85,7 +85,7 @@ public class CargoRepositoryService {
                         cargoRepository.delete(lastName).getForm()
                 )
         );
-        transportRepositoryService.updateCargosName(lastName, newName);
+        transportService.updateCargosName(lastName, newName);
         loadingService.reload("MES");
         return "Название успешно изменено";
     }

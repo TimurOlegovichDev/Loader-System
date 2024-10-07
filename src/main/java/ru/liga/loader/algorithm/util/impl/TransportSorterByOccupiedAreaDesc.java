@@ -6,7 +6,7 @@ import org.springframework.stereotype.Component;
 import ru.liga.loader.algorithm.util.TransportSorter;
 import ru.liga.loader.model.entity.Transport;
 import ru.liga.loader.repository.TransportCrudRepository;
-import ru.liga.loader.service.TransportRepositoryService;
+import ru.liga.loader.service.TransportService;
 
 import java.util.Collections;
 import java.util.Comparator;
@@ -17,11 +17,11 @@ import java.util.stream.Collectors;
 @Component
 public class TransportSorterByOccupiedAreaDesc implements TransportSorter {
 
-    private final TransportRepositoryService transportRepositoryService;
+    private final TransportService transportService;
 
     @Autowired
-    public TransportSorterByOccupiedAreaDesc(TransportRepositoryService transportRepositoryService) {
-        this.transportRepositoryService = transportRepositoryService;
+    public TransportSorterByOccupiedAreaDesc(TransportService transportService) {
+        this.transportService = transportService;
     }
 
     /**
@@ -35,7 +35,7 @@ public class TransportSorterByOccupiedAreaDesc implements TransportSorter {
     public List<Transport> sort(TransportCrudRepository transportDataRepository, List<Transport> transports) {
         log.debug("Сортировка транспорта по заполняемости в порядке убывания...");
         List<Transport> sorted = transports.stream()
-                .sorted(Comparator.comparingInt(transportRepositoryService::percentageOfOccupancy))
+                .sorted(Comparator.comparingInt(transportService::percentageOfOccupancy))
                 .collect(Collectors.toList());
         Collections.reverse(sorted);
         return sorted;

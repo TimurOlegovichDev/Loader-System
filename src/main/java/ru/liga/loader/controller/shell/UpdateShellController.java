@@ -1,4 +1,4 @@
-package ru.liga.loader.shell;
+package ru.liga.loader.controller.shell;
 
 
 import org.springframework.beans.factory.annotation.Autowired;

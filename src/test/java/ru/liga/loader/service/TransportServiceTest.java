@@ -18,13 +18,13 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-public class TransportRepositoryServiceTest {
+public class TransportServiceTest {
 
     @Mock
     private TransportCrudRepository transportRepository;
 
     @InjectMocks
-    private TransportRepositoryService transportRepositoryService;
+    private TransportService transportService;
 
     @Test
     void testPercentageOfOccupancy_TransportExists_ReturnsOccupancy() {
@@ -33,7 +33,7 @@ public class TransportRepositoryServiceTest {
         cargos.add(new Cargo("cargo1", new char[][]{{'A'}}));
         when(transportRepository.getKeys()).thenReturn(List.of(transport));
         when(transportRepository.getCargos(transport)).thenReturn(cargos);
-        int result = transportRepositoryService.percentageOfOccupancy(transport);
+        int result = transportService.percentageOfOccupancy(transport);
         assertEquals(100, result);
     }
 
@@ -41,7 +41,7 @@ public class TransportRepositoryServiceTest {
     void testPercentageOfOccupancy_TransportNotExists_ReturnsZero() {
         Transport transport = new Transport(1, 1);
         when(transportRepository.getKeys()).thenReturn(new ArrayList<>());
-        int result = transportRepositoryService.percentageOfOccupancy(transport);
+        int result = transportService.percentageOfOccupancy(transport);
         assertEquals(0, result);
     }
 
@@ -49,7 +49,7 @@ public class TransportRepositoryServiceTest {
     void testGetTransportById_TransportExists_ReturnsTransport() {
         Transport transport = new Transport(1, 1);
         when(transportRepository.getKeys()).thenReturn(List.of(transport));
-        Optional<Transport> result = transportRepositoryService.getTransportById(transport.getId());
+        Optional<Transport> result = transportService.getTransportById(transport.getId());
         assertNotNull(result);
         assertEquals(transport, result.orElse(null));
     }
@@ -58,7 +58,7 @@ public class TransportRepositoryServiceTest {
     void testGetTransportById_TransportNotExists_ReturnsEmpty() {
         Transport transport = new Transport(1, 1);
         when(transportRepository.getKeys()).thenReturn(new ArrayList<>());
-        Optional<Transport> result = transportRepositoryService.getTransportById(transport.getId());
+        Optional<Transport> result = transportService.getTransportById(transport.getId());
         assertEquals(Optional.empty(), result);
     }
 
@@ -70,7 +70,7 @@ public class TransportRepositoryServiceTest {
         cargos.add(cargo);
         when(transportRepository.getKeys()).thenReturn(List.of(transport));
         when(transportRepository.getCargos(transport)).thenReturn(cargos);
-        transportRepositoryService.updateCargosName("cargo1", "newName");
+        transportService.updateCargosName("cargo1", "newName");
         assertEquals("newName", cargo.getName());
     }
 
@@ -82,7 +82,7 @@ public class TransportRepositoryServiceTest {
         cargos.add(cargo);
         when(transportRepository.getKeys()).thenReturn(List.of(transport));
         when(transportRepository.getCargos(transport)).thenReturn(cargos);
-        transportRepositoryService.updateCargosName("cargo2", "newName");
+        transportService.updateCargosName("cargo2", "newName");
         assertEquals("cargo1", cargo.getName());
     }
 }

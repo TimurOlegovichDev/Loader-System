@@ -23,7 +23,7 @@ public class CargoRepositoryServiceTest {
     private LoadingService loadingService;
 
     @Mock
-    private TransportRepositoryService transportRepositoryService;
+    private TransportService transportService;
 
     @Mock
     private CargoFactory cargoFactory;
