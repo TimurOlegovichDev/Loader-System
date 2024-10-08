@@ -9,7 +9,6 @@ import ru.liga.loadersystem.service.CargoRepositoryService;
 import ru.liga.loadersystem.service.InitializeService;
 
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 
 @Slf4j
 @ShellComponent
@@ -27,7 +26,7 @@ public class CargoShellController {
     }
 
     @ShellMethod(key = "Инициализировать груз из файла")
-    public String initCargosFromFile(String filePath) throws FileNotFoundException {
+    public String initCargosFromFile(String filePath) {
         try {
             initializeService.initializeCargos(new FileInputStream(filePath));
             return "Инициализация прошла успешно";

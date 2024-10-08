@@ -8,6 +8,7 @@ import org.telegram.telegrambots.meta.api.methods.GetFile;
 import org.telegram.telegrambots.meta.api.methods.send.SendDocument;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Document;
+import org.telegram.telegrambots.meta.api.objects.File;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
@@ -15,9 +16,6 @@ import ru.liga.loadersystem.config.BotConfig;
 import ru.liga.loadersystem.handler.TelegramBotCommandHandler;
 import ru.liga.loadersystem.model.ResponseToCLient;
 import ru.liga.loadersystem.service.InitializeService;
-
-import java.io.BufferedInputStream;
-import java.io.InputStream;
 
 
 @Slf4j
@@ -79,7 +77,7 @@ public class TelegramBotController extends TelegramLongPollingBot {
         try {
             GetFile getFile = getGetFile(message);
             org.telegram.telegrambots.meta.api.objects.File file = execute(getFile);
-            return tryInitEntitiesFromFile(downloadFileAsStream(file));
+            return tryInitEntitiesFromFile(file);
         } catch (Exception e) {
             return ResponseToCLient.bad(
                     "Произошла ошибка при обработке файла",
@@ -88,15 +86,17 @@ public class TelegramBotController extends TelegramLongPollingBot {
         }
     }
 
-    private ResponseToCLient tryInitEntitiesFromFile(InputStream inputStream) {
-        BufferedInputStream bufferedInputStream = new BufferedInputStream(inputStream);
+    private ResponseToCLient tryInitEntitiesFromFile(File tgFile) {
         try {
-            initializeService.initializeTransport(bufferedInputStream);
-            bufferedInputStream.reset();
-            initializeService.initializeCargos(bufferedInputStream);
-            return ResponseToCLient.ok("Файл инициализирован успешно");
+            initializeService.initializeTransport(downloadFileAsStream(tgFile));
+            return ResponseToCLient.ok("Транспорт инициализирован успешно");
         } catch (Exception e) {
-            return ResponseToCLient.bad("Данный файл не поддерживается системой " + e.getMessage(), TelegramBotController.class);
+            try {
+                initializeService.initializeCargos(downloadFileAsStream(tgFile));
+                return ResponseToCLient.ok("Груз инициализирован успешно");
+            } catch (Exception ex) {
+                return ResponseToCLient.bad("Данный файл не поддерживается системой " + ex.getMessage(), TelegramBotController.class);
+            }
         }
     }
 
