@@ -27,8 +27,13 @@ public class CargoShellController {
     }
 
     @ShellMethod(key = "Инициализировать груз из файла")
-    public void initCargosFromFile(String filePath) throws FileNotFoundException {
-        initializeService.initializeCargos(new FileInputStream(filePath));
+    public String initCargosFromFile(String filePath) throws FileNotFoundException {
+        try {
+            initializeService.initializeCargos(new FileInputStream(filePath));
+            return "Инициализация прошла успешно";
+        } catch (Exception e) {
+            return "При чтении произошла ошибка " + e.getMessage();
+        }
     }
 
     @ShellMethod(key = "Добавить посылку")

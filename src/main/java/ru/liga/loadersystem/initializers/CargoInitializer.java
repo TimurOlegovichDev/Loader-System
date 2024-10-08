@@ -35,7 +35,7 @@ public class CargoInitializer {
      * @return список грузов
      */
 
-    public List<Cargo> initializeFromJson(InputStream stream) {
+    public List<Cargo> initializeFromJson(InputStream stream) throws Exception {
         List<CargoJsonStructure> cargoJsonStructures =
                 jsonService.read(CargoJsonStructure.class, stream);
         List<Cargo> list = new ArrayList<>();

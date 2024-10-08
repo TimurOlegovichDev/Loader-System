@@ -7,7 +7,6 @@ import ru.liga.loadersystem.util.json.JsonReader;
 import ru.liga.loadersystem.util.json.JsonWriter;
 
 import java.io.InputStream;
-import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
@@ -44,12 +43,7 @@ public class JsonService {
      * @return список объектов
      */
 
-    public <T> List<T> read(Class<T> clazz, InputStream stream) {
-        try {
-            return jsonReader.readObject(clazz, stream);
-        } catch (Throwable e) {
-            log.error("При чтении произошла ошибка {}", e.getMessage());
-        }
-        return new ArrayList<>();
+    public <T> List<T> read(Class<T> clazz, InputStream stream) throws Exception {
+        return jsonReader.readObject(clazz, stream);
     }
 }

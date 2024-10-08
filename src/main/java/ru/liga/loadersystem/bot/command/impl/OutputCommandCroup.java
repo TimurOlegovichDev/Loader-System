@@ -4,7 +4,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
-import org.telegram.telegrambots.meta.api.methods.send.SendDocument;
 import org.telegram.telegrambots.meta.api.objects.InputFile;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import ru.liga.loadersystem.bot.command.TelegramBotCommand;
@@ -15,6 +14,7 @@ import ru.liga.loadersystem.parser.impl.TelegramBotCommandParser;
 import ru.liga.loadersystem.service.CargoRepositoryService;
 import ru.liga.loadersystem.service.TransportRepositoryService;
 
+import java.io.ByteArrayInputStream;
 import java.util.UUID;
 
 @Component
@@ -69,16 +69,17 @@ public class OutputCommandCroup implements TelegramBotCommand {
 
     private ResponseToCLient getResponseWithDocument() {
         try {
+            InputFile inputFile = new InputFile(
+                    new ByteArrayInputStream(
+                            objectMapper.writeValueAsBytes(
+                                    transportRepositoryService.getStructures()
+                            )
+                    ),
+                    "info.json"
+            );
             return ResponseToCLient.ok(
                     "Файл успешно отправлен",
-                    new SendDocument(
-                            "loader-system-info",
-                            new InputFile(
-                                    objectMapper.writeValueAsString(
-                                            transportRepositoryService.getStructures()
-                                    )
-                            )
-                    )
+                    inputFile
             );
         } catch (JsonProcessingException e) {
             return ResponseToCLient.bad(

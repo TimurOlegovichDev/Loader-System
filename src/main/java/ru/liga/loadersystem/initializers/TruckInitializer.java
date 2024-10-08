@@ -55,7 +55,7 @@ public class TruckInitializer {
      * @return карта грузовых автомобилей и грузов
      */
 
-    public Map<Transport, List<Cargo>> initializeFromJson(InputStream stream) {
+    public Map<Transport, List<Cargo>> initializeFromJson(InputStream stream) throws Exception {
         List<TransportJsonStructure> transportJsonStructures =
                 jsonService.read(TransportJsonStructure.class, stream);
         Map<Transport, List<Cargo>> map = new HashMap<>();

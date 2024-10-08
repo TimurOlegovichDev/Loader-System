@@ -8,16 +8,16 @@ import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.TelegramBotsApi;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import org.telegram.telegrambots.updatesreceivers.DefaultBotSession;
-import ru.liga.loadersystem.bot.TelegramBot;
+import ru.liga.loadersystem.controller.TelegramBotController;
 
 @Component
 @Slf4j
 public class BotInitializer {
 
-    private final TelegramBot bot;
+    private final TelegramBotController bot;
 
     @Autowired
-    public BotInitializer(TelegramBot bot) {
+    public BotInitializer(TelegramBotController bot) {
         this.bot = bot;
     }
 

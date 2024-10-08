@@ -35,8 +35,13 @@ public class TransportShellController {
     }
 
     @ShellMethod(key = "Инициализировать транспорт из файла")
-    public void initTransportFromFile(String filePath) throws FileNotFoundException {
-        initializeService.initializeTransport(new FileInputStream(filePath));
+    public String initTransportFromFile(String filePath) throws FileNotFoundException {
+        try {
+            initializeService.initializeTransport(new FileInputStream(filePath));
+            return "Груз инициализирован успешно";
+        } catch (Exception e) {
+            return "При чтении произошла ошибка " + e.getMessage();
+        }
     }
 
     @ShellMethod(key = "Добавить транспорт с указанным размером")

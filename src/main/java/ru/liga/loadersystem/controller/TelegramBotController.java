@@ -4,12 +4,20 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
+import org.telegram.telegrambots.meta.api.methods.GetFile;
+import org.telegram.telegrambots.meta.api.methods.send.SendDocument;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
+import org.telegram.telegrambots.meta.api.objects.Document;
+import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import ru.liga.loadersystem.config.BotConfig;
 import ru.liga.loadersystem.handler.TelegramBotCommandHandler;
 import ru.liga.loadersystem.model.ResponseToCLient;
+import ru.liga.loadersystem.service.InitializeService;
+
+import java.io.BufferedInputStream;
+import java.io.InputStream;
 
 
 @Slf4j
@@ -18,16 +26,26 @@ public class TelegramBotController extends TelegramLongPollingBot {
 
     private final TelegramBotCommandHandler commandHandler;
     private final BotConfig botConfig;
+    private final InitializeService initializeService;
 
     @Autowired
     public TelegramBotController(TelegramBotCommandHandler commandHandler,
-                                 BotConfig botConfig) {
+                                 BotConfig botConfig, InitializeService initializeService) {
+        super(botConfig.getToken());
         this.commandHandler = commandHandler;
         this.botConfig = botConfig;
+        this.initializeService = initializeService;
     }
 
     @Override
     public void onUpdateReceived(Update update) {
+        if (update.getMessage().hasDocument()) {
+            sendResponse(
+                    update.getMessage().getChatId(),
+                    handleFile(update.getMessage())
+            );
+            return;
+        }
         sendResponse(
                 update.getMessage().getChatId(),
                 commandHandler.handleCommand(update)
@@ -39,7 +57,14 @@ public class TelegramBotController extends TelegramLongPollingBot {
         message.setChatId(chatId);
         message.setText(response.getBody());
         try {
-            execute(message);
+            if (response.hasDocument()) {
+                SendDocument document = new SendDocument();
+                document.setDocument(response.getDocument());
+                document.setChatId(chatId);
+                execute(document);
+            } else {
+                execute(message);
+            }
         } catch (TelegramApiException e) {
             log.error(e.getMessage());
         }
@@ -48,5 +73,45 @@ public class TelegramBotController extends TelegramLongPollingBot {
     @Override
     public String getBotUsername() {
         return botConfig.getBotName();
+    }
+
+    private ResponseToCLient handleFile(Message message) {
+        try {
+            GetFile getFile = getGetFile(message);
+            org.telegram.telegrambots.meta.api.objects.File file = execute(getFile);
+            return tryInitEntitiesFromFile(downloadFileAsStream(file));
+        } catch (Exception e) {
+            return ResponseToCLient.bad(
+                    "Произошла ошибка при обработке файла",
+                    e.getCause().getClass()
+            );
+        }
+    }
+
+    private ResponseToCLient tryInitEntitiesFromFile(InputStream inputStream) {
+        BufferedInputStream bufferedInputStream = new BufferedInputStream(inputStream);
+        try {
+            initializeService.initializeTransport(bufferedInputStream);
+            bufferedInputStream.reset();
+            initializeService.initializeCargos(bufferedInputStream);
+            return ResponseToCLient.ok("Файл инициализирован успешно");
+        } catch (Exception e) {
+            return ResponseToCLient.bad("Данный файл не поддерживается системой " + e.getMessage(), TelegramBotController.class);
+        }
+    }
+
+    private GetFile getGetFile(Message message) {
+        String doc_mine = message.getDocument().getMimeType();
+        String doc_name = message.getDocument().getFileName();
+        long doc_size = message.getDocument().getFileSize();
+        String doc_id = message.getDocument().getFileId();
+        Document document = new Document();
+        document.setMimeType(doc_mine);
+        document.setFileName(doc_name);
+        document.setFileSize(doc_size);
+        document.setFileId(doc_id);
+        GetFile getFile = new GetFile();
+        getFile.setFileId(document.getFileId());
+        return getFile;
     }
 }

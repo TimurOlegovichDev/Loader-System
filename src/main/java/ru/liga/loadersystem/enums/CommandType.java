@@ -1,11 +1,13 @@
 package ru.liga.loadersystem.enums;
 
 import lombok.Getter;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Getter
 public enum CommandType {
 
-    INFO_CARGOS(" Информация о грузах"),
+    INFO_CARGOS("Информация о грузах"),
     INFO_TRANSPORTS("Информация о транспорте"),
     INFO_CARGO_BY_NAME("Информация о грузе с названием"),
     SAVE_DATA_TO_FILE("Сохранить данные в файл"),
@@ -33,7 +35,8 @@ public enum CommandType {
 
     public static CommandType fromString(String description) {
         for (CommandType commandType : values()) {
-            if (commandType.getDescription().equals(description)) {
+            log.debug("СРАВНЕНИЕ {} c {}", description, commandType.getDescription());
+            if (commandType.getDescription().equalsIgnoreCase(description)) {
                 return commandType;
             }
         }

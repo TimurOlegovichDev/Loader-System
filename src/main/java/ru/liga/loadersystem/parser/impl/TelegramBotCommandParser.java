@@ -6,19 +6,17 @@ import ru.liga.loadersystem.parser.StringParser;
 
 @Component
 public class TelegramBotCommandParser implements StringParser<TelegramBotCommandData> {
+
     @Override
     public TelegramBotCommandData parse(String input) {
-        String[] parts = input.split("\\s+(?=[^\\s]+$)");
-        if (parts.length == 0) {
-            throw new IllegalArgumentException("Invalid input");
-        }
-        if (parts.length >= 2) {
-            String command = parts[0].trim();
-            String data = parts[1].trim();
-            return new TelegramBotCommandData(command, data);
-        } else {
-            String command = parts[0].trim();
+        int openParenIndex = input.indexOf('(');
+        if (openParenIndex == -1) {
+            String command = input.trim();
             return new TelegramBotCommandData(command, "");
+        } else {
+            String command = input.substring(0, openParenIndex).trim();
+            String params = input.substring(openParenIndex + 1, input.indexOf(')')).trim();
+            return new TelegramBotCommandData(command, params);
         }
     }
 }

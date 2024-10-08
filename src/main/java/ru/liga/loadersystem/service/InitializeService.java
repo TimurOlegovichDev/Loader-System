@@ -45,10 +45,9 @@ public class InitializeService {
      * @param stream файл
      */
 
-    public void initializeCargos(InputStream stream) {
+    public void initializeCargos(InputStream stream) throws Exception {
         List<Cargo> list = cargoInitializer.initializeFromJson(stream);
         initUniqueCargo(list);
-        cargoDataRepository.saveAll(list);
         log.debug("Добавлено груза: {}", list.size());
     }
 
@@ -62,7 +61,7 @@ public class InitializeService {
      * @param stream файл JSON
      */
 
-    public void initializeTransport(InputStream stream) {
+    public void initializeTransport(InputStream stream) throws Exception {
         Map<Transport, List<Cargo>> transportMap =
                 truckInitializer.initializeFromJson(stream);
         countCargos(transportMap);
