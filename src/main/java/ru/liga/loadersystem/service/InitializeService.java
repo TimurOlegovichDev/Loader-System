@@ -81,11 +81,12 @@ public class InitializeService {
      * @param list список размеров
      */
 
-    public void initializeTransport(List<TransportSizeStructure> list) {
+    public int initializeTransport(List<TransportSizeStructure> list) {
         List<Transport> transports =
                 truckInitializer.initialize(list);
         transportDataRepository.saveAll(transports);
         log.debug("Добавлено транспорта из полученных размеров: {}", transports.size());
+        return transports.size();
     }
 
     private void countCargos(Map<Transport, List<Cargo>> map) {

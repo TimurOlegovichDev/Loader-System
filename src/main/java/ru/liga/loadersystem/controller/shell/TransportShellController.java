@@ -46,11 +46,6 @@ public class TransportShellController {
         );
     }
 
-    @ShellMethod(key = "Удалить груз из системы")
-    public String deleteCargoFormSystem(String name, String algoName) {
-        return cargoRepositoryService.delete(name, algoName);
-    }
-
     @ShellMethod(key = "Удалить транспорт из системы")
     public String deleteTransportFormSystem(String id) {
         return transportRepositoryService.delete(UUID.fromString(id));

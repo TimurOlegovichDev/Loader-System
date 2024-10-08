@@ -1,9 +1,7 @@
 package ru.liga.loadersystem.bot;
 
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.shell.Shell;
-import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.GetFile;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
@@ -17,14 +15,12 @@ import ru.liga.loadersystem.service.InitializeService;
 import java.io.InputStream;
 
 @Slf4j
-@Component
 public class TelegramBot extends TelegramLongPollingBot {
 
     private final BotConfig config;
     private final Shell shell;
     private final InitializeService initializeService;
-
-    @Autowired
+    
     public TelegramBot(BotConfig config, Shell shell, InitializeService initializeService) {
         super(config.getToken());
         this.config = config;

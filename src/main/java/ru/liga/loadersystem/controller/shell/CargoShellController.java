@@ -59,4 +59,9 @@ public class CargoShellController {
                 newName
         );
     }
+
+    @ShellMethod(key = "Удалить груз из системы")
+    public String deleteCargoFormSystem(String name, String algoName) {
+        return cargoRepositoryService.delete(name, algoName);
+    }
 }
