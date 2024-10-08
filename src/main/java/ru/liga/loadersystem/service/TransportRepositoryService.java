@@ -12,6 +12,7 @@ import ru.liga.loadersystem.util.CargoCounter;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -83,8 +84,14 @@ public class TransportRepositoryService {
 
     public String getTransportInfoById(UUID id) {
         List<Cargo> list = new ArrayList<>();
-        transportServiceq11.getTransportById(id).ifPresent(
-                transport -> list.addAll(cargoCrudRepository.findAllByTransportId(transport.getId())));
+        Optional<Transport> optional = transportRepository.findById(id);
+        if (optional.isPresent()) {
+            optional.ifPresent(
+                    transport -> list.addAll(cargoCrudRepository.findAllByTransportId(transport.getId()))
+            );
+        } else {
+            return "Транспорт с таким идентификатором не найден";
+        }
         StringBuilder stringBuilder = new StringBuilder("Информация о транспорте").append(System.lineSeparator());
         if (list.isEmpty()) {
             return stringBuilder.append("Транспорт пустой").toString();

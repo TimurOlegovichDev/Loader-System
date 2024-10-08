@@ -50,7 +50,7 @@ public class MinimumEmptySpaceAlgorithm implements LoadingCargoAlgorithm {
 
     @Override
     public void execute(List<Cargo> cargos, List<Transport> transports) {
-        log.info("Старт алгоритма плотной погрузки");
+        log.info("Старт алгоритма плотной погрузки, количество грузовиков: {}", transports.size());
         List<Transport> transportsSorted = transportSorter.sort(transportDataRepository, transports);
         for (Cargo cargo : cargoSorter.sort(cargos)) {
             log.info("Погрузка груза: {}", cargo);
