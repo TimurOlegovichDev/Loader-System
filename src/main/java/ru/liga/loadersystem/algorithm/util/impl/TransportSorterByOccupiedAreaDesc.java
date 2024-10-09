@@ -17,11 +17,11 @@ import java.util.stream.Collectors;
 @Component
 public class TransportSorterByOccupiedAreaDesc implements TransportSorter {
 
-    private final TransportService transportServiceq11;
+    private final TransportService transportService;
 
     @Autowired
-    public TransportSorterByOccupiedAreaDesc(TransportService transportServiceq11) {
-        this.transportServiceq11 = transportServiceq11;
+    public TransportSorterByOccupiedAreaDesc(TransportService transportService) {
+        this.transportService = transportService;
     }
 
     /**
@@ -35,7 +35,7 @@ public class TransportSorterByOccupiedAreaDesc implements TransportSorter {
     public List<Transport> sort(TransportCrudRepository transportDataRepository, List<Transport> transports) {
         log.debug("Сортировка транспорта по заполняемости в порядке убывания...");
         List<Transport> sorted = transports.stream()
-                .sorted(Comparator.comparingInt(transportServiceq11::percentageOfOccupancy))
+                .sorted(Comparator.comparingInt(transportService::percentageOfOccupancy))
                 .collect(Collectors.toList());
         Collections.reverse(sorted);
         return sorted;

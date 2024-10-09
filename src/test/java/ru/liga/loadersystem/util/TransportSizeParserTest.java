@@ -6,7 +6,7 @@ import ru.liga.loadersystem.validator.impl.TransportSizeValidator;
 
 import java.util.Map;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
 class TransportSizeParserTest {
 
@@ -21,10 +21,8 @@ class TransportSizeParserTest {
     @Test
     void testParse() {
         for (Map.Entry<String, Integer> entry : input.entrySet()) {
-            assertEquals(
-                    parser.parse(entry.getKey()).size(),
-                    entry.getValue()
-            );
+            assertThat(parser.parse(entry.getKey()).size())
+                    .isEqualTo(entry.getValue());
         }
     }
 }

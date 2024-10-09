@@ -20,7 +20,6 @@ public class DefaultCargoSorter implements CargoSorter {
      * @param cargos список грузов, который будет отсортирован
      * @return отсортированный список грузов
      */
-
     @Override
     public List<Cargo> sort(List<Cargo> cargos) {
         log.debug("Сортировка груза по весу...");

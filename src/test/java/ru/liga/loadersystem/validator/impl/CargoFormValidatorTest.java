@@ -5,8 +5,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 import ru.liga.loadersystem.exception.InvalidCargoInput;
 
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThatCode;
 
 @ExtendWith(MockitoExtension.class)
 public class CargoFormValidatorTest {
@@ -16,24 +16,26 @@ public class CargoFormValidatorTest {
     @Test
     void testValidate_EmptyForm_ThrowsInvalidCargoInput() {
         char[][] input = new char[][]{};
-        assertThrows(InvalidCargoInput.class, () -> validator.validate(input));
+        assertThatThrownBy(() -> validator.validate(input))
+                .isInstanceOf(InvalidCargoInput.class);
     }
 
     @Test
     void testValidate_FormWithDifferentChars_ThrowsInvalidCargoInput() {
         char[][] input = new char[][]{{'A', 'B'}};
-        assertThrows(InvalidCargoInput.class, () -> validator.validate(input));
+        assertThatThrownBy(() -> validator.validate(input))
+                .isInstanceOf(InvalidCargoInput.class);
     }
 
     @Test
     void testValidate_ValidForm_DoesNotThrow() {
         char[][] input = new char[][]{{'A', 'A'}};
-        assertDoesNotThrow(() -> validator.validate(input));
+        assertThatCode(() -> validator.validate(input)).doesNotThrowAnyException();
     }
 
     @Test
     void testValidate_FormWithSpaces_DoesNotThrow() {
         char[][] input = new char[][]{{'A', ' '}, {' ', 'A'}};
-        assertDoesNotThrow(() -> validator.validate(input));
+        assertThatCode(() -> validator.validate(input)).doesNotThrowAnyException();
     }
 }

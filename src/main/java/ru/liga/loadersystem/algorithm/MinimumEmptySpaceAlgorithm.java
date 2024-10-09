@@ -38,16 +38,6 @@ public class MinimumEmptySpaceAlgorithm implements LoadingCargoAlgorithm {
         this.cargoCrudRepository = cargoCrudRepository;
     }
 
-    /**
-     * Выполняет алгоритм плотной погрузки грузов.
-     * Метод находит наиболее заполненную машину для погрузки, если погрузка не удалась,
-     * то алгоритм повторяется для следующего транспорта
-     *
-     * @see CargoSorter#sort(List)
-     * @see TransportSorter#sort(TransportCrudRepository, List)
-     * @see #loadCargo(Cargo, List)
-     */
-
     @Override
     public void execute(List<Cargo> cargos, List<Transport> transports) {
         log.info("Старт алгоритма плотной погрузки, количество грузовиков: {}", transports.size());

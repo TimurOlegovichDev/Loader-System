@@ -2,7 +2,7 @@ package ru.liga.loadersystem.parser.impl;
 
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class CargoFormParserTest {
 
@@ -11,17 +11,17 @@ public class CargoFormParserTest {
     @Test
     void testParse_EmptyString_ReturnsEmptyArray() {
         char[][] result = parser.parse("");
-        assertNotNull(result);
-        assertEquals(0, result.length);
+        assertThat(result).isNotNull();
+        assertThat(result).isEmpty();
     }
 
     @Test
     void testParse_SingleLine_ReturnsSingleLineArray() {
         char[][] result = parser.parse("00;000;0000");
-        assertNotNull(result);
-        assertEquals(3, result.length);
-        assertArrayEquals(new char[]{'0', '0'}, result[0]);
-        assertArrayEquals(new char[]{'0', '0', '0'}, result[1]);
-        assertArrayEquals(new char[]{'0', '0', '0', '0'}, result[2]);
+        assertThat(result).isNotNull();
+        assertThat(result.length).isEqualTo(3);
+        assertThat(result[0]).containsExactly('0', '0');
+        assertThat(result[1]).containsExactly('0', '0', '0');
+        assertThat(result[2]).containsExactly('0', '0', '0', '0');
     }
 }

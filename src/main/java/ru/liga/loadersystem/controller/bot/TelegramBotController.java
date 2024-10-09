@@ -46,7 +46,7 @@ public class TelegramBotController extends TelegramLongPollingBot {
         }
         sendResponse(
                 update.getMessage().getChatId(),
-                commandHandler.handleCommand(update)
+                commandHandler.handle(update)
         );
     }
 
@@ -73,7 +73,7 @@ public class TelegramBotController extends TelegramLongPollingBot {
         return botConfig.getBotName();
     }
 
-    private BotResponseEntity handleFile(Message message) {
+    public BotResponseEntity handleFile(Message message) {
         try {
             GetFile getFile = getGetFile(message);
             org.telegram.telegrambots.meta.api.objects.File file = execute(getFile);

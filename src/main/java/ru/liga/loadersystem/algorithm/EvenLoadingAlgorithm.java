@@ -39,14 +39,6 @@ public class EvenLoadingAlgorithm implements LoadingCargoAlgorithm {
         this.cargoCrudRepository = cargoCrudRepository;
     }
 
-    /**
-     * Выполняет алгоритм равномерной погрузки грузов.
-     * Данный алгоритм находит транспорт с наименьшим процентом заполненности,
-     * чтобы в конечном результате грузовики были равномерно загружены относительно своего размера
-     *
-     * @see CargoSorter#sort(List)
-     */
-
     @Override
     public void execute(List<Cargo> cargos, List<Transport> transports) {
         log.info("Старт алгоритма равномерной погрузки");

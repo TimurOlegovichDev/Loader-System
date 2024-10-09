@@ -6,8 +6,7 @@ import ru.liga.loadersystem.model.entity.Cargo;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class DefaultCargoSorterTest {
 
@@ -17,8 +16,8 @@ public class DefaultCargoSorterTest {
     void testSort_EmptyList_ReturnsEmptyList() {
         List<Cargo> cargos = new ArrayList<>();
         List<Cargo> sortedCargos = sorter.sort(cargos);
-        assertNotNull(sortedCargos);
-        assertEquals(0, sortedCargos.size());
+        assertThat(sortedCargos).isNotNull();
+        assertThat(sortedCargos).isEmpty();
     }
 
     @Test
@@ -26,9 +25,9 @@ public class DefaultCargoSorterTest {
         Cargo cargo = new Cargo("cargo1", "A");
         List<Cargo> cargos = List.of(cargo);
         List<Cargo> sortedCargos = sorter.sort(cargos);
-        assertNotNull(sortedCargos);
-        assertEquals(1, sortedCargos.size());
-        assertEquals(cargo, sortedCargos.get(0));
+        assertThat(sortedCargos).isNotNull();
+        assertThat(sortedCargos).hasSize(1);
+        assertThat(sortedCargos).containsExactly(cargo);
     }
 
     @Test
@@ -38,11 +37,9 @@ public class DefaultCargoSorterTest {
         Cargo cargo3 = new Cargo("cargo3", "CCC;CCC"); // area = 9
         List<Cargo> cargos = List.of(cargo1, cargo2, cargo3);
         List<Cargo> sortedCargos = sorter.sort(cargos);
-        assertNotNull(sortedCargos);
-        assertEquals(3, sortedCargos.size());
-        assertEquals(cargo3, sortedCargos.get(0));
-        assertEquals(cargo1, sortedCargos.get(1));
-        assertEquals(cargo2, sortedCargos.get(2));
+        assertThat(sortedCargos).isNotNull();
+        assertThat(sortedCargos).hasSize(3);
+        assertThat(sortedCargos).containsExactly(cargo3, cargo1, cargo2);
     }
 
     @Test
@@ -52,10 +49,8 @@ public class DefaultCargoSorterTest {
         Cargo cargo3 = new Cargo("cargo3", "C"); // area = 1
         List<Cargo> cargos = List.of(cargo1, cargo2, cargo3);
         List<Cargo> sortedCargos = sorter.sort(cargos);
-        assertNotNull(sortedCargos);
-        assertEquals(3, sortedCargos.size());
-        assertEquals(cargo1, sortedCargos.get(0));
-        assertEquals(cargo2, sortedCargos.get(1));
-        assertEquals(cargo3, sortedCargos.get(2));
+        assertThat(sortedCargos).isNotNull();
+        assertThat(sortedCargos).hasSize(3);
+        assertThat(sortedCargos).containsExactly(cargo1, cargo2, cargo3);
     }
 }

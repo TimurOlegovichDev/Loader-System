@@ -1,9 +1,11 @@
 package ru.liga.loadersystem.validator.impl;
 
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
+
+import static org.assertj.core.api.Assertions.assertThatCode;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 
 class TransportSizeValidatorTest {
 
@@ -17,9 +19,7 @@ class TransportSizeValidatorTest {
                 "3x3"
         );
         for (String line : input) {
-            Assertions.assertDoesNotThrow(
-                    () -> validator.validate(line)
-            );
+            assertThatCode(() -> validator.validate(line)).doesNotThrowAnyException();
         }
     }
 
@@ -35,10 +35,8 @@ class TransportSizeValidatorTest {
                 "3x3 1x2 5x5 6x6 8x8"
         );
         for (String line : input) {
-            Assertions.assertThrows(
-                    IllegalArgumentException.class,
-                    () -> validator.validate(line)
-            );
+            assertThatThrownBy(() -> validator.validate(line))
+                    .isInstanceOf(IllegalArgumentException.class);
         }
     }
 }

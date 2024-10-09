@@ -8,7 +8,8 @@ import ru.liga.loadersystem.validator.impl.TransportSizeValidator;
 
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @ExtendWith(MockitoExtension.class)
 public class TransportSizeParserTest {
@@ -19,29 +20,32 @@ public class TransportSizeParserTest {
 
     @Test
     void testParse_EmptyString_ThrowsIllegalArgumentException() {
-        assertThrows(IllegalArgumentException.class, () -> parser.parse(""));
+        assertThatThrownBy(() -> parser.parse(""))
+                .isInstanceOf(IllegalArgumentException.class);
     }
 
     @Test
     void testParse_InvalidFormat_ThrowsIllegalArgumentException() {
-        assertThrows(IllegalArgumentException.class, () -> parser.parse("invalid"));
+        assertThatThrownBy(() -> parser.parse("invalid"))
+                .isInstanceOf(IllegalArgumentException.class);
     }
 
     @Test
     void testParse_ValidFormat_ReturnsTransportSizeStructures() {
         List<TransportSizeStructure> result = parser.parse("1x2");
-        assertNotNull(result);
-        assertEquals(1, result.size());
-        assertEquals(1, result.get(0).width());
-        assertEquals(2, result.get(0).height());
+        assertThat(result).isNotNull();
+        assertThat(result).hasSize(1);
+        assertThat(result.get(0)).isEqualTo(new TransportSizeStructure(1, 2));
     }
 
     @Test
     void testParse_MultipleSizes_ReturnsTransportSizeStructures() {
         List<TransportSizeStructure> result = parser.parse("1x2,3x4");
-        assertNotNull(result);
-        assertEquals(2, result.size());
-        assertEquals(new TransportSizeStructure(1, 2), result.get(0));
-        assertEquals(new TransportSizeStructure(3, 4), result.get(1));
+        assertThat(result).isNotNull();
+        assertThat(result).hasSize(2);
+        assertThat(result).containsExactly(
+                new TransportSizeStructure(1, 2),
+                new TransportSizeStructure(3, 4)
+        );
     }
 }
