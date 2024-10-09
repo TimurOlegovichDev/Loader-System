@@ -35,7 +35,7 @@ public class DefaultCargoSorterTest {
     void testSort_MultipleElementsList_SortedByAreaDescending() {
         Cargo cargo1 = new Cargo("cargo1", "AA;AA"); // area = 4
         Cargo cargo2 = new Cargo("cargo2", "B"); // area = 1
-        Cargo cargo3 = new Cargo("cargo3", "CC;CC"); // area = 9
+        Cargo cargo3 = new Cargo("cargo3", "CCC;CCC"); // area = 9
         List<Cargo> cargos = List.of(cargo1, cargo2, cargo3);
         List<Cargo> sortedCargos = sorter.sort(cargos);
         assertNotNull(sortedCargos);

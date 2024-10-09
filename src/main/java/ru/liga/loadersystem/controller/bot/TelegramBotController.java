@@ -1,4 +1,4 @@
-package ru.liga.loadersystem.controller;
+package ru.liga.loadersystem.controller.bot;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;

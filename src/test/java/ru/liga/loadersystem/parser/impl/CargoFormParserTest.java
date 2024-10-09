@@ -17,7 +17,7 @@ public class CargoFormParserTest {
 
     @Test
     void testParse_SingleLine_ReturnsSingleLineArray() {
-        char[][] result = parser.parse("00 000 0000");
+        char[][] result = parser.parse("00;000;0000");
         assertNotNull(result);
         assertEquals(3, result.length);
         assertArrayEquals(new char[]{'0', '0'}, result[0]);
