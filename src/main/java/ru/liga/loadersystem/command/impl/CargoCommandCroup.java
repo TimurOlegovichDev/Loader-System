@@ -1,11 +1,11 @@
-package ru.liga.loadersystem.bot.command.impl;
+package ru.liga.loadersystem.command.impl;
 
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.Update;
-import ru.liga.loadersystem.bot.command.TelegramBotCommand;
+import ru.liga.loadersystem.command.TelegramBotCommand;
 import ru.liga.loadersystem.enums.CommandType;
-import ru.liga.loadersystem.model.ResponseToCLient;
-import ru.liga.loadersystem.model.TelegramBotCommandData;
+import ru.liga.loadersystem.model.bot.BotRequestEntity;
+import ru.liga.loadersystem.model.bot.BotResponseEntity;
 import ru.liga.loadersystem.parser.impl.TelegramBotCommandParser;
 import ru.liga.loadersystem.service.CargoRepositoryService;
 
@@ -24,73 +24,73 @@ public class CargoCommandCroup implements TelegramBotCommand {
     }
 
     @Override
-    public ResponseToCLient execute(Update update) {
-        TelegramBotCommandData data = telegramBotCommandParser.parse(
+    public BotResponseEntity execute(Update update) {
+        BotRequestEntity data = telegramBotCommandParser.parse(
                 update.getMessage().getText()
         );
         return distribute(data.command(), data.parameters());
     }
 
-    private ResponseToCLient distribute(String command, String parameters) {
+    private BotResponseEntity distribute(String command, String parameters) {
         return switch (CommandType.fromString(command)) {
             case ADD_CARGO -> handleAddCargo(parameters);
             case CHANGE_CARGO_NAME -> handleChangeCargoName(parameters);
             case CHANGE_CARGO_FORM -> handleChangeCargoForm(parameters);
             case CHANGE_CARGO_TYPE -> handleChangeCargoType(parameters);
             case REMOVE_CARGO_FROM_SYSTEM -> handleRemoveCargo(parameters);
-            default -> ResponseToCLient.bad(CommandType.UNKNOWN.getDescription(), OutputCommandCroup.class);
+            default -> BotResponseEntity.bad(CommandType.UNKNOWN.getDescription(), OutputCommandCroup.class);
         };
     }
 
-    private ResponseToCLient handleRemoveCargo(String parameters) {
+    private BotResponseEntity handleRemoveCargo(String parameters) {
         return validateAndExtractParams(
                 parameters,
                 this::delete
         );
     }
 
-    private ResponseToCLient handleAddCargo(String parameters) {
+    private BotResponseEntity handleAddCargo(String parameters) {
         return validateAndExtractParams(parameters, this::create);
     }
 
-    private ResponseToCLient handleChangeCargoName(String parameters) {
+    private BotResponseEntity handleChangeCargoName(String parameters) {
         return validateAndExtractParams(parameters, this::changeName);
     }
 
-    private ResponseToCLient handleChangeCargoForm(String parameters) {
+    private BotResponseEntity handleChangeCargoForm(String parameters) {
         return validateAndExtractParams(parameters, this::changeForm);
     }
 
-    private ResponseToCLient handleChangeCargoType(String parameters) {
+    private BotResponseEntity handleChangeCargoType(String parameters) {
         return validateAndExtractParams(parameters, this::changeType);
     }
 
-    private ResponseToCLient validateAndExtractParams(String parameters,
-                                                      Function<String[], ResponseToCLient> func) {
+    private BotResponseEntity validateAndExtractParams(String parameters,
+                                                       Function<String[], BotResponseEntity> func) {
         String[] params = parameters.split(" ");
         if (params.length <= 1) {
-            return ResponseToCLient.bad("Слишком мало аргументов", CargoCommandCroup.class);
+            return BotResponseEntity.bad("Слишком мало аргументов", CargoCommandCroup.class);
         }
         return func.apply(params);
     }
 
-    private ResponseToCLient create(String[] params) {
-        return ResponseToCLient.ok(cargoRepositoryService.create(params[0], params[1]));
+    private BotResponseEntity create(String[] params) {
+        return BotResponseEntity.ok(cargoRepositoryService.create(params[0], params[1]));
     }
 
-    private ResponseToCLient changeName(String[] params) {
-        return ResponseToCLient.ok(cargoRepositoryService.setName(params[0], params[1]));
+    private BotResponseEntity changeName(String[] params) {
+        return BotResponseEntity.ok(cargoRepositoryService.setName(params[0], params[1]));
     }
 
-    private ResponseToCLient changeForm(String[] params) {
-        return ResponseToCLient.ok(cargoRepositoryService.setForm(params[0], params[1]));
+    private BotResponseEntity changeForm(String[] params) {
+        return BotResponseEntity.ok(cargoRepositoryService.setForm(params[0], params[1]));
     }
 
-    private ResponseToCLient changeType(String[] params) {
-        return ResponseToCLient.ok(cargoRepositoryService.setType(params[0], params[1].charAt(0)));
+    private BotResponseEntity changeType(String[] params) {
+        return BotResponseEntity.ok(cargoRepositoryService.setType(params[0], params[1].charAt(0)));
     }
 
-    private ResponseToCLient delete(String[] params) {
-        return ResponseToCLient.ok(cargoRepositoryService.delete(params[0], params[1]));
+    private BotResponseEntity delete(String[] params) {
+        return BotResponseEntity.ok(cargoRepositoryService.delete(params[0], params[1]));
     }
 }

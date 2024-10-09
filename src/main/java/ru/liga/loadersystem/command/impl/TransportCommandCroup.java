@@ -1,11 +1,11 @@
-package ru.liga.loadersystem.bot.command.impl;
+package ru.liga.loadersystem.command.impl;
 
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.Update;
-import ru.liga.loadersystem.bot.command.TelegramBotCommand;
+import ru.liga.loadersystem.command.TelegramBotCommand;
 import ru.liga.loadersystem.enums.CommandType;
-import ru.liga.loadersystem.model.ResponseToCLient;
-import ru.liga.loadersystem.model.TelegramBotCommandData;
+import ru.liga.loadersystem.model.bot.BotRequestEntity;
+import ru.liga.loadersystem.model.bot.BotResponseEntity;
 import ru.liga.loadersystem.model.structure.TransportSizeStructure;
 import ru.liga.loadersystem.parser.StringParser;
 import ru.liga.loadersystem.parser.impl.TelegramBotCommandParser;
@@ -34,17 +34,17 @@ public class TransportCommandCroup implements TelegramBotCommand {
     }
 
     @Override
-    public ResponseToCLient execute(Update update) {
-        TelegramBotCommandData data = telegramBotCommandParser.parse(
+    public BotResponseEntity execute(Update update) {
+        BotRequestEntity data = telegramBotCommandParser.parse(
                 update.getMessage().getText()
         );
         return distribute(data.command(), data.parameters());
     }
 
-    private ResponseToCLient distribute(String command, String parameters) {
+    private BotResponseEntity distribute(String command, String parameters) {
         switch (CommandType.fromString(command)) {
             case ADD_TRANSPORT_WITH_SIZE -> {
-                return ResponseToCLient.ok(
+                return BotResponseEntity.ok(
                         "Транспорта добавлено: " +
                                 initializeService.initializeTransport(
                                         stringParser.parse(parameters)
@@ -52,14 +52,14 @@ public class TransportCommandCroup implements TelegramBotCommand {
                 );
             }
             case REMOVE_TRANSPORT_FROM_SYSTEM -> {
-                return ResponseToCLient.ok(
+                return BotResponseEntity.ok(
                         transportRepositoryService.delete(
                                 UUID.fromString(parameters)
                         )
                 );
             }
         }
-        return ResponseToCLient.bad(
+        return BotResponseEntity.bad(
                 CommandType.UNKNOWN.getDescription(),
                 OutputCommandCroup.class
         );

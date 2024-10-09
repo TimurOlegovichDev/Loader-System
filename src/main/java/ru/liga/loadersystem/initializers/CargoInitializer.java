@@ -3,7 +3,7 @@ package ru.liga.loadersystem.initializers;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import ru.liga.loadersystem.factory.cargo.DefaultCargoFactory;
+import ru.liga.loadersystem.factory.cargo.CargoFactory;
 import ru.liga.loadersystem.model.entity.Cargo;
 import ru.liga.loadersystem.model.structure.CargoJsonStructure;
 import ru.liga.loadersystem.service.JsonService;
@@ -18,13 +18,13 @@ import java.util.List;
 public class CargoInitializer {
 
     private final CargoStructureValidator validator;
-    private final DefaultCargoFactory defaultCargoFactory;
+    private final CargoFactory cargoFactory;
     private final JsonService jsonService;
 
     @Autowired
-    public CargoInitializer(CargoStructureValidator validator, DefaultCargoFactory defaultCargoFactory, JsonService jsonService) {
+    public CargoInitializer(CargoStructureValidator validator, CargoFactory cargoFactory, JsonService jsonService) {
         this.validator = validator;
-        this.defaultCargoFactory = defaultCargoFactory;
+        this.cargoFactory = cargoFactory;
         this.jsonService = jsonService;
     }
 
@@ -42,7 +42,7 @@ public class CargoInitializer {
         for (CargoJsonStructure cargoJsonStructure : cargoJsonStructures) {
             try {
                 validator.validate(cargoJsonStructure);
-                list.add(defaultCargoFactory.createCargo(cargoJsonStructure));
+                list.add(cargoFactory.createCargo(cargoJsonStructure));
 
             } catch (Exception e) {
                 log.error("{} {}", e.getMessage(), cargoJsonStructure.name());

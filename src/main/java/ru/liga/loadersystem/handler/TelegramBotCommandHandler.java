@@ -3,13 +3,13 @@ package ru.liga.loadersystem.handler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.Update;
-import ru.liga.loadersystem.bot.command.TelegramBotCommand;
-import ru.liga.loadersystem.bot.command.impl.CargoCommandCroup;
-import ru.liga.loadersystem.bot.command.impl.LoadingCommandCroup;
-import ru.liga.loadersystem.bot.command.impl.OutputCommandCroup;
-import ru.liga.loadersystem.bot.command.impl.TransportCommandCroup;
+import ru.liga.loadersystem.command.TelegramBotCommand;
+import ru.liga.loadersystem.command.impl.CargoCommandCroup;
+import ru.liga.loadersystem.command.impl.LoadingCommandCroup;
+import ru.liga.loadersystem.command.impl.OutputCommandCroup;
+import ru.liga.loadersystem.command.impl.TransportCommandCroup;
 import ru.liga.loadersystem.enums.CommandType;
-import ru.liga.loadersystem.model.ResponseToCLient;
+import ru.liga.loadersystem.model.bot.BotResponseEntity;
 import ru.liga.loadersystem.parser.impl.TelegramBotCommandParser;
 
 import javax.annotation.PostConstruct;
@@ -57,11 +57,11 @@ public class TelegramBotCommandHandler {
         commands.put(commandName, command);
     }
 
-    public ResponseToCLient handleCommand(Update update) {
+    public BotResponseEntity handleCommand(Update update) {
         String commandName = update.getMessage().getText();
         TelegramBotCommand command = commands.get(telegramBotCommandParser.parse(commandName).command());
         if (command == null) {
-            return ResponseToCLient.bad(
+            return BotResponseEntity.bad(
                     CommandType.UNKNOWN.getDescription() + " \"" + commandName + "\" is not a valid command",
                     TelegramBotCommandHandler.class);
         }

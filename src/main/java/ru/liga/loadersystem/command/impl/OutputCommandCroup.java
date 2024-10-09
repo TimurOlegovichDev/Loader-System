@@ -1,4 +1,4 @@
-package ru.liga.loadersystem.bot.command.impl;
+package ru.liga.loadersystem.command.impl;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -6,10 +6,10 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.InputFile;
 import org.telegram.telegrambots.meta.api.objects.Update;
-import ru.liga.loadersystem.bot.command.TelegramBotCommand;
+import ru.liga.loadersystem.command.TelegramBotCommand;
 import ru.liga.loadersystem.enums.CommandType;
-import ru.liga.loadersystem.model.ResponseToCLient;
-import ru.liga.loadersystem.model.TelegramBotCommandData;
+import ru.liga.loadersystem.model.bot.BotRequestEntity;
+import ru.liga.loadersystem.model.bot.BotResponseEntity;
 import ru.liga.loadersystem.parser.impl.TelegramBotCommandParser;
 import ru.liga.loadersystem.service.CargoRepositoryService;
 import ru.liga.loadersystem.service.TransportRepositoryService;
@@ -33,26 +33,26 @@ public class OutputCommandCroup implements TelegramBotCommand {
     }
 
     @Override
-    public ResponseToCLient execute(Update update) {
-        TelegramBotCommandData data = telegramBotCommandParser.parse(
+    public BotResponseEntity execute(Update update) {
+        BotRequestEntity data = telegramBotCommandParser.parse(
                 update.getMessage().getText()
         );
         return distribute(data.command(), data.parameters());
     }
 
-    private ResponseToCLient distribute(String command, String parameters) {
+    private BotResponseEntity distribute(String command, String parameters) {
         switch (CommandType.fromString(command)) {
             case INFO_TRANSPORTS -> {
-                return ResponseToCLient.ok(transportRepositoryService.getTransportsInfo());
+                return BotResponseEntity.ok(transportRepositoryService.getTransportsInfo());
             }
             case INFO_CARGOS -> {
-                return ResponseToCLient.ok(cargoRepositoryService.getCargosInfo());
+                return BotResponseEntity.ok(cargoRepositoryService.getCargosInfo());
             }
             case INFO_CARGO_BY_NAME -> {
-                return ResponseToCLient.ok(cargoRepositoryService.getCargoInfoByName(parameters));
+                return BotResponseEntity.ok(cargoRepositoryService.getCargoInfoByName(parameters));
             }
             case INFO_TRANSPORT_BY_ID -> {
-                return ResponseToCLient.ok(
+                return BotResponseEntity.ok(
                         transportRepositoryService
                                 .getTransportInfoById(UUID.fromString(parameters))
                 );
@@ -61,13 +61,13 @@ public class OutputCommandCroup implements TelegramBotCommand {
                 return getResponseWithDocument();
             }
         }
-        return ResponseToCLient.bad(
+        return BotResponseEntity.bad(
                 CommandType.UNKNOWN.getDescription(),
                 OutputCommandCroup.class
         );
     }
 
-    private ResponseToCLient getResponseWithDocument() {
+    private BotResponseEntity getResponseWithDocument() {
         try {
             InputFile inputFile = new InputFile(
                     new ByteArrayInputStream(
@@ -77,12 +77,12 @@ public class OutputCommandCroup implements TelegramBotCommand {
                     ),
                     "info.json"
             );
-            return ResponseToCLient.ok(
+            return BotResponseEntity.ok(
                     "Файл успешно отправлен",
                     inputFile
             );
         } catch (JsonProcessingException e) {
-            return ResponseToCLient.bad(
+            return BotResponseEntity.bad(
                     "Ошибка при сохранении данных в файл",
                     e.getCause().getClass()
             );

@@ -2,7 +2,6 @@ package ru.liga.loadersystem.initializers;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import ru.liga.loadersystem.factory.transport.TransportFactory;
 import ru.liga.loadersystem.factory.transport.TruckFactory;
 import ru.liga.loadersystem.model.entity.Cargo;
 import ru.liga.loadersystem.model.entity.Transport;
@@ -20,10 +19,12 @@ import java.util.Map;
 public class TruckInitializer {
 
     private final JsonService jsonService;
+    private final TruckFactory truckFactory;
 
     @Autowired
-    public TruckInitializer(JsonService jsonService) {
+    public TruckInitializer(JsonService jsonService, TruckFactory truckFactory) {
         this.jsonService = jsonService;
+        this.truckFactory = truckFactory;
     }
 
     /**
@@ -34,11 +35,10 @@ public class TruckInitializer {
      */
 
     public List<Transport> initialize(List<TransportSizeStructure> sizeStructures) {
-        TransportFactory transportFactory = new TruckFactory();
         List<Transport> transports = new ArrayList<>();
         for (TransportSizeStructure sizeStructure : sizeStructures) {
             transports.add(
-                    transportFactory.createTransport(
+                    truckFactory.createTransport(
                             sizeStructure.width(),
                             sizeStructure.height()
                     )

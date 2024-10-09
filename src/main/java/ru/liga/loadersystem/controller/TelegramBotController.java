@@ -14,7 +14,7 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import ru.liga.loadersystem.config.BotConfig;
 import ru.liga.loadersystem.handler.TelegramBotCommandHandler;
-import ru.liga.loadersystem.model.ResponseToCLient;
+import ru.liga.loadersystem.model.bot.BotResponseEntity;
 import ru.liga.loadersystem.service.InitializeService;
 
 
@@ -50,7 +50,7 @@ public class TelegramBotController extends TelegramLongPollingBot {
         );
     }
 
-    protected void sendResponse(long chatId, ResponseToCLient response) {
+    protected void sendResponse(long chatId, BotResponseEntity response) {
         SendMessage message = new SendMessage();
         message.setChatId(chatId);
         message.setText(response.getBody());
@@ -73,29 +73,29 @@ public class TelegramBotController extends TelegramLongPollingBot {
         return botConfig.getBotName();
     }
 
-    private ResponseToCLient handleFile(Message message) {
+    private BotResponseEntity handleFile(Message message) {
         try {
             GetFile getFile = getGetFile(message);
             org.telegram.telegrambots.meta.api.objects.File file = execute(getFile);
             return tryInitEntitiesFromFile(file);
         } catch (Exception e) {
-            return ResponseToCLient.bad(
+            return BotResponseEntity.bad(
                     "Произошла ошибка при обработке файла",
                     e.getCause().getClass()
             );
         }
     }
 
-    private ResponseToCLient tryInitEntitiesFromFile(File tgFile) {
+    private BotResponseEntity tryInitEntitiesFromFile(File tgFile) {
         try {
             initializeService.initializeTransport(downloadFileAsStream(tgFile));
-            return ResponseToCLient.ok("Транспорт инициализирован успешно");
+            return BotResponseEntity.ok("Транспорт инициализирован успешно");
         } catch (Exception e) {
             try {
                 initializeService.initializeCargos(downloadFileAsStream(tgFile));
-                return ResponseToCLient.ok("Груз инициализирован успешно");
+                return BotResponseEntity.ok("Груз инициализирован успешно");
             } catch (Exception ex) {
-                return ResponseToCLient.bad("Данный файл не поддерживается системой " + ex.getMessage(), TelegramBotController.class);
+                return BotResponseEntity.bad("Данный файл не поддерживается системой " + ex.getMessage(), TelegramBotController.class);
             }
         }
     }
