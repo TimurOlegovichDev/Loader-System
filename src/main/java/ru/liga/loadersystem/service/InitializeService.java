@@ -9,8 +9,8 @@ import ru.liga.loadersystem.initializers.TruckInitializer;
 import ru.liga.loadersystem.model.entity.Cargo;
 import ru.liga.loadersystem.model.entity.Transport;
 import ru.liga.loadersystem.model.structure.TransportSizeStructure;
-import ru.liga.loadersystem.repository.DefaultCrudCargoRepository;
-import ru.liga.loadersystem.repository.DefaultCrudTransportRepository;
+import ru.liga.loadersystem.repository.CargoCrudRepository;
+import ru.liga.loadersystem.repository.TransportCrudRepository;
 import ru.liga.loadersystem.util.CargoCounter;
 
 import java.io.InputStream;
@@ -23,13 +23,18 @@ public class InitializeService {
 
     private final TruckInitializer truckInitializer;
     private final CargoInitializer cargoInitializer;
-    private final DefaultCrudTransportRepository transportDataRepository;
-    private final DefaultCrudCargoRepository cargoDataRepository;
+    private final TransportCrudRepository transportDataRepository;
+    private final CargoCrudRepository cargoDataRepository;
     private final CargoCounter cargoCounter;
     private final DefaultCargoFactory defaultCargoFactory;
 
     @Autowired
-    public InitializeService(TruckInitializer truckInitializer, CargoInitializer cargoInitializer, DefaultCrudTransportRepository transportDataRepository, DefaultCrudCargoRepository cargoDataRepository, CargoCounter cargoCounter, DefaultCargoFactory defaultCargoFactory) {
+    public InitializeService(TruckInitializer truckInitializer,
+                             CargoInitializer cargoInitializer,
+                             TransportCrudRepository transportDataRepository,
+                             CargoCrudRepository cargoDataRepository,
+                             CargoCounter cargoCounter,
+                             DefaultCargoFactory defaultCargoFactory) {
         this.truckInitializer = truckInitializer;
         this.cargoInitializer = cargoInitializer;
         this.transportDataRepository = transportDataRepository;

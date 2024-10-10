@@ -5,7 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.liga.loadersystem.model.entity.Cargo;
 import ru.liga.loadersystem.parser.impl.CargoFormParser;
-import ru.liga.loadersystem.repository.DefaultCrudCargoRepository;
+import ru.liga.loadersystem.repository.CargoCrudRepository;
 import ru.liga.loadersystem.validator.impl.CargoFormValidator;
 
 import java.util.ArrayList;
@@ -18,16 +18,18 @@ import java.util.UUID;
 public class CargoRepositoryService {
 
 
-    private final DefaultCrudCargoRepository cargoRepository;
+    private final CargoCrudRepository cargoRepository;
     private final LoadingService loadingService;
     private final CargoService cargoService;
     private final CargoFormValidator cargoFormValidator;
     private final CargoFormParser cargoFormParser;
 
     @Autowired
-    public CargoRepositoryService(DefaultCrudCargoRepository cargoRepository,
+    public CargoRepositoryService(CargoCrudRepository cargoRepository,
                                   LoadingService loadingService,
-                                  CargoService cargoService, CargoFormValidator cargoFormValidator, CargoFormParser cargoFormParser) {
+                                  CargoService cargoService,
+                                  CargoFormValidator cargoFormValidator,
+                                  CargoFormParser cargoFormParser) {
         this.cargoRepository = cargoRepository;
         this.loadingService = loadingService;
         this.cargoService = cargoService;
@@ -104,7 +106,10 @@ public class CargoRepositoryService {
             log.debug("Груз с именем {} не найден в системе", name);
             return "Груза с таким именем нет в системе";
         }
-        cargoRepository.updateTypeForName(name, newType.toString());
+        String newForm = cargoService.replaceFormWith(
+                cargoRepository.findByName(name).getForm(), newType
+        );
+        cargoRepository.updateFormForName(name, newForm);
         loadingService.reload("MES");
         return "Тип груза успешно изменен";
     }

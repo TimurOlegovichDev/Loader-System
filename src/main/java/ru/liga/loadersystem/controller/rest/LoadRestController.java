@@ -1,7 +1,6 @@
 package ru.liga.loadersystem.controller.rest;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -25,7 +24,7 @@ public class LoadRestController {
 
     @Autowired
     public LoadRestController(LoadingService loadingService,
-                              @Qualifier("defaultCrudTransportRepository") TransportCrudRepository transportRepository,
+                              TransportCrudRepository transportRepository,
                               CargoNameParser cargoNameParser) {
         this.loadingService = loadingService;
         this.transportRepository = transportRepository;

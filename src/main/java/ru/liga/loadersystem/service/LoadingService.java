@@ -1,7 +1,6 @@
 package ru.liga.loadersystem.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import ru.liga.loadersystem.algorithm.LoadingCargoAlgorithm;
 import ru.liga.loadersystem.enums.AlgorithmTypes;
@@ -9,7 +8,7 @@ import ru.liga.loadersystem.model.entity.Cargo;
 import ru.liga.loadersystem.model.entity.Transport;
 import ru.liga.loadersystem.processor.LoadingProcessor;
 import ru.liga.loadersystem.repository.CargoCrudRepository;
-import ru.liga.loadersystem.repository.DefaultCrudTransportRepository;
+import ru.liga.loadersystem.repository.TransportCrudRepository;
 
 import java.util.List;
 
@@ -17,18 +16,16 @@ import java.util.List;
 public class LoadingService {
 
     private final LoadingProcessor defaultLoadingProcessor;
-    private final DefaultCrudTransportRepository transportRepository;
+    private final TransportCrudRepository transportRepository;
     private final CargoCrudRepository cargoRepository;
-    private final CargoCrudRepository cargoCrudRepository;
 
     @Autowired
     public LoadingService(LoadingProcessor defaultLoadingProcessor,
-                          DefaultCrudTransportRepository transportRepository,
-                          @Qualifier("cargoCrudRepository") CargoCrudRepository cargoRepository, @Qualifier("cargoCrudRepository") CargoCrudRepository cargoCrudRepository) {
+                          TransportCrudRepository transportRepository,
+                          CargoCrudRepository cargoRepository) {
         this.defaultLoadingProcessor = defaultLoadingProcessor;
         this.transportRepository = transportRepository;
         this.cargoRepository = cargoRepository;
-        this.cargoCrudRepository = cargoCrudRepository;
     }
 
     /**
@@ -41,7 +38,7 @@ public class LoadingService {
         defaultLoadingProcessor.process(
                 getAlgorithm(algoName),
                 (List<Transport>) transportRepository.findAll(),
-                cargoCrudRepository.findAllUnique()
+                cargoRepository.findAllUnique()
         );
     }
 

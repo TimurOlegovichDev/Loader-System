@@ -5,7 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import ru.liga.loadersystem.model.entity.Cargo;
 import ru.liga.loadersystem.parser.StringParser;
-import ru.liga.loadersystem.repository.DefaultCrudCargoRepository;
+import ru.liga.loadersystem.repository.CargoCrudRepository;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,10 +14,10 @@ import java.util.List;
 @Component
 public class CargoNameParser implements StringParser<List<Cargo>> {
 
-    private final DefaultCrudCargoRepository repository;
+    private final CargoCrudRepository repository;
 
     @Autowired
-    public CargoNameParser(DefaultCrudCargoRepository repository) {
+    public CargoNameParser(CargoCrudRepository repository) {
         this.repository = repository;
     }
 

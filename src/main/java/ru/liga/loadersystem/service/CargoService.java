@@ -1,8 +1,6 @@
 package ru.liga.loadersystem.service;
 
-import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import ru.liga.loadersystem.factory.cargo.DefaultCargoFactory;
 import ru.liga.loadersystem.parser.impl.CargoFormParser;
@@ -20,7 +18,7 @@ public class CargoService {
 
     public CargoService(CargoFormParser cargoFormParser,
                         CargoFormValidator cargoFormValidator,
-                        @Qualifier("defaultCrudCargoRepository") CargoCrudRepository cargoRepository,
+                        CargoCrudRepository cargoRepository,
                         DefaultCargoFactory defaultCargoFactory) {
         this.cargoFormParser = cargoFormParser;
         this.cargoFormValidator = cargoFormValidator;
@@ -29,26 +27,13 @@ public class CargoService {
     }
 
     /**
-     * Заменяет все непустые символы в двумерном массиве на указанный символ.
+     * Заменяет все непустые символы в форме на указанный символ.
      *
-     * @param originalArray   исходный двумерный массив
-     * @param replacementChar символ, на который необходимо заменить непустые символы
-     * @return новый двумерный массив с замененными символами
+     * @return обновленная форма
      */
 
-    public char[][] replaceNonEmptyCharsWith(@NonNull char[][] originalArray, char replacementChar) {
-        char[][] newArray = new char[originalArray.length][];
-        for (int i = 0; i < originalArray.length; i++) {
-            newArray[i] = new char[originalArray[i].length];
-            for (int j = 0; j < originalArray[i].length; j++) {
-                if (originalArray[i][j] != ' ') {
-                    newArray[i][j] = replacementChar;
-                } else {
-                    newArray[i][j] = originalArray[i][j];
-                }
-            }
-        }
-        return newArray;
+    public String replaceFormWith(String form, char replacementChar) {
+        return form.replaceAll("[^;]", String.valueOf(replacementChar));
     }
 
     /**
