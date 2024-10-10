@@ -1,4 +1,4 @@
-package ru.liga.loadersystem.model.structure;
+package ru.liga.loadersystem.model.json;
 
 import java.util.UUID;
 

@@ -1,8 +1,11 @@
 package ru.liga.loadersystem.service;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import ru.liga.loadersystem.exception.EntityAlreadyExistsException;
+import ru.liga.loadersystem.exception.NoSuchEntityException;
 import ru.liga.loadersystem.model.entity.Cargo;
 import ru.liga.loadersystem.parser.impl.CargoFormParser;
 import ru.liga.loadersystem.repository.CargoCrudRepository;
@@ -15,6 +18,7 @@ import java.util.UUID;
 
 @Service
 @Slf4j
+@RequiredArgsConstructor(onConstructor_ = {@Autowired})
 public class CargoRepositoryService {
 
 
@@ -24,18 +28,6 @@ public class CargoRepositoryService {
     private final CargoFormValidator cargoFormValidator;
     private final CargoFormParser cargoFormParser;
 
-    @Autowired
-    public CargoRepositoryService(CargoCrudRepository cargoRepository,
-                                  LoadingService loadingService,
-                                  CargoService cargoService,
-                                  CargoFormValidator cargoFormValidator,
-                                  CargoFormParser cargoFormParser) {
-        this.cargoRepository = cargoRepository;
-        this.loadingService = loadingService;
-        this.cargoService = cargoService;
-        this.cargoFormValidator = cargoFormValidator;
-        this.cargoFormParser = cargoFormParser;
-    }
 
     /**
      * Создает груз с указанным именем и формой.
@@ -44,14 +36,11 @@ public class CargoRepositoryService {
      * @param form форма груза
      * @return сообщение о результате создания груза
      */
-
-    public String create(String name, String form) {
-        if (existsInDatabase(name)) {
-            log.error("Груз с именем {} уже есть в системе", name);
-            return "Груз с таким названием уже есть в системе!";
+    public Cargo create(String name, String form) {
+        if (cargoRepository.findByName(name) != null) {
+            throw new EntityAlreadyExistsException("Груз с названием " + name + " уже существует");
         }
-        cargoService.putCargoWithValidation(name, form);
-        return "Груз успешно создан";
+        return cargoService.putCargoWithValidation(name, form);
     }
 
     /**
@@ -62,31 +51,26 @@ public class CargoRepositoryService {
      * @return сообщение о результате изменения формы груза
      */
 
-    public String setForm(String name, String form) {
-        if (!existsInDatabase(name)) {
-            log.debug("Груз с именем {} не найден в системе", name);
-            return "Груза с таким именем нет в системе";
-        }
+    public Cargo setForm(String name, String form) {
+        validateExists(name);
         cargoFormValidator.validate(cargoFormParser.parse(form));
         cargoRepository.updateFormForName(name, form);
         loadingService.reload("MES");
-        return "Форма успешно изменена";
+        return cargoRepository.findByName(name);
     }
 
     /**
      * Изменяет имя груза с указанным старым именем на новое имя.
      *
-     * @param lastName старое имя груза
-     * @param newName  новое имя груза
+     * @param actualName старое имя груза
+     * @param newName    новое имя груза
      * @return сообщение о результате изменения имени груза
      */
 
-    public String setName(String lastName, String newName) {
-        if (!existsInDatabase(lastName)) {
-            return "Груза с таким именем нет в системе";
-        }
-        cargoRepository.updateNameForName(lastName, newName);
-        return "Название успешно изменено";
+    public Cargo setName(String actualName, String newName) {
+        validateExists(actualName);
+        cargoRepository.updateNameForName(actualName, newName);
+        return cargoRepository.findByName(newName);
     }
 
     /**
@@ -97,21 +81,17 @@ public class CargoRepositoryService {
      * @return сообщение о результате изменения типа груза
      */
 
-    public String setType(String name, Character newType) {
+    public Cargo setType(String name, Character newType) {
         if (newType == ' ') {
-            log.debug("Тип груза не может быть пустым");
-            return "Тип груза не может быть пустым";
+            throw new IllegalArgumentException("Тип груза не может быть пустым");
         }
-        if (!existsInDatabase(name)) {
-            log.debug("Груз с именем {} не найден в системе", name);
-            return "Груза с таким именем нет в системе";
-        }
+        validateExists(name);
         String newForm = cargoService.replaceFormWith(
                 cargoRepository.findByName(name).getForm(), newType
         );
         cargoRepository.updateFormForName(name, newForm);
         loadingService.reload("MES");
-        return "Тип груза успешно изменен";
+        return cargoRepository.findByName(name);
     }
 
     /**
@@ -119,13 +99,10 @@ public class CargoRepositoryService {
      *
      * @param name     имя груза
      * @param algoname имя алгоритма, по которому будут перезагружены грузовики
-     * @return сообщение о результате удаления груза
      */
 
-    public String delete(String name, String algoname) {
-        if (!existsInDatabase(name)) {
-            return "Груза с таким именем нет в системе!";
-        }
+    public void delete(String name, String algoname) {
+        validateExists(name);
         List<UUID> cargosUuid = new ArrayList<>();
         for (Cargo cargo : cargoRepository.findAll()) {
             if (cargo.getName().equals(name)) {
@@ -134,7 +111,6 @@ public class CargoRepositoryService {
         }
         cargoRepository.deleteAllById(cargosUuid);
         loadingService.reload(algoname);
-        return "Груз удален успешно!";
     }
 
     /**
@@ -165,7 +141,9 @@ public class CargoRepositoryService {
                 .orElse("Груза с таким именем нет в системе!");
     }
 
-    private boolean existsInDatabase(String name) {
-        return cargoRepository.findByName(name) != null;
+    private void validateExists(String name) {
+        if (cargoRepository.findByName(name) == null) {
+            throw new NoSuchEntityException("Груз с таким именем не найден - " + name);
+        }
     }
 }

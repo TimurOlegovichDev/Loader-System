@@ -1,7 +1,7 @@
 package ru.liga.loadersystem.service;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import ru.liga.loadersystem.model.entity.Cargo;
 import ru.liga.loadersystem.model.entity.Transport;
@@ -13,16 +13,11 @@ import java.util.Optional;
 import java.util.UUID;
 
 @Service
+@RequiredArgsConstructor(onConstructor_ = {@Autowired})
 public class TransportService {
 
     private final TransportCrudRepository transportRepository;
     private final CargoCrudRepository cargoCrudRepository;
-
-    @Autowired
-    public TransportService(@Qualifier("transportCrudRepository") TransportCrudRepository transportRepository, @Qualifier("cargoCrudRepository") CargoCrudRepository cargoCrudRepository) {
-        this.transportRepository = transportRepository;
-        this.cargoCrudRepository = cargoCrudRepository;
-    }
 
     /**
      * Возвращает процент занятости транспортного средства.

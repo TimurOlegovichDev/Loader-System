@@ -1,14 +1,15 @@
 package ru.liga.loadersystem.service;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.liga.loadersystem.factory.cargo.DefaultCargoFactory;
 import ru.liga.loadersystem.initializers.CargoInitializer;
 import ru.liga.loadersystem.initializers.TruckInitializer;
+import ru.liga.loadersystem.model.dto.TransportDto;
 import ru.liga.loadersystem.model.entity.Cargo;
 import ru.liga.loadersystem.model.entity.Transport;
-import ru.liga.loadersystem.model.structure.TransportSizeStructure;
 import ru.liga.loadersystem.repository.CargoCrudRepository;
 import ru.liga.loadersystem.repository.TransportCrudRepository;
 import ru.liga.loadersystem.util.CargoCounter;
@@ -19,6 +20,7 @@ import java.util.Map;
 
 @Slf4j
 @Service
+@RequiredArgsConstructor(onConstructor_ = {@Autowired})
 public class InitializeService {
 
     private final TruckInitializer truckInitializer;
@@ -28,28 +30,12 @@ public class InitializeService {
     private final CargoCounter cargoCounter;
     private final DefaultCargoFactory defaultCargoFactory;
 
-    @Autowired
-    public InitializeService(TruckInitializer truckInitializer,
-                             CargoInitializer cargoInitializer,
-                             TransportCrudRepository transportDataRepository,
-                             CargoCrudRepository cargoDataRepository,
-                             CargoCounter cargoCounter,
-                             DefaultCargoFactory defaultCargoFactory) {
-        this.truckInitializer = truckInitializer;
-        this.cargoInitializer = cargoInitializer;
-        this.transportDataRepository = transportDataRepository;
-        this.cargoDataRepository = cargoDataRepository;
-        this.cargoCounter = cargoCounter;
-        this.defaultCargoFactory = defaultCargoFactory;
-    }
-
     /**
      * Инициализирует грузы из json файла.
      * Этот метод инициализирует грузы по заданным формам и добавляет их в главный репозиторий.
      *
      * @param stream файл
      */
-
     public void initializeCargos(InputStream stream) throws Exception {
         List<Cargo> list = cargoInitializer.initializeFromJson(stream);
         initUniqueCargo(list);
@@ -65,7 +51,6 @@ public class InitializeService {
      *
      * @param stream файл JSON
      */
-
     public void initializeTransport(InputStream stream) throws Exception {
         Map<Transport, List<Cargo>> transportMap =
                 truckInitializer.initializeFromJson(stream);
@@ -84,8 +69,7 @@ public class InitializeService {
      *
      * @param list список размеров
      */
-
-    public int initializeTransport(List<TransportSizeStructure> list) {
+    public int initializeTransport(List<TransportDto> list) {
         List<Transport> transports =
                 truckInitializer.initialize(list);
         transportDataRepository.saveAll(transports);

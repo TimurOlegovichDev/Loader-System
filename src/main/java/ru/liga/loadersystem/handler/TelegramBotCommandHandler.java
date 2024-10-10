@@ -1,5 +1,6 @@
 package ru.liga.loadersystem.handler;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.Update;
@@ -17,6 +18,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Component
+@RequiredArgsConstructor(onConstructor_ = {@Autowired})
 public class TelegramBotCommandHandler {
 
     private final Map<String, TelegramBotCommand> commands = new HashMap<>();
@@ -26,15 +28,6 @@ public class TelegramBotCommandHandler {
     private final OutputCommandCroup outputCommandCroup;
     private final CargoCommandCroup cargoCommandCroup;
     private final TelegramBotCommandParser telegramBotCommandParser;
-
-    @Autowired
-    public TelegramBotCommandHandler(TransportCommandCroup transportCommandCroup, LoadingCommandCroup loadingCommandCroup, OutputCommandCroup outputCommandCroup, CargoCommandCroup cargoCommandCroup, TelegramBotCommandParser telegramBotCommandParser) {
-        this.transportCommandCroup = transportCommandCroup;
-        this.loadingCommandCroup = loadingCommandCroup;
-        this.outputCommandCroup = outputCommandCroup;
-        this.cargoCommandCroup = cargoCommandCroup;
-        this.telegramBotCommandParser = telegramBotCommandParser;
-    }
 
     /**
      * Вносим команды в хранилище.

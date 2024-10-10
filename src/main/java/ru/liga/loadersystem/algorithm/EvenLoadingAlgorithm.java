@@ -29,9 +29,9 @@ public class EvenLoadingAlgorithm implements LoadingCargoAlgorithm {
     @Autowired
     public EvenLoadingAlgorithm(CargoSorter cargoSorter,
                                 @Qualifier("transportSorterByOccupiedAreaAsc") TransportSorter transportSorter,
-                                @Qualifier("transportCrudRepository") TransportCrudRepository transportDataRepository,
+                                TransportCrudRepository transportDataRepository,
                                 CargoLoader cargoLoader,
-                                @Qualifier("cargoCrudRepository") CargoCrudRepository cargoCrudRepository) {
+                                CargoCrudRepository cargoCrudRepository) {
         this.cargoSorter = cargoSorter;
         this.transportSorter = transportSorter;
         this.transportDataRepository = transportDataRepository;

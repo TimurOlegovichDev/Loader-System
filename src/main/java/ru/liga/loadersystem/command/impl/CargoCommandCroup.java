@@ -1,5 +1,7 @@
 package ru.liga.loadersystem.command.impl;
 
+import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import ru.liga.loadersystem.command.TelegramBotCommand;
@@ -12,16 +14,11 @@ import ru.liga.loadersystem.service.CargoRepositoryService;
 import java.util.function.Function;
 
 @Component
+@RequiredArgsConstructor(onConstructor_ = {@Autowired})
 public class CargoCommandCroup implements TelegramBotCommand {
 
     private final TelegramBotCommandParser telegramBotCommandParser;
     private final CargoRepositoryService cargoRepositoryService;
-
-    public CargoCommandCroup(TelegramBotCommandParser telegramBotCommandParser,
-                             CargoRepositoryService cargoRepositoryService) {
-        this.telegramBotCommandParser = telegramBotCommandParser;
-        this.cargoRepositoryService = cargoRepositoryService;
-    }
 
     @Override
     public BotResponseEntity execute(Update update) {
@@ -75,22 +72,23 @@ public class CargoCommandCroup implements TelegramBotCommand {
     }
 
     private BotResponseEntity create(String[] params) {
-        return BotResponseEntity.ok(cargoRepositoryService.create(params[0], params[1]));
+        return BotResponseEntity.ok(cargoRepositoryService.create(params[0], params[1]).toString());
     }
 
     private BotResponseEntity changeName(String[] params) {
-        return BotResponseEntity.ok(cargoRepositoryService.setName(params[0], params[1]));
+        return BotResponseEntity.ok(cargoRepositoryService.setName(params[0], params[1]).toString());
     }
 
     private BotResponseEntity changeForm(String[] params) {
-        return BotResponseEntity.ok(cargoRepositoryService.setForm(params[0], params[1]));
+        return BotResponseEntity.ok(cargoRepositoryService.setForm(params[0], params[1]).toString());
     }
 
     private BotResponseEntity changeType(String[] params) {
-        return BotResponseEntity.ok(cargoRepositoryService.setType(params[0], params[1].charAt(0)));
+        return BotResponseEntity.ok(cargoRepositoryService.setType(params[0], params[1].charAt(0)).toString());
     }
 
     private BotResponseEntity delete(String[] params) {
-        return BotResponseEntity.ok(cargoRepositoryService.delete(params[0], params[1]));
+        cargoRepositoryService.delete(params[0], params[1]);
+        return BotResponseEntity.ok("Груз удален успешно");
     }
 }

@@ -12,7 +12,6 @@ public class CargoFormValidator implements Validator<char[][]> {
      *
      * @param input - форма груза для проверки
      */
-
     @Override
     public void validate(char[][] input) {
         if (input.length == 0 || input[0].length == 0) {

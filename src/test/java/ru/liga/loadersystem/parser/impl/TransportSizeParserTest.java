@@ -3,7 +3,7 @@ package ru.liga.loadersystem.parser.impl;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
-import ru.liga.loadersystem.model.structure.TransportSizeStructure;
+import ru.liga.loadersystem.model.dto.TransportDto;
 import ru.liga.loadersystem.validator.impl.TransportSizeValidator;
 
 import java.util.List;
@@ -32,20 +32,20 @@ public class TransportSizeParserTest {
 
     @Test
     void testParse_ValidFormat_ReturnsTransportSizeStructures() {
-        List<TransportSizeStructure> result = parser.parse("1x2");
+        List<TransportDto> result = parser.parse("1x2");
         assertThat(result).isNotNull();
         assertThat(result).hasSize(1);
-        assertThat(result.get(0)).isEqualTo(new TransportSizeStructure(1, 2));
+        assertThat(result.get(0)).isEqualTo(new TransportDto(1, 2));
     }
 
     @Test
     void testParse_MultipleSizes_ReturnsTransportSizeStructures() {
-        List<TransportSizeStructure> result = parser.parse("1x2,3x4");
+        List<TransportDto> result = parser.parse("1x2,3x4");
         assertThat(result).isNotNull();
         assertThat(result).hasSize(2);
         assertThat(result).containsExactly(
-                new TransportSizeStructure(1, 2),
-                new TransportSizeStructure(3, 4)
+                new TransportDto(1, 2),
+                new TransportDto(3, 4)
         );
     }
 }

@@ -1,5 +1,6 @@
 package ru.liga.loadersystem.service;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.liga.loadersystem.algorithm.LoadingCargoAlgorithm;
@@ -13,27 +14,18 @@ import ru.liga.loadersystem.repository.TransportCrudRepository;
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor(onConstructor_ = {@Autowired})
 public class LoadingService {
 
     private final LoadingProcessor defaultLoadingProcessor;
     private final TransportCrudRepository transportRepository;
     private final CargoCrudRepository cargoRepository;
 
-    @Autowired
-    public LoadingService(LoadingProcessor defaultLoadingProcessor,
-                          TransportCrudRepository transportRepository,
-                          CargoCrudRepository cargoRepository) {
-        this.defaultLoadingProcessor = defaultLoadingProcessor;
-        this.transportRepository = transportRepository;
-        this.cargoRepository = cargoRepository;
-    }
-
     /**
      * Загружает грузы в транспортные средства с использованием алгоритма с указанным именем.
      *
      * @param algoName имя алгоритма
      */
-
     public void load(String algoName) {
         defaultLoadingProcessor.process(
                 getAlgorithm(algoName),
@@ -49,7 +41,6 @@ public class LoadingService {
      * @param transports список транспортных средств
      * @param cargos     список грузов
      */
-
     public void selectiveLoad(String algoName,
                               List<Transport> transports,
                               List<Cargo> cargos) {
@@ -73,7 +64,6 @@ public class LoadingService {
      *
      * @param algoName имя алгоритма
      */
-
     public void reload(String algoName) {
         List<Cargo> cargoToLoad = (List<Cargo>) cargoRepository.findAllLoaded();
         for (Transport transport : transportRepository.findAll()) {

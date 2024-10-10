@@ -11,6 +11,5 @@ public interface TelegramBotCommand {
      * @param update - сообщение от пользователя
      * @return структура ответа
      */
-
     BotResponseEntity execute(Update update);
 }

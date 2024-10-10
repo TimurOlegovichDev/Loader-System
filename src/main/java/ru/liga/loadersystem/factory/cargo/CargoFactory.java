@@ -1,7 +1,7 @@
 package ru.liga.loadersystem.factory.cargo;
 
 import ru.liga.loadersystem.model.entity.Cargo;
-import ru.liga.loadersystem.model.structure.CargoJsonStructure;
+import ru.liga.loadersystem.model.json.CargoJsonStructure;
 
 public interface CargoFactory {
 

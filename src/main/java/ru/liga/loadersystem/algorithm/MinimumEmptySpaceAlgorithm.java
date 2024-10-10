@@ -28,9 +28,9 @@ public class MinimumEmptySpaceAlgorithm implements LoadingCargoAlgorithm {
     @Autowired
     public MinimumEmptySpaceAlgorithm(CargoSorter cargoSorter,
                                       @Qualifier("transportSorterByOccupiedAreaDesc") TransportSorter transportSorter,
-                                      @Qualifier("transportCrudRepository") TransportCrudRepository transportDataRepository,
+                                      TransportCrudRepository transportDataRepository,
                                       CargoLoader cargoLoader,
-                                      @Qualifier("cargoCrudRepository") CargoCrudRepository cargoCrudRepository) {
+                                      CargoCrudRepository cargoCrudRepository) {
         this.cargoSorter = cargoSorter;
         this.transportSorter = transportSorter;
         this.transportDataRepository = transportDataRepository;

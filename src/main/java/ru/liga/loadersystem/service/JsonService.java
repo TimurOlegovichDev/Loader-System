@@ -24,7 +24,6 @@ public class JsonService {
      * @param object   объект для записи
      * @param fileName имя файла для записи
      */
-
     public void writeObject(Object object, String fileName) {
         try {
             jsonWriter.writeObject(object, fileName);
@@ -42,7 +41,6 @@ public class JsonService {
      * @param stream файл для чтения
      * @return список объектов
      */
-
     public <T> List<T> read(Class<T> clazz, InputStream stream) throws Exception {
         return jsonReader.readObject(clazz, stream);
     }

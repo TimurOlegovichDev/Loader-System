@@ -2,7 +2,8 @@ package ru.liga.loadersystem.command.impl;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.springframework.beans.factory.annotation.Qualifier;
+import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.InputFile;
 import org.telegram.telegrambots.meta.api.objects.Update;
@@ -18,19 +19,13 @@ import java.io.ByteArrayInputStream;
 import java.util.UUID;
 
 @Component
+@RequiredArgsConstructor(onConstructor_ = {@Autowired})
 public class OutputCommandCroup implements TelegramBotCommand {
 
     private final TransportRepositoryService transportRepositoryService;
     private final TelegramBotCommandParser telegramBotCommandParser;
     private final CargoRepositoryService cargoRepositoryService;
     private final ObjectMapper objectMapper;
-
-    public OutputCommandCroup(TransportRepositoryService transportRepositoryService, TelegramBotCommandParser telegramBotCommandParser, CargoRepositoryService cargoRepositoryService, @Qualifier("objectMapper") ObjectMapper objectMapper) {
-        this.transportRepositoryService = transportRepositoryService;
-        this.telegramBotCommandParser = telegramBotCommandParser;
-        this.cargoRepositoryService = cargoRepositoryService;
-        this.objectMapper = objectMapper;
-    }
 
     @Override
     public BotResponseEntity execute(Update update) {

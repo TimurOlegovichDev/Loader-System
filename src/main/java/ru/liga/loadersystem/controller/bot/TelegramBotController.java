@@ -1,5 +1,6 @@
 package ru.liga.loadersystem.controller.bot;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -20,20 +21,12 @@ import ru.liga.loadersystem.service.InitializeService;
 
 @Slf4j
 @Component
+@RequiredArgsConstructor(onConstructor_ = {@Autowired})
 public class TelegramBotController extends TelegramLongPollingBot {
 
     private final TelegramBotCommandHandler commandHandler;
     private final BotConfig botConfig;
     private final InitializeService initializeService;
-
-    @Autowired
-    public TelegramBotController(TelegramBotCommandHandler commandHandler,
-                                 BotConfig botConfig, InitializeService initializeService) {
-        super(botConfig.getToken());
-        this.commandHandler = commandHandler;
-        this.botConfig = botConfig;
-        this.initializeService = initializeService;
-    }
 
     @Override
     public void onUpdateReceived(Update update) {

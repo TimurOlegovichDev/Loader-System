@@ -1,5 +1,6 @@
 package ru.liga.loadersystem.algorithm.util.impl;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -14,14 +15,10 @@ import java.util.stream.Collectors;
 
 @Slf4j
 @Component
+@RequiredArgsConstructor(onConstructor_ = {@Autowired})
 public class TransportSorterByOccupiedAreaAsc implements TransportSorter {
 
     private final TransportService transportService;
-
-    @Autowired
-    public TransportSorterByOccupiedAreaAsc(TransportService transportServiceq11) {
-        this.transportService = transportServiceq11;
-    }
 
     /**
      * Сортирует список транспортных средств площади, занятой грузами в порядке возрастания.
@@ -29,7 +26,6 @@ public class TransportSorterByOccupiedAreaAsc implements TransportSorter {
      * @param transportDataRepository менеджер данных транспортных средств, из которого берется список транспортных средств
      * @return отсортированный список транспортных средств
      */
-
     @Override
     public List<Transport> sort(TransportCrudRepository transportDataRepository, List<Transport> transports) {
         log.debug("Сортировка транспорта по заполненности в порядке возрастания...");

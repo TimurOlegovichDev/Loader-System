@@ -1,12 +1,14 @@
 package ru.liga.loadersystem.command.impl;
 
+import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import ru.liga.loadersystem.command.TelegramBotCommand;
 import ru.liga.loadersystem.enums.CommandType;
 import ru.liga.loadersystem.model.bot.BotRequestEntity;
 import ru.liga.loadersystem.model.bot.BotResponseEntity;
-import ru.liga.loadersystem.model.structure.TransportSizeStructure;
+import ru.liga.loadersystem.model.dto.TransportDto;
 import ru.liga.loadersystem.parser.StringParser;
 import ru.liga.loadersystem.parser.impl.TelegramBotCommandParser;
 import ru.liga.loadersystem.service.InitializeService;
@@ -16,22 +18,13 @@ import java.util.List;
 import java.util.UUID;
 
 @Component
+@RequiredArgsConstructor(onConstructor_ = {@Autowired})
 public class TransportCommandCroup implements TelegramBotCommand {
 
-    private final StringParser<List<TransportSizeStructure>> stringParser;
+    private final StringParser<List<TransportDto>> stringParser;
     private final TelegramBotCommandParser telegramBotCommandParser;
     private final InitializeService initializeService;
     private final TransportRepositoryService transportRepositoryService;
-
-    public TransportCommandCroup(StringParser<List<TransportSizeStructure>> stringParser,
-                                 TelegramBotCommandParser telegramBotCommandParser,
-                                 InitializeService initializeService,
-                                 TransportRepositoryService transportRepositoryService) {
-        this.stringParser = stringParser;
-        this.telegramBotCommandParser = telegramBotCommandParser;
-        this.initializeService = initializeService;
-        this.transportRepositoryService = transportRepositoryService;
-    }
 
     @Override
     public BotResponseEntity execute(Update update) {

@@ -1,6 +1,7 @@
 package ru.liga.loadersystem.command.impl;
 
-import org.springframework.beans.factory.annotation.Qualifier;
+import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import ru.liga.loadersystem.command.TelegramBotCommand;
@@ -18,19 +19,13 @@ import java.util.List;
 import java.util.function.Function;
 
 @Component
+@RequiredArgsConstructor(onConstructor_ = {@Autowired})
 public class LoadingCommandCroup implements TelegramBotCommand {
 
     private final TelegramBotCommandParser telegramBotCommandParser;
     private final LoadingService loadingService;
     private final CargoNameParser cargoNameParser;
     private final TransportCrudRepository transportCrudRepository;
-
-    public LoadingCommandCroup(TelegramBotCommandParser telegramBotCommandParser, LoadingService loadingService, CargoNameParser cargoNameParser, @Qualifier("transportCrudRepository") TransportCrudRepository transportCrudRepository) {
-        this.telegramBotCommandParser = telegramBotCommandParser;
-        this.loadingService = loadingService;
-        this.cargoNameParser = cargoNameParser;
-        this.transportCrudRepository = transportCrudRepository;
-    }
 
     @Override
     public BotResponseEntity execute(Update update) {

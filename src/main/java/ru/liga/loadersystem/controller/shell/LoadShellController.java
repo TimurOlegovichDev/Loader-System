@@ -1,7 +1,7 @@
 package ru.liga.loadersystem.controller.shell;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.shell.standard.ShellCommandGroup;
 import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
@@ -15,20 +15,12 @@ import java.util.List;
 
 @ShellComponent
 @ShellCommandGroup("Управление погрузкой")
+@RequiredArgsConstructor(onConstructor_ = {@Autowired})
 public class LoadShellController {
 
     private final LoadingService loadingService;
     private final TransportCrudRepository transportRepository;
     private final CargoNameParser cargoNameParser;
-
-    @Autowired
-    public LoadShellController(LoadingService loadingService,
-                               @Qualifier("transportCrudRepository") TransportCrudRepository transportRepository,
-                               CargoNameParser cargoNameParser) {
-        this.loadingService = loadingService;
-        this.transportRepository = transportRepository;
-        this.cargoNameParser = cargoNameParser;
-    }
 
     @ShellMethod(key = "Выполнить автоматическую погрузку")
     public void loadCargos(String algoName) {

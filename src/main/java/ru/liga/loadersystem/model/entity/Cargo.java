@@ -6,7 +6,7 @@ import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
 import org.springframework.lang.Nullable;
-import ru.liga.loadersystem.model.structure.CargoJsonStructure;
+import ru.liga.loadersystem.model.json.CargoJsonStructure;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;

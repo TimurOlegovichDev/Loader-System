@@ -1,6 +1,7 @@
 package ru.liga.loadersystem.controller.rest;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,20 +16,12 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("/loader-system")
+@RequiredArgsConstructor(onConstructor_ = {@Autowired})
 public class OutputRestController {
 
     private final TransportRepositoryService transportRepositoryService;
     private final CargoRepositoryService cargoRepositoryService;
     private final ObjectMapper objectMapper;
-
-    @Autowired
-    public OutputRestController(TransportRepositoryService transportRepositoryService,
-                                CargoRepositoryService cargoRepositoryService,
-                                ObjectMapper objectMapper) {
-        this.transportRepositoryService = transportRepositoryService;
-        this.cargoRepositoryService = cargoRepositoryService;
-        this.objectMapper = objectMapper;
-    }
 
     @GetMapping("/transports")
     public ResponseEntity<String> getAllTransports() {

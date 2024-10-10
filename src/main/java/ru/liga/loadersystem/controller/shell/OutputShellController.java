@@ -1,5 +1,6 @@
 package ru.liga.loadersystem.controller.shell;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.shell.standard.ShellCommandGroup;
 import org.springframework.shell.standard.ShellComponent;
@@ -11,16 +12,11 @@ import java.util.UUID;
 
 @ShellComponent
 @ShellCommandGroup("Вывод данных")
+@RequiredArgsConstructor(onConstructor_ = {@Autowired})
 public class OutputShellController {
 
     private final TransportRepositoryService transportRepositoryService;
     private final CargoRepositoryService cargoRepositoryService;
-
-    @Autowired
-    public OutputShellController(TransportRepositoryService transportRepositoryService, CargoRepositoryService cargoRepositoryService) {
-        this.transportRepositoryService = transportRepositoryService;
-        this.cargoRepositoryService = cargoRepositoryService;
-    }
 
     @ShellMethod(key = "Информация о транспорте")
     public String getTransportInfo() {

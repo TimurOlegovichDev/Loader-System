@@ -29,7 +29,6 @@ public class DefaultCargoLoader implements CargoLoader {
      * @param transport транспортное средство, в которое будет загружен груз
      * @throws NoPlaceException если не найдено пустое место в транспортном средстве для груза
      */
-
     @Override
     public void load(Cargo cargo, Transport transport) {
         log.trace("Попытка найти пустое места для погрузки груза: {}", cargo);

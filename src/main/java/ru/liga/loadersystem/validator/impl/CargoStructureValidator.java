@@ -1,24 +1,21 @@
 package ru.liga.loadersystem.validator.impl;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import ru.liga.loadersystem.exception.InvalidCargoInput;
-import ru.liga.loadersystem.model.structure.CargoJsonStructure;
+import ru.liga.loadersystem.model.json.CargoJsonStructure;
 import ru.liga.loadersystem.validator.Validator;
 
 import java.util.Arrays;
 
 @Slf4j
 @Component
+@RequiredArgsConstructor(onConstructor_ = {@Autowired})
 public class CargoStructureValidator implements Validator<CargoJsonStructure> {
 
     private final CharacterNeighborhoodValidator characterNeighborhoodValidator;
-
-    @Autowired
-    public CargoStructureValidator(CharacterNeighborhoodValidator characterNeighborhoodValidator) {
-        this.characterNeighborhoodValidator = characterNeighborhoodValidator;
-    }
 
     /**
      * Метод проверяет груз и бросает исключение, если груз содержит ошибку.
@@ -26,7 +23,6 @@ public class CargoStructureValidator implements Validator<CargoJsonStructure> {
      * @param cargo грузовая структура, полученная из json файла
      * @throws InvalidCargoInput если груз невалиден
      */
-
     @Override
     public void validate(CargoJsonStructure cargo) throws InvalidCargoInput {
         log.debug("Валидация груза: {}", cargo.name());

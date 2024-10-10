@@ -13,7 +13,6 @@ public class TransportSizeValidator implements Validator<String> {
      *
      * @param input - строка для проверки
      */
-
     public void validate(String input) {
         String[] parts = input.split(",");
         for (String part : parts) {

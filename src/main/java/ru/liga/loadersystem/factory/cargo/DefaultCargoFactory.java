@@ -2,7 +2,7 @@ package ru.liga.loadersystem.factory.cargo;
 
 import org.springframework.stereotype.Component;
 import ru.liga.loadersystem.model.entity.Cargo;
-import ru.liga.loadersystem.model.structure.CargoJsonStructure;
+import ru.liga.loadersystem.model.json.CargoJsonStructure;
 
 import java.util.Arrays;
 

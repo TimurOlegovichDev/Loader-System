@@ -3,7 +3,7 @@ package ru.liga.loadersystem.factory.transport;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import ru.liga.loadersystem.model.entity.Transport;
-import ru.liga.loadersystem.model.structure.TransportJsonStructure;
+import ru.liga.loadersystem.model.json.TransportJsonStructure;
 
 import java.util.UUID;
 

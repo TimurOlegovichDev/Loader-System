@@ -1,5 +1,6 @@
 package ru.liga.loadersystem.controller.rest;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -16,26 +17,18 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/loader-system/load")
+@RequiredArgsConstructor(onConstructor_ = {@Autowired})
 public class LoadRestController {
 
     private final LoadingService loadingService;
     private final TransportCrudRepository transportRepository;
     private final CargoNameParser cargoNameParser;
 
-    @Autowired
-    public LoadRestController(LoadingService loadingService,
-                              TransportCrudRepository transportRepository,
-                              CargoNameParser cargoNameParser) {
-        this.loadingService = loadingService;
-        this.transportRepository = transportRepository;
-        this.cargoNameParser = cargoNameParser;
-    }
-
     @PostMapping("/automatic")
     public ResponseEntity<String> loadCargos(@RequestParam("algoName") String algoName) {
         try {
             loadingService.load(algoName);
-            return ResponseEntity.ok("Погрузка окончена!");
+            return ResponseEntity.ok().build();
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
@@ -51,7 +44,7 @@ public class LoadRestController {
                     (List<Transport>) transportRepository.findAll(),
                     listToLoad
             );
-            return ResponseEntity.ok("Погрузка окончена, загружено посылок: " + listToLoad.size());
+            return ResponseEntity.ok().build();
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
