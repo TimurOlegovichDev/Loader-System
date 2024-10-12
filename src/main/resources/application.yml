@@ -1,0 +1,15 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/loader_db
+    username: admin
+    password: 12052005
+    driver-class-name: org.postgresql.Driver
+  flyway:
+    locations: db/migration
+  devtools:
+    restart:
+      enabled: false
+
+bot:
+  name: Loady
+  token: 7748431510:AAF5XSE2m11b2mLNokJjMube6CwHEW4HRhA
